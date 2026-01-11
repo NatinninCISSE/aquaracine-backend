@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-aquaracine-dev
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com,.railway.app').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,.pythonanywhere.com').split(',')
 
 # CSRF Trusted Origins for production
 CSRF_TRUSTED_ORIGINS = os.environ.get(
@@ -80,13 +80,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'aquaracine.wsgi.application'
 
 # Database
-# Use PostgreSQL in production (via DATABASE_URL), SQLite for local dev
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
+# Use MySQL on PythonAnywhere, SQLite for local dev
+if os.environ.get('PYTHONANYWHERE_DOMAIN'):
+    # PythonAnywhere MySQL configuration
     DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('DB_NAME', ''),
+            'USER': os.environ.get('DB_USER', ''),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', ''),
+            'PORT': '3306',
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
+elif os.environ.get('DATABASE_URL'):
+    # Other cloud platforms (Render, Railway)
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'), conn_max_age=600)
     }
 else:
+    # Local development with SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
