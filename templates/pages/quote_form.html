@@ -1,0 +1,807 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Devis {{ quote_type_display }} | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<div class="quote-form-page">
+    <!-- Page Header -->
+    <div class="page-header {{ quote_type }}">
+        <div class="container">
+            <h1><i class="fa {{ quote_icon }}"></i> Devis {{ quote_type_display }}</h1>
+            <p>{{ quote_description }}</p>
+        </div>
+    </div>
+
+    <!-- Quote Form -->
+    <div class="container">
+        <div class="quote-form-container">
+            <form id="quote-type-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="quote_type" value="{{ quote_type }}">
+
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-user"></i>
+                        <h4>Vos informations</h4>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Prénom <span class="required">*</span></label>
+                            <input type="text" name="first_name" required placeholder="Votre prénom">
+                        </div>
+                        <div class="form-group">
+                            <label>Nom <span class="required">*</span></label>
+                            <input type="text" name="last_name" required placeholder="Votre nom">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="email" required placeholder="votre@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Téléphone <span class="required">*</span></label>
+                            <input type="tel" name="phone" required placeholder="+225 XX XX XX XX XX">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Entreprise / Organisation</label>
+                        <input type="text" name="company" placeholder="Optionnel">
+                    </div>
+                </div>
+
+                {% if quote_type != 'formation' %}
+                <!-- Location for non-formation -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-map-marker"></i>
+                        <h4>Localisation du site d'installation</h4>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ville <span class="required">*</span></label>
+                            <input type="text" name="city" required placeholder="Ex: Abidjan">
+                        </div>
+                        <div class="form-group">
+                            <label>Commune / Quartier <span class="required">*</span></label>
+                            <input type="text" name="commune" required placeholder="Ex: Cocody">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse complète du site <span class="required">*</span></label>
+                        <div class="location-input-wrapper">
+                            <input type="text" name="address" required placeholder="Rue, repère, description de l'emplacement...">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Coordonnées GPS (optionnel)</label>
+                        <input type="text" name="gps_coordinates" placeholder="Ex: 5.3600, -4.0083">
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ================================ -->
+                <!-- PISCICULTURE SPECIFIC FIELDS -->
+                <!-- ================================ -->
+                {% if quote_type == 'pisciculture' %}
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-tint"></i>
+                        <h4>Détails du projet de pisciculture</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type de bassin souhaité <span class="required">*</span></label>
+                        <div class="radio-group">
+                            {% for basin in basin_types %}
+                            <div class="radio-option">
+                                <input type="radio" id="bassin-{{ basin.id }}" name="bassin_type" value="{{ basin.name }}" {% if forloop.first %}checked{% endif %}>
+                                <label for="bassin-{{ basin.id }}">{{ basin.name }}</label>
+                            </div>
+                            {% empty %}
+                            <div class="radio-option">
+                                <input type="radio" id="bassin-beton" name="bassin_type" value="Bassin en béton" checked>
+                                <label for="bassin-beton">Bassin en béton</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="bassin-bache" name="bassin_type" value="Bassin bâche">
+                                <label for="bassin-bache">Bassin bâche</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="bassin-plastique" name="bassin_type" value="Bac plastique/IBC">
+                                <label for="bassin-plastique">Bac plastique/IBC</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="bassin-terre" name="bassin_type" value="Étang en terre">
+                                <label for="bassin-terre">Étang en terre</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Espèce(s) de poissons souhaitée(s) <span class="required">*</span></label>
+                            <div class="checkbox-group">
+                                {% for fish in fish_species %}
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="fish_species" value="{{ fish.name }}">
+                                    <span>{{ fish.name }}</span>
+                                </label>
+                                {% empty %}
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="fish_species" value="Tilapia">
+                                    <span>Tilapia</span>
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="fish_species" value="Silure (Poisson-chat)">
+                                    <span>Silure (Poisson-chat)</span>
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="fish_species" value="Carpe">
+                                    <span>Carpe</span>
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="fish_species" value="Hétérotis">
+                                    <span>Hétérotis</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre de bassins souhaité</label>
+                            <input type="number" name="pond_count" placeholder="Ex: 2" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Capacité souhaitée (nombre de poissons)</label>
+                            <select name="fish_capacity">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="100-500">100 - 500 poissons</option>
+                                <option value="500-1000">500 - 1000 poissons</option>
+                                <option value="1000-5000">1000 - 5000 poissons</option>
+                                <option value="5000+">Plus de 5000 poissons</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Objectif de production</label>
+                            <select name="production_goal">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Autoconsommation familiale">Autoconsommation familiale</option>
+                                <option value="Vente locale (marché)">Vente locale (marché)</option>
+                                <option value="Production commerciale">Production commerciale</option>
+                                <option value="Approvisionnement restaurant/hôtel">Approvisionnement restaurant/hôtel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Source d'eau disponible</label>
+                            <select name="water_source">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Forage">Forage</option>
+                                <option value="Puits">Puits</option>
+                                <option value="Eau de robinet (CIE)">Eau de robinet (CIE)</option>
+                                <option value="Rivière/Marigot">Rivière/Marigot</option>
+                                <option value="Récupération eau de pluie">Récupération eau de pluie</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ================================ -->
+                <!-- HYDROPONIE SPECIFIC FIELDS -->
+                <!-- ================================ -->
+                {% if quote_type == 'hydroponie' %}
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-leaf"></i>
+                        <h4>Détails du projet d'hydroponie</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type de système hydroponique souhaité <span class="required">*</span></label>
+                        <div class="radio-group">
+                            {% for hydro in hydro_system_types %}
+                            <div class="radio-option">
+                                <input type="radio" id="hydro-{{ hydro.id }}" name="hydro_system" value="{{ hydro.name }}" {% if forloop.first %}checked{% endif %}>
+                                <label for="hydro-{{ hydro.id }}">{{ hydro.name }} ({{ hydro.code }})</label>
+                            </div>
+                            {% empty %}
+                            <div class="radio-option">
+                                <input type="radio" id="hydro-nft" name="hydro_system" value="NFT (Nutrient Film Technique)" checked>
+                                <label for="hydro-nft">NFT (Nutrient Film Technique)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="hydro-dwc" name="hydro_system" value="DWC (Deep Water Culture)">
+                                <label for="hydro-dwc">DWC (Deep Water Culture)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="hydro-tour" name="hydro_system" value="Tours verticales">
+                                <label for="hydro-tour">Tours verticales</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="hydro-conseille" name="hydro_system" value="Je ne sais pas, conseillez-moi">
+                                <label for="hydro-conseille">Je ne sais pas, conseillez-moi</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type(s) de cultures souhaitées <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            {% for crop in crop_types %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="{{ crop.name }}">
+                                <span>{{ crop.name }}</span>
+                            </label>
+                            {% empty %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Laitue / Salade">
+                                <span>Laitue / Salade</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Épinards">
+                                <span>Épinards</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Tomates">
+                                <span>Tomates</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Poivrons / Piments">
+                                <span>Poivrons / Piments</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Herbes aromatiques (basilic, menthe...)">
+                                <span>Herbes aromatiques (basilic, menthe...)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Fraises">
+                                <span>Fraises</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Concombres">
+                                <span>Concombres</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacité souhaitée (nombre de plantes)</label>
+                            <select name="plant_capacity">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="50-100">50 - 100 plantes</option>
+                                <option value="100-300">100 - 300 plantes</option>
+                                <option value="300-500">300 - 500 plantes</option>
+                                <option value="500-1000">500 - 1000 plantes</option>
+                                <option value="1000+">Plus de 1000 plantes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Emplacement prévu</label>
+                            <select name="location_type">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Intérieur (maison/appartement)">Intérieur (maison/appartement)</option>
+                                <option value="Terrasse/Balcon">Terrasse/Balcon</option>
+                                <option value="Jardin extérieur">Jardin extérieur</option>
+                                <option value="Serre">Serre</option>
+                                <option value="Terrain agricole">Terrain agricole</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ================================ -->
+                <!-- AQUAPONIE SPECIFIC FIELDS -->
+                <!-- ================================ -->
+                {% if quote_type == 'aquaponie' %}
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-refresh"></i>
+                        <h4>Détails du projet d'aquaponie (Poissons + Plantes)</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type de système aquaponique souhaité <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="aqua-media" name="aqua_system" value="Lit de culture (Media Bed)" checked>
+                                <label for="aqua-media">Lit de culture (Media Bed)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="aqua-nft" name="aqua_system" value="NFT">
+                                <label for="aqua-nft">NFT</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="aqua-dwc" name="aqua_system" value="DWC (Radeaux flottants)">
+                                <label for="aqua-dwc">DWC (Radeaux flottants)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="aqua-conseille" name="aqua_system" value="Conseillez-moi">
+                                <label for="aqua-conseille">Conseillez-moi</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 style="margin: 25px 0 15px; color: #1976d2;"><i class="fa fa-tint"></i> Partie Pisciculture</h5>
+
+                    <div class="form-group">
+                        <label>Espèce(s) de poissons souhaitée(s) <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            {% for fish in fish_species %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="fish_species" value="{{ fish.name }}">
+                                <span>{{ fish.name }}</span>
+                            </label>
+                            {% empty %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="fish_species" value="Tilapia">
+                                <span>Tilapia</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="fish_species" value="Silure">
+                                <span>Silure</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="fish_species" value="Carpe">
+                                <span>Carpe</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Capacité poissons souhaitée</label>
+                            <select name="fish_capacity">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="50-100">50 - 100 poissons</option>
+                                <option value="100-300">100 - 300 poissons</option>
+                                <option value="300-500">300 - 500 poissons</option>
+                                <option value="500+">Plus de 500 poissons</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Type de bassin</label>
+                            <select name="bassin_type">
+                                <option value="">-- Sélectionnez --</option>
+                                {% for basin in basin_types %}
+                                <option value="{{ basin.name }}">{{ basin.name }}</option>
+                                {% empty %}
+                                <option value="Cuve IBC">Cuve IBC</option>
+                                <option value="Bassin bâche">Bassin bâche</option>
+                                <option value="Bassin béton">Bassin béton</option>
+                                <option value="Bac plastique">Bac plastique</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 style="margin: 25px 0 15px; color: #4caf50;"><i class="fa fa-leaf"></i> Partie Culture</h5>
+
+                    <div class="form-group">
+                        <label>Type(s) de cultures souhaitées <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            {% for crop in crop_types %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="{{ crop.name }}">
+                                <span>{{ crop.name }}</span>
+                            </label>
+                            {% empty %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Laitue / Salade">
+                                <span>Laitue / Salade</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Épinards">
+                                <span>Épinards</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Tomates">
+                                <span>Tomates</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Herbes aromatiques">
+                                <span>Herbes aromatiques</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="crop_types" value="Autres légumes">
+                                <span>Autres légumes</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Capacité plantes souhaitée</label>
+                        <select name="plant_capacity">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="50-100">50 - 100 plantes</option>
+                            <option value="100-200">100 - 200 plantes</option>
+                            <option value="200-500">200 - 500 plantes</option>
+                            <option value="500+">Plus de 500 plantes</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ================================ -->
+                <!-- FORMATION SPECIFIC FIELDS -->
+                <!-- ================================ -->
+                {% if quote_type == 'formation' %}
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-graduation-cap"></i>
+                        <h4>Détails de la formation souhaitée</h4>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type(s) de formation souhaitée(s) <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            {% for training in training_types %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="training_types" value="{{ training.name }}">
+                                <span>{{ training.name }}</span>
+                            </label>
+                            {% empty %}
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="training_types" value="Pisciculture">
+                                <span>Pisciculture</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="training_types" value="Hydroponie">
+                                <span>Hydroponie</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="training_types" value="Aquaponie">
+                                <span>Aquaponie</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="training_types" value="Gestion d'exploitation">
+                                <span>Gestion d'exploitation</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Format de formation <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="format-presentiel" name="training_format" value="Présentiel" checked>
+                                <label for="format-presentiel">Présentiel</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="format-ligne" name="training_format" value="En ligne">
+                                <label for="format-ligne">En ligne</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="format-mixte" name="training_format" value="Mixte (présentiel + en ligne)">
+                                <label for="format-mixte">Mixte (présentiel + en ligne)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Location for presentiel training -->
+                    <div id="presentiel-location" class="form-section" style="margin-top: 20px; padding: 20px; background: #f5f7fa; border-radius: 15px;">
+                        <h5 style="margin-bottom: 15px; color: #1976d2;"><i class="fa fa-map-marker"></i> Lieu de formation (si présentiel)</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ville</label>
+                                <input type="text" name="city" placeholder="Ex: Abidjan">
+                            </div>
+                            <div class="form-group">
+                                <label>Commune / Quartier</label>
+                                <input type="text" name="commune" placeholder="Ex: Cocody">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Lieu de formation souhaité</label>
+                            <select name="training_location">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Chez Aqua-Racine (notre site)">Chez Aqua-Racine (notre site)</option>
+                                <option value="À mon domicile/entreprise">À mon domicile/entreprise</option>
+                                <option value="Autre lieu à définir">Autre lieu à définir</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Adresse complète (si à votre domicile)</label>
+                            <input type="text" name="address" placeholder="Rue, repère, description...">
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label>Nombre de participants</label>
+                            <input type="number" name="participants_count" placeholder="Ex: 5" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Durée souhaitée</label>
+                            <select name="training_duration">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Demi-journée (initiation)">Demi-journée (initiation)</option>
+                                <option value="1 jour">1 jour</option>
+                                <option value="2 jours">2 jours</option>
+                                <option value="3 jours">3 jours</option>
+                                <option value="1 semaine (formation complète)">1 semaine (formation complète)</option>
+                                <option value="Durée personnalisée">Durée personnalisée</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Niveau actuel</label>
+                        <select name="current_level">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="Débutant total">Débutant total</option>
+                            <option value="Quelques notions théoriques">Quelques notions théoriques</option>
+                            <option value="Expérience pratique limitée">Expérience pratique limitée</option>
+                            <option value="Déjà en activité, perfectionnement">Déjà en activité, perfectionnement</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Objectif de la formation</label>
+                        <select name="training_goal">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="Projet personnel/familial">Projet personnel/familial</option>
+                            <option value="Créer mon entreprise">Créer mon entreprise</option>
+                            <option value="Reconversion professionnelle">Reconversion professionnelle</option>
+                            <option value="Améliorer mon activité existante">Améliorer mon activité existante</option>
+                            <option value="Recherche/Étude">Recherche/Étude</option>
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Common fields -->
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="fa fa-info-circle"></i>
+                        <h4>Informations complémentaires</h4>
+                    </div>
+
+                    {% if quote_type != 'formation' %}
+                    <div class="form-group">
+                        <label>Taille du projet <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="size-small" name="project_size" value="small" checked>
+                                <label for="size-small">Petit (familial)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="size-medium" name="project_size" value="medium">
+                                <label for="size-medium">Moyen</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="size-large" name="project_size" value="large">
+                                <label for="size-large">Grand</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="size-industrial" name="project_size" value="industrial">
+                                <label for="size-industrial">Industriel</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Surface disponible (m²)</label>
+                            <input type="text" name="surface_area" placeholder="Ex: 50">
+                        </div>
+                        <div class="form-group">
+                            <label>Budget estimé (FCFA)</label>
+                            <select name="budget_range">
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="Moins de 500 000 FCFA">Moins de 500 000 FCFA</option>
+                                <option value="500 000 - 1 000 000 FCFA">500 000 - 1 000 000 FCFA</option>
+                                <option value="1 000 000 - 3 000 000 FCFA">1 000 000 - 3 000 000 FCFA</option>
+                                <option value="3 000 000 - 5 000 000 FCFA">3 000 000 - 5 000 000 FCFA</option>
+                                <option value="Plus de 5 000 000 FCFA">Plus de 5 000 000 FCFA</option>
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label>Description de votre projet / Besoins spécifiques <span class="required">*</span></label>
+                        <textarea name="description" required placeholder="Décrivez votre projet, vos objectifs, vos contraintes, vos questions..."></textarea>
+                    </div>
+
+                    {% if quote_type != 'formation' %}
+                    <div class="form-group">
+                        <label>Services supplémentaires souhaités</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="needs_training" value="1">
+                                <span>Formation à l'exploitation</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="needs_maintenance" value="1">
+                                <span>Contrat de maintenance</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="needs_supply" value="1">
+                                <span>Approvisionnement en intrants</span>
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit -->
+                <div class="submit-btn-wrapper">
+                    <button type="submit" class="whatsapp-submit-btn">
+                        <i class="fa fa-whatsapp"></i>
+                        Envoyer ma demande via WhatsApp
+                    </button>
+                    <p class="submit-note">
+                        <i class="fa fa-lock"></i> Vos données sont sécurisées. Nous vous contacterons sous 48h.
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show/hide presentiel location based on training format
+{% if quote_type == 'formation' %}
+document.querySelectorAll('input[name="training_format"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        var locationSection = document.getElementById('presentiel-location');
+        if (this.value === 'En ligne') {
+            locationSection.style.display = 'none';
+        } else {
+            locationSection.style.display = 'block';
+        }
+    });
+});
+{% endif %}
+
+document.getElementById('quote-type-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Collect form data
+    var formData = new FormData(this);
+    var data = {};
+    formData.forEach(function(value, key) {
+        if (data[key]) {
+            if (Array.isArray(data[key])) {
+                data[key].push(value);
+            } else {
+                data[key] = [data[key], value];
+            }
+        } else {
+            data[key] = value;
+        }
+    });
+
+    // Build WhatsApp message
+    var quoteType = '{{ quote_type_display }}';
+    var message = '*DEMANDE DE DEVIS - ' + quoteType.toUpperCase() + '*\n\n';
+
+    message += '*INFORMATIONS CLIENT*\n';
+    message += 'Nom: ' + data.first_name + ' ' + data.last_name + '\n';
+    message += 'Email: ' + data.email + '\n';
+    message += 'Téléphone: ' + data.phone + '\n';
+    if (data.company) message += 'Entreprise: ' + data.company + '\n';
+
+    {% if quote_type != 'formation' %}
+    message += '\n*LOCALISATION*\n';
+    message += 'Ville: ' + data.city + '\n';
+    message += 'Commune: ' + data.commune + '\n';
+    message += 'Adresse: ' + data.address + '\n';
+    if (data.gps_coordinates) message += 'GPS: ' + data.gps_coordinates + '\n';
+    {% endif %}
+
+    message += '\n*DÉTAILS DU PROJET*\n';
+
+    {% if quote_type == 'pisciculture' %}
+    message += 'Type de bassin: ' + (data.bassin_type || 'Non spécifié') + '\n';
+    if (data.fish_species) {
+        var species = Array.isArray(data.fish_species) ? data.fish_species.join(', ') : data.fish_species;
+        message += 'Espèces: ' + species + '\n';
+    }
+    if (data.pond_count) message += 'Nombre de bassins: ' + data.pond_count + '\n';
+    if (data.fish_capacity) message += 'Capacité: ' + data.fish_capacity + '\n';
+    if (data.production_goal) message += 'Objectif: ' + data.production_goal + '\n';
+    if (data.water_source) message += 'Source d\'eau: ' + data.water_source + '\n';
+    {% endif %}
+
+    {% if quote_type == 'hydroponie' %}
+    message += 'Système: ' + (data.hydro_system || 'Non spécifié') + '\n';
+    if (data.crop_types) {
+        var crops = Array.isArray(data.crop_types) ? data.crop_types.join(', ') : data.crop_types;
+        message += 'Cultures: ' + crops + '\n';
+    }
+    if (data.plant_capacity) message += 'Capacité plantes: ' + data.plant_capacity + '\n';
+    if (data.location_type) message += 'Emplacement: ' + data.location_type + '\n';
+    {% endif %}
+
+    {% if quote_type == 'aquaponie' %}
+    message += 'Système aquaponique: ' + (data.aqua_system || 'Non spécifié') + '\n';
+    if (data.fish_species) {
+        var species = Array.isArray(data.fish_species) ? data.fish_species.join(', ') : data.fish_species;
+        message += 'Espèces poissons: ' + species + '\n';
+    }
+    if (data.fish_capacity) message += 'Capacité poissons: ' + data.fish_capacity + '\n';
+    if (data.bassin_type) message += 'Type bassin: ' + data.bassin_type + '\n';
+    if (data.crop_types) {
+        var crops = Array.isArray(data.crop_types) ? data.crop_types.join(', ') : data.crop_types;
+        message += 'Cultures: ' + crops + '\n';
+    }
+    if (data.plant_capacity) message += 'Capacité plantes: ' + data.plant_capacity + '\n';
+    {% endif %}
+
+    {% if quote_type == 'formation' %}
+    if (data.training_types) {
+        var types = Array.isArray(data.training_types) ? data.training_types.join(', ') : data.training_types;
+        message += 'Types de formation: ' + types + '\n';
+    }
+    message += 'Format: ' + (data.training_format || 'Non spécifié') + '\n';
+    if (data.training_format !== 'En ligne') {
+        if (data.city) message += 'Ville: ' + data.city + '\n';
+        if (data.commune) message += 'Commune: ' + data.commune + '\n';
+        if (data.training_location) message += 'Lieu: ' + data.training_location + '\n';
+        if (data.address) message += 'Adresse: ' + data.address + '\n';
+    }
+    if (data.participants_count) message += 'Participants: ' + data.participants_count + '\n';
+    if (data.training_duration) message += 'Durée: ' + data.training_duration + '\n';
+    if (data.current_level) message += 'Niveau: ' + data.current_level + '\n';
+    if (data.training_goal) message += 'Objectif: ' + data.training_goal + '\n';
+    {% else %}
+    var sizes = {'small': 'Petit (familial)', 'medium': 'Moyen', 'large': 'Grand', 'industrial': 'Industriel'};
+    message += 'Taille projet: ' + (sizes[data.project_size] || data.project_size) + '\n';
+    if (data.surface_area) message += 'Surface: ' + data.surface_area + ' m²\n';
+    if (data.budget_range) message += 'Budget: ' + data.budget_range + '\n';
+
+    var services = [];
+    if (data.needs_training) services.push('Formation');
+    if (data.needs_maintenance) services.push('Maintenance');
+    if (data.needs_supply) services.push('Approvisionnement');
+    if (services.length > 0) message += 'Services: ' + services.join(', ') + '\n';
+    {% endif %}
+
+    message += '\n*DESCRIPTION*\n' + data.description;
+
+    // Encode and open WhatsApp
+    var whatsappNumber = '2250767203532';
+    var encodedMessage = encodeURIComponent(message);
+    var whatsappUrl = 'https://wa.me/' + whatsappNumber + '?text=' + encodedMessage;
+
+    // Also save to database via AJAX
+    fetch('{% url "submit_quote" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    }).then(function(response) {
+        window.open(whatsappUrl, '_blank');
+        setTimeout(function() {
+            window.location.href = '{% url "quote_success" %}';
+        }, 1000);
+    }).catch(function(error) {
+        window.open(whatsappUrl, '_blank');
+        setTimeout(function() {
+            window.location.href = '{% url "quote_success" %}';
+        }, 1000);
+    });
+});
+</script>
+{% endblock %}

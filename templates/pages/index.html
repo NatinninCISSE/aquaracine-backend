@@ -1,0 +1,576 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bienvenue | {{ settings.site_name|default:'Aqua-Racine' }} - Aquaponie en Côte d'Ivoire{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/game-popup.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <div class="hero-area-slide">
+                    {% for slide in hero_slides %}
+                    <div class="hero-area-single-slide">
+                        <h1>{{ slide.title }}</h1>
+                        <p>{{ slide.description }}</p>
+                        {% if slide.button_url %}
+                        <a href="{{ slide.button_url }}" class="aquaponic-btn">{{ slide.button_text|default:'En savoir plus' }}</a>
+                        {% endif %}
+                        <a href="#devis" class="aquaponic-btn aquaponic-btn-outline">Demander un devis</a>
+                    </div>
+                    {% empty %}
+                    <div class="hero-area-single-slide">
+                        <h1>Aqua-Racine</h1>
+                        <p>Un projet qui résout les défis alimentaires en Côte d'Ivoire avec l'aquaponie durable.</p>
+                        <a href="#about" class="aquaponic-btn">En savoir plus</a>
+                        <a href="#devis" class="aquaponic-btn aquaponic-btn-outline">Demander un devis</a>
+                    </div>
+                    <div class="hero-area-single-slide">
+                        <h1>Aquaponie Durable</h1>
+                        <p>Élevage de poissons et culture de plantes dans un environnement symbiotique.</p>
+                        <a href="#about" class="aquaponic-btn">Découvrir</a>
+                        <a href="#devis" class="aquaponic-btn aquaponic-btn-outline">Obtenir un devis</a>
+                    </div>
+                    <div class="hero-area-single-slide">
+                        <h1>Production Saine</h1>
+                        <p>Poissons et légumes sans engrais chimiques, sains et respectueux de l'environnement.</p>
+                        <a href="{% url 'products' %}" class="aquaponic-btn">Nos produits</a>
+                        <a href="#devis" class="aquaponic-btn aquaponic-btn-outline">Votre projet</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about-area ptb-100" id="about">
+    <div class="container">
+        <div class="row flexbox-center">
+            <div class="col-lg-6">
+                <div class="about-area-slide">
+                    {% if settings.about_image_1 %}
+                    <div class="about-area-single-slide"><img src="{{ settings.about_image_1.url }}" alt="Aquaponie"></div>
+                    {% else %}
+                    <div class="about-area-single-slide"><img src="{% static 'img/about-slide/slide-1.jpg' %}" alt="Aquaponie"></div>
+                    {% endif %}
+                    {% if settings.about_image_2 %}
+                    <div class="about-area-single-slide"><img src="{{ settings.about_image_2.url }}" alt="Culture"></div>
+                    {% else %}
+                    <div class="about-area-single-slide"><img src="{% static 'img/about-slide/slide-3.jpg' %}" alt="Culture"></div>
+                    {% endif %}
+                    {% if settings.about_image_3 %}
+                    <div class="about-area-single-slide"><img src="{{ settings.about_image_3.url }}" alt="Production"></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-area-info">
+                    <h2>{{ settings.about_title|default:'À propos de nous' }}</h2>
+                    {% if settings.about_description %}
+                        {{ settings.about_description|safe }}
+                    {% else %}
+                    <p>Le projet Aqua-Racine, porté par trois jeunes femmes ivoiriennes, vise à résoudre les défis alimentaires en Côte d'Ivoire avec l'aquaponie. Ce procédé combine l'aquaculture et l'hydroponie dans un environnement symbiotique.</p>
+                    <p>Aqua-Racine garantit la production de poissons et de légumes sans engrais chimiques, assurant des produits sains et respectueux de l'environnement.</p>
+                    {% endif %}
+                    <a href="#devis" class="read-more">Demander un devis gratuit<i class="fa fa-angle-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nos Services Section -->
+<section class="services-area ptb-100" id="services">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Nos services</h2>
+                    <p>Des solutions complètes pour l'agriculture durable et l'aquaculture</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                {% if services %}
+                <div class="services-carousel owl-carousel">
+                    {% for service in services %}
+                    <div class="service-card">
+                        <div class="service-icon" style="background: {{ service.gradient_style }};">
+                            <i class="{{ service.icon }}"></i>
+                        </div>
+                        <div class="service-content">
+                            <h4>{{ service.title }}</h4>
+                            <p>{{ service.description }}</p>
+                            {% if service.link_url %}
+                            <a href="{{ service.link_url }}" class="service-link">{{ service.link_text }} <i class="fa fa-arrow-right"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <p class="text-muted">Aucun service disponible pour le moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="gallery pt-70" id="gallery">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Notre galerie</h2>
+                    <p>Découvrez nos installations et réalisations en aquaponie.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tile-gallery">
+                    {% for image in gallery_images %}
+                    <div class="tile-gallery-block tile-gallery-block-{{ forloop.counter }}" style="background-image: url('{{ image.image.url }}');">
+                        <div class="tile-gallery-overlay">
+                            <div class="display-table">
+                                <div class="display-table-cell">
+                                    <a class="example-image-link" href="{{ image.image.url }}" data-lightbox="example-set" title="{{ image.title }}">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="tile-gallery-block tile-gallery-block-1" style="background-image: url('{% static 'img/gallery/1.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/1.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    <div class="tile-gallery-block tile-gallery-block-2" style="background-image: url('{% static 'img/gallery/2.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/2.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    <div class="tile-gallery-block tile-gallery-block-3" style="background-image: url('{% static 'img/gallery/3.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/3.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    <div class="tile-gallery-block tile-gallery-block-4" style="background-image: url('{% static 'img/gallery/4.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/4.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    <div class="tile-gallery-block tile-gallery-block-5" style="background-image: url('{% static 'img/gallery/5.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/5.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    <div class="tile-gallery-block tile-gallery-block-6" style="background-image: url('{% static 'img/gallery/6.jpg' %}');"><div class="tile-gallery-overlay"><div class="display-table"><div class="display-table-cell"><a class="example-image-link" href="{% static 'img/gallery/6.jpg' %}" data-lightbox="example-set"><i class="fa fa-search"></i></a></div></div></div></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Advantages Section -->
+<section class="product-advantage ptb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Avantages de l'aquaponie</h2>
+                    <p>Un système durable, économique et respectueux de l'environnement</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for advantage in advantages %}
+            <div class="col-md-3 col-sm-6">
+                <div class="product-advantages-chart">
+                    <div class="demo-{{ forloop.counter }}" data-percent="{{ advantage.percentage }}"></div>
+                    <p>{{ advantage.title }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-md-3 col-sm-6"><div class="product-advantages-chart"><div class="demo-1" data-percent="75"></div><p>Économie d'eau</p></div></div>
+            <div class="col-md-3 col-sm-6"><div class="product-advantages-chart"><div class="demo-2" data-percent="100"></div><p>Double production</p></div></div>
+            <div class="col-md-3 col-sm-6"><div class="product-advantages-chart"><div class="demo-3" data-percent="100"></div><p>Sans engrais chimiques</p></div></div>
+            <div class="col-md-3 col-sm-6"><div class="product-advantages-chart"><div class="demo-4" data-percent="100"></div><p>Aliments 100% sains</p></div></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Pourquoi Choisir Aqua-Racine Section -->
+<section class="choose-us" id="pourquoi">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Pourquoi choisir Aqua-Racine ?</h2>
+                    <p>Nous allions agriculture durable, innovation locale et solutions clés en main pour vous offrir bien plus que des produits : une nouvelle façon de produire et de consommer sainement en Afrique.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="our-foods">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="our-foods-list flexbox-center">
+                    <div class="our-foods-icon">
+                        <i class="icofont icofont-fruits"></i>
+                    </div>
+                    <div class="our-foods-info">
+                        <h4>Aliments 100 % frais</h4>
+                        <p>Poissons et légumes produits localement, récoltés à maturité, frais et sans produits chimiques.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="our-foods-list flexbox-center">
+                    <div class="our-foods-icon">
+                        <i class="icofont icofont-leaf"></i>
+                    </div>
+                    <div class="our-foods-info">
+                        <h4>Légumes d'aquaponie</h4>
+                        <p>Cultivés sans pesticides avec des nutriments naturels issus des poissons pour un goût authentique.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="our-foods-list flexbox-center">
+                    <div class="our-foods-icon">
+                        <i class="icofont icofont-truck-alt"></i>
+                    </div>
+                    <div class="our-foods-info">
+                        <h4>Livraison à domicile</h4>
+                        <p>Livraison directe chez vous : particuliers, restaurants, hôtels ou institutions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="our-foods-list flexbox-center">
+                    <div class="our-foods-icon">
+                        <i class="icofont icofont-money"></i>
+                    </div>
+                    <div class="our-foods-info">
+                        <h4>Paiement à la livraison</h4>
+                        <p>Paiement flexible à la réception de votre commande, en toute confiance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- choose us area end -->
+
+<!-- Quote Section - 4 Buttons -->
+<section class="quote-section" id="devis">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Demandez votre devis</h2>
+                    <p>Choisissez le type de projet qui vous intéresse et obtenez un devis personnalisé.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="quote-buttons-wrapper">
+                    <a href="{% url 'quote_form' 'pisciculture' %}" class="quote-type-btn">
+                        <div class="quote-btn-icon" style="background: linear-gradient(135deg, #1976d2, #0d47a1);">
+                            <i class="fa fa-tint"></i>
+                        </div>
+                        <h4>Pisciculture</h4>
+                        <p>Élevage de poissons</p>
+                    </a>
+                    <a href="{% url 'quote_form' 'hydroponie' %}" class="quote-type-btn">
+                        <div class="quote-btn-icon" style="background: linear-gradient(135deg, #4caf50, #2e7d32);">
+                            <i class="fa fa-leaf"></i>
+                        </div>
+                        <h4>Hydroponie</h4>
+                        <p>Culture hors-sol</p>
+                    </a>
+                    <a href="{% url 'quote_form' 'aquaponie' %}" class="quote-type-btn">
+                        <div class="quote-btn-icon" style="background: linear-gradient(135deg, #00bcd4, #0097a7);">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                        <h4>Aquaponie</h4>
+                        <p>Poissons + Plantes</p>
+                    </a>
+                    <a href="{% url 'quote_form' 'formation' %}" class="quote-type-btn">
+                        <div class="quote-btn-icon" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
+                            <i class="fa fa-graduation-cap"></i>
+                        </div>
+                        <h4>Formation</h4>
+                        <p>Apprenez nos techniques</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pre-defined Systems Section -->
+<section class="systems-section ptb-100" id="systemes">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Nos systèmes prêts à l'emploi</h2>
+                    <p>Des modèles conçus pour les ménages et petites exploitations, livrés et installés chez vous.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for system in system_models %}
+            <div class="col-lg-4 col-md-6">
+                <div class="system-card">
+                    <div class="system-badge">{{ system.get_system_type_display }}</div>
+                    <div class="system-image">
+                        {% if system.image %}
+                        <img src="{{ system.image.url }}" alt="{{ system.name }}">
+                        {% else %}
+                        <img src="{% static 'img/systems/default.jpg' %}" alt="{{ system.name }}">
+                        {% endif %}
+                        {% if system.is_featured %}
+                        <span class="featured-badge">Populaire</span>
+                        {% endif %}
+                    </div>
+                    <div class="system-content">
+                        <h4>{{ system.name }}</h4>
+                        <p class="system-desc">{{ system.description|truncatewords:20 }}</p>
+                        <div class="system-specs">
+                            <div class="spec-item">
+                                <i class="fa fa-arrows-alt"></i>
+                                <span>{{ system.dimensions }}</span>
+                            </div>
+                            {% if system.fish_capacity %}
+                            <div class="spec-item">
+                                <i class="fa fa-tint"></i>
+                                <span>{{ system.fish_capacity }} poissons</span>
+                            </div>
+                            {% endif %}
+                            {% if system.plant_capacity %}
+                            <div class="spec-item">
+                                <i class="fa fa-leaf"></i>
+                                <span>{{ system.plant_capacity }} plantes</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="system-price">
+                            {% if system.old_price %}
+                            <span class="old-price">{{ system.old_price|floatformat:0 }} FCFA</span>
+                            {% endif %}
+                            <span class="current-price">{{ system.price|floatformat:0 }} FCFA</span>
+                        </div>
+                        <div class="system-target">
+                            <i class="fa fa-users"></i> {{ system.target_audience }}
+                        </div>
+                        <a href="{% url 'system_detail' system.slug %}" class="system-btn">
+                            Voir les détails <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-lg-12 text-center">
+                <p style="color: #666;">Nos modèles de systèmes seront bientôt disponibles. Contactez-nous pour plus d'informations.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="product-gallery pt-100" id="shop">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Nos produits frais</h2>
+                    <p>Poissons et légumes frais cultivés grâce à notre système d'aquaponie durable.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-3 col-sm-6">
+                <div class="single-product max-width-320" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}" data-product-price="{{ product.price }}" data-product-unit="{{ product.unit }}">
+                    <div class="single-product-img">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{% static 'img/product/default.jpg' %}" alt="{{ product.name }}">
+                        {% endif %}
+                        {% if product.is_featured %}
+                        <span class="product-badge">Vedette</span>
+                        {% endif %}
+                        <div class="product-img-overlay">
+                            <button type="button" class="aquaponic-btn add-to-cart-btn" data-product-id="{{ product.id }}">Ajouter <i class="fa fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="single-product-info">
+                        <p><a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a></p>
+                        <h4>{{ product.price|floatformat:0 }} FCFA{% if product.unit %}/{{ product.unit }}{% endif %}</h4>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-lg-12 text-center">
+                <p>Aucun produit disponible pour le moment. Revenez bientôt !</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12 text-center">
+                <a href="{% url 'products' %}" class="aquaponic-btn">Voir tous nos produits</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-member ptb-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Notre équipe</h2>
+                    <p>Trois jeunes femmes ivoiriennes engagées pour une agriculture durable.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="row">
+                    {% for member in team_members %}
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="single-member max-width-320">
+                            <div class="single-member-img">
+                                {% if member.photo %}
+                                <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                                {% else %}
+                                <img src="{% static 'img/member/default.jpg' %}" alt="{{ member.name }}">
+                                {% endif %}
+                            </div>
+                            <div class="single-member-info">
+                                <p><a href="{% url 'team' %}">{{ member.name }}</a></p>
+                                <span>{{ member.role }}</span>
+                                <a href="{% url 'team' %}" class="read-more">Voir le profil<i class="fa fa-long-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-lg-4 col-sm-6"><div class="single-member max-width-320"><div class="single-member-img"><img src="{% static 'img/member/natinnin.png' %}" alt="CISSE Natinnin"></div><div class="single-member-info"><p><a href="{% url 'team' %}">CISSE Natinnin</a></p><span>Co-fondatrice</span><a href="{% url 'team' %}" class="read-more">Voir le profil<i class="fa fa-long-arrow-right"></i></a></div></div></div>
+                    <div class="col-lg-4 col-sm-6"><div class="single-member max-width-320"><div class="single-member-img"><img src="{% static 'img/member/aicha.png' %}" alt="DOSSO Aicha"></div><div class="single-member-info"><p><a href="{% url 'team' %}">DOSSO Moussokoura Aicha</a></p><span>Co-fondatrice</span><a href="{% url 'team' %}" class="read-more">Voir le profil<i class="fa fa-long-arrow-right"></i></a></div></div></div>
+                    <div class="col-lg-4 col-sm-6"><div class="single-member max-width-320"><div class="single-member-img"><img src="{% static 'img/member/kati.jpg' %}" alt="SORO Djénébou"></div><div class="single-member-info"><p><a href="{% url 'team' %}">SORO Katiéné Djénébou</a></p><span>Co-fondatrice</span><a href="{% url 'team' %}" class="read-more">Voir le profil<i class="fa fa-long-arrow-right"></i></a></div></div></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Awards/Distinctions Section -->
+{% if awards %}
+<section class="awards-section ptb-80" id="distinctions">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <h2>Nos distinctions</h2>
+                    <p>Récompenses et prix qui témoignent de notre engagement pour l'innovation agricole.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for award in awards %}
+            <div class="col-lg-4 col-md-6">
+                <div class="award-card">
+                    {% if award.image %}
+                    <div class="award-image">
+                        <img src="{{ award.image.url }}" alt="{{ award.title }}">
+                    </div>
+                    {% endif %}
+                    <div class="award-content">
+                        <span class="award-year">{{ award.year }}</span>
+                        <h4>{{ award.title }}</h4>
+                        <p class="award-org"><i class="fa fa-trophy"></i> {{ award.organization }}</p>
+                        {% if award.description %}
+                        <p class="award-desc">{{ award.description|truncatewords:25 }}</p>
+                        {% endif %}
+                        {% if award.url %}
+                        <a href="{{ award.url }}" target="_blank" class="award-link">En savoir plus <i class="fa fa-external-link"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact Section -->
+<section class="contact-area ptb-50" id="contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="contact-us-area">
+                    <h2>Newsletter</h2>
+                    <p>Recevez nos actualités et conseils en aquaponie.</p>
+                    <div class="contact-form mt-25">
+                        <form id="newsletter-form" method="post" action="{% url 'newsletter_subscribe' %}">
+                            {% csrf_token %}
+                            <div class="contact-container"><input type="text" name="name" placeholder="Nom complet" required><i class="fa fa-user"></i></div>
+                            <div class="contact-container"><input type="email" name="email" placeholder="Votre email" required><i class="fa fa-envelope"></i></div>
+                            <div class="contact-container"><input type="tel" name="phone" placeholder="Numéro de téléphone" required><i class="fa fa-phone"></i></div>
+                            <button type="submit" class="aquaponic-btn">S'inscrire</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-2">
+                <div class="contact-us-area">
+                    <h2>Contactez-nous</h2>
+                    <div class="contact-form mt-35">
+                        <form id="contact-form" method="post" action="{% url 'submit_contact' %}">
+                            {% csrf_token %}
+                            <div class="contact-container"><input type="text" name="name" placeholder="Nom complet" required><i class="fa fa-user"></i></div>
+                            <div class="contact-container"><input type="email" name="email" placeholder="Email" required><i class="fa fa-envelope"></i></div>
+                            <div class="contact-container"><input type="tel" name="phone" placeholder="Numéro de téléphone"><i class="fa fa-phone"></i></div>
+                            <textarea name="message" placeholder="Votre message" required></textarea>
+                            <button type="submit" class="aquaponic-btn">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if messages %}
+<div class="notification-container">
+    {% for message in messages %}
+    <div class="notification notification-{{ message.tags }}">
+        {{ message }}
+        <button class="notification-close">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-hide notifications
+document.querySelectorAll('.notification-close').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.parentElement.remove();
+    });
+});
+setTimeout(() => {
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+}, 5000);
+</script>
+<!-- Game Popup Script -->
+<script src="{% static 'js/game-popup.js' %}"></script>
+{% endblock %}

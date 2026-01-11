@@ -1,0 +1,933 @@
+/**
+ * Aqua-Racine - Styles du panier et checkout
+ */
+
+/* ========================================
+   PAGE HEADER - Global responsive
+   ======================================== */
+.page-header {
+    background: linear-gradient(135deg, #1976d2, #0d47a1);
+    padding: 60px 0;
+    color: #fff;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+@media (max-width: 767px) {
+    .page-header {
+        padding: 40px 0 !important;
+    }
+
+    .page-header h1 {
+        font-size: 24px !important;
+    }
+
+    .page-header p {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .page-header {
+        padding: 30px 0 !important;
+    }
+
+    .page-header h1 {
+        font-size: 20px !important;
+    }
+
+    .page-header p {
+        font-size: 13px !important;
+        padding: 0 15px;
+    }
+}
+
+/* Notifications */
+.cart-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
+.cart-notification.show {
+    transform: translateX(0);
+}
+
+.cart-notification-success {
+    border-left: 4px solid #4caf50;
+}
+
+.cart-notification-success i {
+    color: #4caf50;
+}
+
+.cart-notification-error {
+    border-left: 4px solid #f44336;
+}
+
+.cart-notification-error i {
+    color: #f44336;
+}
+
+/* Badge panier */
+.aquaponic-cart {
+    position: relative;
+}
+
+.aquaponic-cart span {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #f44336;
+    color: #fff;
+    font-size: 11px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+/* Page panier */
+.cart-page {
+    background: #f9f9f9;
+    min-height: 60vh;
+}
+
+.cart-empty {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.cart-empty i {
+    font-size: 100px;
+    color: #ddd;
+    margin-bottom: 25px;
+}
+
+.cart-empty h3 {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.cart-table {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.cart-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-table th {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid #e0e0e0;
+    color: #333;
+    font-weight: 600;
+}
+
+.cart-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.cart-product {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-product img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.cart-product-info h5 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.cart-qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.cart-qty button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.cart-qty button:hover {
+    background: #e0e0e0;
+}
+
+.cart-qty input {
+    width: 50px;
+    height: 40px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.remove-item {
+    color: #f44336;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.remove-item:hover {
+    transform: scale(1.2);
+}
+
+/* Résumé panier */
+.cart-summary {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 100px;
+}
+
+.cart-summary h4 {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #1976d2;
+    color: #333;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #666;
+}
+
+.summary-row.total {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2e7d32;
+    border-bottom: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.summary-row.advance {
+    background: #e8f5e9;
+    margin: 15px -30px;
+    padding: 15px 30px;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.summary-row.remainder {
+    color: #ff9800;
+    font-weight: 500;
+}
+
+.checkout-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+    padding: 15px 30px;
+    font-size: 16px;
+}
+
+.continue-shopping {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #1976d2;
+    text-decoration: none;
+}
+
+.continue-shopping:hover {
+    text-decoration: underline;
+}
+
+/* Page Checkout */
+.checkout-page {
+    background: #f9f9f9;
+}
+
+.checkout-form {
+    background: #fff;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.checkout-form h3 {
+    margin-bottom: 25px;
+    color: #1976d2;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkout-form .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.checkout-form .form-group {
+    flex: 1;
+}
+
+.checkout-form .form-group.full-width {
+    width: 100%;
+}
+
+.checkout-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.checkout-form input,
+.checkout-form textarea,
+.checkout-form select {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus,
+.checkout-form select:focus {
+    outline: none;
+    border-color: #1976d2;
+}
+
+.checkout-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Méthodes de paiement */
+.payment-methods {
+    margin: 25px 0;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.payment-option:hover {
+    border-color: #1976d2;
+}
+
+.payment-option input {
+    display: none;
+}
+
+.payment-option input:checked + .payment-icon {
+    background: #1976d2;
+    color: #fff;
+}
+
+.payment-option input:checked ~ .payment-details {
+    color: #1976d2;
+}
+
+.payment-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 12px;
+    margin-right: 15px;
+    font-size: 22px;
+    transition: all 0.3s;
+}
+
+.payment-details {
+    flex: 1;
+}
+
+.payment-label {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.payment-desc {
+    font-size: 13px;
+    color: #888;
+}
+
+/* Résumé commande */
+.order-summary {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 100px;
+}
+
+.order-summary h4 {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #1976d2;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.summary-totals {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* Avance 50% */
+.advance-info {
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 4px solid #4caf50;
+}
+
+.advance-info h5 {
+    color: #2e7d32;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.advance-info p {
+    color: #555;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.advance-info .advance-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2e7d32;
+}
+
+.advance-info .remainder-amount {
+    font-size: 16px;
+    color: #ff9800;
+}
+
+/* Bouton WhatsApp */
+.whatsapp-btn {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 18px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    transition: background 0.3s;
+}
+
+.whatsapp-btn:hover {
+    background: #128C7E;
+}
+
+.whatsapp-btn i {
+    font-size: 22px;
+}
+
+/* Étapes de commande */
+.order-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.order-step {
+    display: flex;
+    align-items: center;
+    color: #999;
+}
+
+.order-step.active {
+    color: #1976d2;
+}
+
+.order-step.completed {
+    color: #4caf50;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.order-step.active .step-number {
+    background: #1976d2;
+    color: #fff;
+}
+
+.order-step.completed .step-number {
+    background: #4caf50;
+    color: #fff;
+}
+
+.step-line {
+    width: 60px;
+    height: 3px;
+    background: #e0e0e0;
+    margin: 0 15px;
+}
+
+.order-step.completed + .step-line {
+    background: #4caf50;
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) {
+    .cart-summary,
+    .order-summary {
+        position: static;
+        margin-top: 30px;
+    }
+
+    .checkout-form {
+        padding: 25px;
+    }
+
+    .order-summary {
+        padding: 25px;
+    }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+    /* Notifications */
+    .cart-notification {
+        right: 10px;
+        left: 10px;
+        top: 10px;
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    /* Cart Page */
+    .cart-page {
+        padding: 30px 0;
+    }
+
+    .cart-empty {
+        padding: 50px 15px;
+    }
+
+    .cart-empty i {
+        font-size: 70px;
+    }
+
+    .cart-empty h3 {
+        font-size: 18px;
+    }
+
+    /* Cart Table */
+    .cart-table {
+        padding: 15px;
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+
+    .cart-table table {
+        min-width: 550px;
+    }
+
+    .cart-table th {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .cart-table td {
+        padding: 15px 10px;
+    }
+
+    .cart-product {
+        min-width: 180px;
+    }
+
+    .cart-product img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .cart-product-info h5 {
+        font-size: 14px;
+    }
+
+    .cart-qty button {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .cart-qty input {
+        width: 45px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    /* Cart Summary */
+    .cart-summary {
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .cart-summary h4 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .summary-row {
+        padding: 10px 0;
+        font-size: 14px;
+    }
+
+    .summary-row.total {
+        font-size: 18px;
+    }
+
+    .summary-row.advance {
+        margin: 10px -20px;
+        padding: 12px 20px;
+    }
+
+    .checkout-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    /* Checkout Page */
+    .checkout-page {
+        padding: 30px 0;
+    }
+
+    .checkout-form {
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+
+    .checkout-form h3 {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .checkout-form .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .checkout-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .checkout-form label {
+        font-size: 14px;
+    }
+
+    .checkout-form input,
+    .checkout-form textarea,
+    .checkout-form select {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+        margin: 20px 0;
+    }
+
+    .payment-option {
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .payment-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        margin-right: 12px;
+    }
+
+    .payment-label {
+        font-size: 14px;
+    }
+
+    .payment-desc {
+        font-size: 12px;
+    }
+
+    /* Order Summary */
+    .order-summary {
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+
+    .order-summary h4 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .order-item {
+        padding: 10px 0;
+        font-size: 13px;
+    }
+
+    /* Advance Info */
+    .advance-info {
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .advance-info h5 {
+        font-size: 14px;
+    }
+
+    .advance-info p {
+        font-size: 13px;
+    }
+
+    .advance-info .advance-amount {
+        font-size: 20px;
+    }
+
+    .advance-info .remainder-amount {
+        font-size: 14px;
+    }
+
+    /* WhatsApp Button */
+    .whatsapp-btn {
+        padding: 14px 20px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .whatsapp-btn i {
+        font-size: 18px;
+    }
+
+    /* Order Steps */
+    .order-steps {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 25px;
+        padding: 0 10px;
+    }
+
+    .order-step {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .order-step span:last-child {
+        font-size: 11px;
+    }
+
+    .step-line {
+        display: none;
+    }
+}
+
+/* Small Mobile (max-width: 575px) */
+@media (max-width: 575px) {
+    .cart-notification {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .cart-table {
+        padding: 10px;
+    }
+
+    .cart-table table {
+        min-width: 480px;
+    }
+
+    .cart-product img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .cart-summary,
+    .order-summary {
+        padding: 15px;
+    }
+
+    .checkout-form {
+        padding: 15px;
+    }
+
+    .checkout-form input,
+    .checkout-form textarea,
+    .checkout-form select {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .payment-option {
+        padding: 12px;
+    }
+
+    .payment-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .whatsapp-btn {
+        padding: 12px 15px;
+        font-size: 13px;
+    }
+
+    .order-step span:last-child {
+        display: none;
+    }
+
+    .step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+}
+
+/* Extra Small Mobile (max-width: 380px) */
+@media (max-width: 380px) {
+    .cart-table table {
+        min-width: 420px;
+    }
+
+    .cart-product img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .cart-qty button {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .cart-qty input {
+        width: 40px;
+        height: 30px;
+        font-size: 13px;
+    }
+
+    .summary-row.total {
+        font-size: 16px;
+    }
+
+    .advance-info .advance-amount {
+        font-size: 18px;
+    }
+}
+
+/* Animation produit ajouté */
+@keyframes addToCartPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.cart-added-animation {
+    animation: addToCartPulse 0.3s ease;
+}

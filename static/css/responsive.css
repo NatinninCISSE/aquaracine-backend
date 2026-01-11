@@ -1,0 +1,1580 @@
+/*
+ * Aqua-Racine - Responsive CSS
+ * Complete mobile-first responsive design
+ */
+
+/* ========================================
+   LARGE DEVICES (1200px - 1399px)
+   ======================================== */
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {
+    .container {
+        max-width: 1140px;
+    }
+
+    .hero-area {
+        padding: 150px 0 25px;
+    }
+
+    .tile-gallery-block {
+        height: 220px;
+    }
+}
+
+/* ========================================
+   MEDIUM-LARGE DEVICES (992px - 1199px)
+   ======================================== */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .tile-gallery-block {
+        height: 200px;
+    }
+
+    .hero-area {
+        padding: 120px 0 25px;
+    }
+
+    .hero-area h1 {
+        font-size: 40px;
+    }
+
+    .post-details {
+        width: 55%;
+        padding: 5px 20px;
+    }
+
+    .post-thumbnail {
+        width: 45%;
+    }
+
+    .post-author p {
+        margin: 6px 0 3px;
+    }
+
+    .post-details a.read-more {
+        margin-top: 6px;
+    }
+
+    .widget-blog-info {
+        width: 100%;
+        padding: 0;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .widget-single-blog {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .widget-blog-img {
+        text-align: center;
+        width: 100%;
+    }
+
+    .menubar li {
+        padding-left: 12px;
+        font-size: 14px;
+    }
+
+    .single-product {
+        margin-bottom: 60px;
+    }
+}
+
+/* ========================================
+   TABLET DEVICES (768px - 991px)
+   ======================================== */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    /* Typography */
+    h1 {
+        font-size: 36px;
+    }
+
+    h2 {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    /* Padding utilities */
+    .ptb-100 {
+        padding: 70px 0;
+    }
+
+    .ptb-80 {
+        padding: 60px 0;
+    }
+
+    /* Hero Area */
+    .hero-area {
+        padding: 75px 0 25px;
+    }
+
+    .hero-area h1 {
+        font-size: 32px;
+        padding-bottom: 15px;
+    }
+
+    .hero-area p {
+        margin: 0 0 25px;
+        font-size: 14px;
+    }
+
+    /* Menu */
+    .menubar .logo {
+        padding: 15px 0;
+    }
+
+    .menubar li {
+        padding-left: 10px;
+        font-size: 13px;
+    }
+
+    /* About */
+    .about-area-info {
+        margin-top: 40px;
+    }
+
+    /* Gallery */
+    .tile-gallery-block {
+        width: 49%;
+        height: 220px;
+    }
+
+    .tile-gallery-block-1,
+    .tile-gallery-block-3,
+    .tile-gallery-block-5 {
+        width: 49%;
+    }
+
+    /* Timeline */
+    .cd-horizontal-timeline .events-content ul li {
+        line-height: 30px;
+    }
+
+    .cd-horizontal-timeline .events-content ul {
+        margin: 0 0 25px;
+    }
+
+    .timeline-para p {
+        margin-bottom: 12px;
+    }
+
+    .cd-horizontal-timeline > .events-content > ol {
+        padding: 0 40px;
+    }
+
+    /* Choose Us */
+    .our-foods-list {
+        padding: 20px 15px;
+    }
+
+    .our-foods-icon {
+        margin-right: 15px;
+    }
+
+    .our-foods-icon i {
+        font-size: 40px;
+    }
+
+    /* Products */
+    .single-product-img img {
+        width: 100%;
+    }
+
+    .product-gallery .col-lg-3 {
+        padding: 0 15px;
+    }
+
+    .single-product {
+        margin-bottom: 50px;
+    }
+
+    /* Contact */
+    .contact-area .container::before {
+        display: none;
+    }
+
+    .contact-us-area {
+        margin: 20px 0;
+    }
+
+    /* Product Details */
+    .product-discount {
+        margin-left: 0;
+        margin-top: 50px;
+    }
+
+    .product-details-btn .aquaponic-btn {
+        margin-bottom: 10px;
+        padding: 10px 25px;
+    }
+
+    .product-details-content {
+        padding-left: 0;
+    }
+
+    .product-details-form button {
+        margin-top: 10px;
+    }
+
+    /* Blog */
+    .widget {
+        margin: 30px 0 0;
+    }
+
+    .pagination {
+        margin-bottom: 30px;
+    }
+
+    .widget-blog-info {
+        width: 78%;
+    }
+
+    .widget-blog-img {
+        width: 22%;
+    }
+
+    .post-thumbnail {
+        width: 45%;
+    }
+
+    .post-details {
+        padding: 5px 20px;
+        width: 55%;
+    }
+
+    .post-author p {
+        margin: 5px 0 3px;
+    }
+
+    .post-details a.read-more {
+        margin-top: 5px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-area {
+        padding: 100px 0 90px;
+    }
+
+    /* Team */
+    .single-member {
+        margin: 15px 0;
+    }
+
+    /* Testimonials */
+    .testimonial-single-slide-desc {
+        padding: 50px 30px 30px;
+    }
+
+    /* Services */
+    .services-area .col-lg-4 {
+        margin-bottom: 30px;
+    }
+
+    /* Blog slide */
+    .blog-slide {
+        padding: 0 5%;
+    }
+
+    .blog-slide .owl-nav div {
+        display: none;
+    }
+}
+
+/* ========================================
+   MOBILE DEVICES (max-width: 767px)
+   ======================================== */
+@media only screen and (max-width: 767px) {
+    /* Base Typography */
+    body {
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 18px;
+        line-height: 26px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    h4 {
+        font-size: 14px;
+    }
+
+    /* Padding utilities */
+    .ptb-100 {
+        padding: 40px 0;
+    }
+
+    .ptb-80 {
+        padding: 40px 0;
+    }
+
+    .ptb-90 {
+        padding: 40px 0;
+    }
+
+    .pt-100 {
+        padding-top: 40px;
+    }
+
+    .pt-70 {
+        padding-top: 30px;
+    }
+
+    /* Section titles */
+    .sec-title {
+        margin-bottom: 20px;
+    }
+
+    .sec-title h2 {
+        margin-bottom: 12px;
+    }
+
+    /* Buttons */
+    .aquaponic-btn {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+
+    /* Responsive Menu */
+    .responsive-menu {
+        display: block;
+    }
+
+    .mainmenu {
+        display: none;
+    }
+
+    .menubar .logo {
+        text-align: left;
+    }
+
+    .menubar .logo img {
+        max-width: 45px;
+        max-height: 45px;
+    }
+
+    .slicknav_menu {
+        text-align: right;
+        margin-top: 5px;
+    }
+
+    .slicknav_btn {
+        display: inline-block;
+        background: transparent;
+        padding: 0;
+    }
+
+    .slicknav_menu .slicknav_menutxt {
+        display: none;
+    }
+
+    .slicknav_nav {
+        margin-top: 10px;
+    }
+
+    .slicknav_nav .slicknav_row,
+    .slicknav_nav a {
+        padding: 8px 0;
+    }
+
+    .menubar li a {
+        padding: 5px 0;
+    }
+
+    /* Header */
+    .header-area {
+        text-align: center;
+    }
+
+    header.header-area .header-left-content li {
+        border: 0;
+        padding: 0 5px;
+        margin: 0 5px;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    header.header-area .header-left-content li:last-child {
+        margin-bottom: 0;
+    }
+
+    header.header-area .header-right-content li:nth-child(2) {
+        position: static;
+    }
+
+    .header-right-content {
+        float: none;
+        margin-top: 15px;
+    }
+
+    .login-popup {
+        right: 0;
+        left: 0;
+        margin: 10px auto;
+        width: 90%;
+        max-width: 350px;
+    }
+
+    /* Hero Area */
+    .hero-area {
+        padding: 60px 0 25px;
+    }
+
+    .hero-area h1 {
+        padding-bottom: 10px;
+        font-size: 26px;
+        line-height: 34px;
+    }
+
+    .hero-area p {
+        margin: 10px 0 30px;
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    /* About */
+    .about-area-info {
+        margin-top: 35px;
+        text-align: center;
+    }
+
+    .about-area-info p {
+        text-align: left;
+    }
+
+    /* Gallery */
+    .tile-gallery {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .tile-gallery-block {
+        width: 100%;
+        height: 200px;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .tile-gallery-block-1,
+    .tile-gallery-block-3,
+    .tile-gallery-block-5 {
+        width: 100%;
+    }
+
+    /* Timeline */
+    .timeline-para p {
+        margin-bottom: 10px;
+    }
+
+    .cd-horizontal-timeline .events-content ul {
+        margin: 10px 0 20px;
+    }
+
+    .cd-horizontal-timeline .events-content ul li {
+        line-height: 25px;
+        padding-left: 30px;
+    }
+
+    .cd-horizontal-timeline .events-wrapper {
+        margin: 0;
+    }
+
+    .cd-horizontal-timeline > .events-content > ol {
+        padding: 0 15px;
+    }
+
+    /* Video Play */
+    .video-play {
+        padding: 50px 0;
+        margin-left: 0;
+    }
+
+    .video-play i {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 18px;
+    }
+
+    .video-play-border {
+        display: none;
+    }
+
+    /* Advantages */
+    .product-advantages-chart {
+        margin-bottom: 15px;
+    }
+
+    /* Choose Us / Services */
+    .choose-us {
+        padding: 40px 0 220px;
+    }
+
+    .our-foods {
+        margin-top: -210px;
+    }
+
+    .our-foods .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -8px;
+    }
+
+    .our-foods .col-lg-4,
+    .our-foods .col-md-6,
+    .our-foods [class*="col-"] {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 8px !important;
+    }
+
+    .our-foods-list {
+        padding: 12px;
+        margin-top: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .our-foods-icon {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+
+    .our-foods-icon i {
+        font-size: 28px;
+    }
+
+    .our-foods-info h4 {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+
+    .our-foods-info p {
+        font-size: 11px;
+        display: none;
+    }
+
+    /* Products - Mobile 2-column grid */
+    .product-gallery .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -8px;
+    }
+
+    .product-gallery .col-lg-3,
+    .product-gallery .col-md-4,
+    .product-gallery .col-md-6,
+    .product-gallery [class*="col-"] {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 8px !important;
+    }
+
+    .single-product {
+        margin-bottom: 20px;
+    }
+
+    .single-product-img img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+    }
+
+    .single-product-info {
+        padding: 10px 5px 0;
+    }
+
+    .single-product-info h4 {
+        font-size: 12px;
+        line-height: 1.3;
+        margin-top: 2px;
+    }
+
+    .single-product-info p {
+        font-size: 11px;
+    }
+
+    .buy-product {
+        padding: 4px 12px;
+        font-size: 11px;
+    }
+
+    .single-product-info .buy-product {
+        bottom: -14px;
+    }
+
+    /* Testimonials */
+    .testimonial-single-slide-desc {
+        padding: 50px 20px 30px;
+        border-radius: 50px;
+    }
+
+    .testimonial-area .sec-title {
+        margin-bottom: 0;
+    }
+
+    .owl-dots {
+        margin-top: 30px;
+    }
+
+    /* Blog Slide */
+    .blog-slide {
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    .blog-slide .owl-nav div {
+        display: none;
+    }
+
+    .single-blog {
+        padding: 120px 15px 10px;
+    }
+
+    .single-blog h3 {
+        font-size: 16px;
+    }
+
+    /* Team - Mobile 2-column grid */
+    .team-member .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -8px;
+    }
+
+    .team-member .col-lg-3,
+    .team-member .col-md-4,
+    .team-member .col-md-6,
+    .team-member [class*="col-"] {
+        width: 50% !important;
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 8px !important;
+    }
+
+    .single-member {
+        margin: 10px 0;
+        max-width: 100%;
+    }
+
+    .single-member-img img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+    }
+
+    .single-member-info {
+        padding: 8px 5px;
+    }
+
+    .single-member-info p a {
+        font-size: 13px;
+    }
+
+    .single-member-info span {
+        font-size: 11px;
+    }
+
+    .team-member .sec-title {
+        margin-bottom: 10px;
+    }
+
+    /* Contact */
+    .contact-area .container::before {
+        display: none;
+    }
+
+    .contact-us-area {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .contact-us-area p {
+        text-align: left;
+    }
+
+    .contact-form button {
+        float: none;
+        width: 100%;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+        padding: 10px 20px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+    }
+
+    .footer-menu {
+        float: none;
+        margin-top: 15px;
+    }
+
+    .footer-menu li {
+        padding: 0 8px;
+    }
+
+    /* Product Details */
+    .product-discount {
+        margin-left: 0;
+        margin-top: 40px;
+    }
+
+    .product-details-content {
+        padding-left: 0;
+        margin-top: 30px;
+    }
+
+    .product-details-btn .aquaponic-btn {
+        margin-bottom: 10px;
+        margin-right: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .product-details-left {
+        float: none;
+        width: 100%;
+    }
+
+    .product-icon {
+        float: none;
+        width: 100%;
+        margin: 15px 0;
+        text-align: center;
+    }
+
+    .product-details-content .product-icon a {
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+    .nav-item {
+        margin-right: 15px;
+    }
+
+    .nav-item a {
+        font-size: 14px;
+        line-height: 30px;
+    }
+
+    .tab-accordion {
+        padding: 15px;
+    }
+
+    /* Blog Page */
+    .single-post .flexbox-center {
+        display: block;
+    }
+
+    .post-thumbnail {
+        width: 100%;
+    }
+
+    .post-thumbnail img {
+        margin: auto;
+        display: block;
+        width: 100%;
+    }
+
+    .post-details {
+        width: 100%;
+        margin-top: 20px;
+        padding: 0 15px;
+    }
+
+    .single-post {
+        padding: 20px 15px;
+    }
+
+    .post-meta {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .post-meta a {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+
+    .widget {
+        margin: 25px 0 0;
+    }
+
+    .pagination {
+        margin-bottom: 30px;
+    }
+
+    .widget-blog-info {
+        width: 75%;
+    }
+
+    .widget-blog-img {
+        width: 25%;
+    }
+
+    /* Blog Detail */
+    .single-blog-details,
+    .blog-details .contact-form {
+        padding: 20px 15px;
+    }
+
+    .single-blog-details p {
+        margin-top: 15px;
+    }
+
+    .blog-details .post-meta::before {
+        width: 100%;
+        right: 0;
+    }
+
+    .blog-details .video-play {
+        margin: 20px 0 0;
+    }
+
+    blockquote {
+        margin: 15px 0;
+        padding: 20px 15px 15px 25px;
+    }
+
+    blockquote:before {
+        top: 5px;
+        left: 5px;
+        font-size: 35px;
+    }
+
+    .mr-50 {
+        margin-right: 0;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-area {
+        padding: 60px 0 55px;
+    }
+
+    .breadcrumb-area h1 {
+        font-size: 26px;
+        line-height: 36px;
+    }
+
+    /* Cart Overview */
+    .cart-overview {
+        padding: 30px 15px;
+    }
+
+    .single-cart-overview {
+        padding-left: 0;
+    }
+
+    .single-cart-overview-img {
+        width: 100%;
+        position: static;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .single-cart-overview-img img {
+        max-width: 150px;
+    }
+
+    .single-cart-overview-head .text-center,
+    .single-cart-overview-head .price-tag {
+        text-align: center !important;
+    }
+
+    .single-cart-overview-head .col-md-4 {
+        margin-bottom: 15px;
+    }
+
+    .single-cart-overview-desc p {
+        margin: 10px 0 15px;
+    }
+
+    /* Checkout */
+    .checkout-area .contact-form {
+        padding: 25px 15px;
+    }
+
+    .checkout-area .contact-form .aquaponic-btn {
+        margin-top: 0;
+        width: 100%;
+    }
+
+    /* Payment */
+    .payment-method .contact-form {
+        padding: 25px 15px;
+    }
+
+    .payment-method .contact-form h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+
+    .promo-code-form {
+        margin-bottom: 25px;
+    }
+
+    .promo-code-form button {
+        width: 100%;
+    }
+
+    .contact-form form img {
+        margin-left: 5px;
+        margin-right: 15px;
+        max-width: 40px;
+    }
+
+    .contact-agreement {
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .contact-agreement input[type="checkbox"] {
+        position: absolute;
+        left: 0;
+        height: 18px;
+        top: 3px;
+        width: 13px;
+    }
+
+    .payment-method .contact-form p {
+        margin-left: 0;
+        display: block;
+    }
+
+    .payment-method .contact-container i {
+        bottom: 20%;
+    }
+
+    .total-price {
+        text-align: center;
+        width: 100%;
+    }
+
+    .total-price table {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    /* Services Area */
+    .services-area .col-lg-4,
+    .services-area .col-md-6 {
+        margin-bottom: 25px;
+    }
+
+    /* Page Header (inline styles override) */
+    .page-header {
+        padding: 40px 0 !important;
+    }
+
+    .page-header h1 {
+        font-size: 24px !important;
+    }
+
+    .page-header p {
+        font-size: 14px !important;
+    }
+}
+
+/* ========================================
+   SMALL MOBILE DEVICES (max-width: 575px)
+   ======================================== */
+@media only screen and (max-width: 575px) {
+    /* Typography */
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 18px;
+        line-height: 26px;
+    }
+
+    /* Containers */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .max-width-320 {
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Menu / Logo */
+    .logo img {
+        position: absolute;
+        top: 5px;
+        z-index: 9;
+        width: 45%;
+        max-height: 45px;
+        left: 15px;
+        display: inline-block;
+    }
+
+    .menubar li {
+        padding-left: 0;
+    }
+
+    .slicknav_btn {
+        padding: 0;
+    }
+
+    .slicknav_nav .slicknav_row,
+    .slicknav_nav a {
+        padding: 5px 0;
+    }
+
+    .slicknav_nav {
+        margin-top: 45px;
+    }
+
+    .slicknav_menu {
+        margin: 0 0 10px;
+    }
+
+    /* Hero */
+    .hero-area {
+        padding: 50px 0 20px;
+    }
+
+    .hero-area h1 {
+        font-size: 22px;
+        line-height: 30px;
+    }
+
+    .hero-area p {
+        margin: 10px 0 25px;
+        font-size: 13px;
+    }
+
+    /* Gallery */
+    .tile-gallery-block {
+        width: 100%;
+        height: 180px;
+    }
+
+    /* Choose us */
+    .choose-us {
+        padding-bottom: 400px;
+    }
+
+    .our-foods {
+        margin-top: -390px;
+    }
+
+    .our-foods-list {
+        padding: 15px;
+    }
+
+    .our-foods-icon i {
+        font-size: 30px;
+    }
+
+    /* Products */
+    .single-product {
+        margin-bottom: 30px;
+    }
+
+    .buy-product {
+        padding: 5px 20px;
+        font-size: 13px;
+    }
+
+    /* Product Details */
+    .product-details-form input {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .product-details-form .dropdowns-select {
+        display: block;
+        margin: 0 0 15px;
+    }
+
+    .product-details-form .dropdowns-select select {
+        width: 100%;
+    }
+
+    .product-details-form button {
+        width: 100%;
+    }
+
+    .product-details-left {
+        float: none;
+        text-align: center;
+        width: 100%;
+    }
+
+    .product-details-category,
+    .product-details-price {
+        margin: 15px 0 5px;
+    }
+
+    .product-details-btn .aquaponic-btn {
+        margin-right: 0;
+    }
+
+    .product-details-btn {
+        text-align: center;
+    }
+
+    .product-details-content .product-icon {
+        float: none;
+        width: 100%;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .product-details-content .product-icon a {
+        display: inline-block;
+    }
+
+    .nav-item {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+    }
+
+    .nav-item a {
+        display: block;
+        padding: 10px 0;
+    }
+
+    /* Blog */
+    .post-details {
+        padding: 0 10px;
+    }
+
+    .single-blog h3 {
+        font-size: 15px;
+    }
+
+    .single-blog-details,
+    .blog-details .contact-form {
+        padding: 15px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-area h1 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    .breadcrumb-area {
+        padding: 50px 0 45px;
+    }
+
+    /* Cart */
+    .cart-overview {
+        padding: 20px 10px;
+    }
+
+    .single-cart-overview-head,
+    .single-cart-overview-head .text-center,
+    .single-cart-overview-head .price-tag {
+        text-align: center !important;
+    }
+
+    /* Payment */
+    .payment-method .contact-form {
+        padding: 20px 15px;
+    }
+
+    /* Login popup */
+    .login-popup {
+        right: 0;
+        left: 0;
+        width: 95%;
+        max-width: 320px;
+        margin: 10px auto;
+        padding: 20px 15px;
+    }
+
+    .login-popup .text-left,
+    .login-popup .text-right {
+        text-align: center !important;
+    }
+
+    /* Forms */
+    .contact-form input,
+    .contact-form textarea {
+        padding: 8px 15px;
+    }
+
+    /* Footer */
+    .footer-menu li {
+        padding: 0 5px;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    /* Team */
+    .single-member-img img {
+        max-width: 200px;
+    }
+
+    /* Services */
+    .services-area .service-item {
+        padding: 20px 15px;
+    }
+}
+
+/* ========================================
+   EXTRA SMALL DEVICES (max-width: 380px)
+   ======================================== */
+@media only screen and (max-width: 380px) {
+    /* Typography */
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    /* Login popup */
+    .login-popup {
+        width: 100%;
+        padding: 15px 10px;
+    }
+
+    .sign-with::before,
+    .sign-with::after {
+        width: 20%;
+    }
+
+    /* Logo */
+    .logo img {
+        width: 55%;
+        max-height: 40px;
+    }
+
+    /* Hero */
+    .hero-area h1 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .hero-area p {
+        font-size: 12px;
+    }
+
+    /* Choose us */
+    .choose-us {
+        padding-bottom: 500px;
+    }
+
+    .our-foods {
+        margin-top: -490px;
+    }
+
+    /* Forms */
+    .contact-form {
+        text-align: center;
+    }
+
+    .contact-form button {
+        padding: 8px 25px;
+    }
+
+    .payment-method .contact-form p,
+    .payment-method .contact-form label,
+    .payment-method .contact-form h3,
+    .show-comments {
+        text-align: left;
+    }
+
+    /* Products */
+    .aquaponic-btn {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+
+    .buy-product {
+        padding: 4px 15px;
+        font-size: 12px;
+    }
+
+    /* Blog */
+    .single-blog {
+        padding: 100px 10px 10px;
+    }
+
+    .single-blog h3 {
+        font-size: 14px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-area h1 {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    /* Footer */
+    .footer-copyright p {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   PAGE-SPECIFIC RESPONSIVE FIXES
+   ======================================== */
+
+/* Page Headers (for templates with inline styles) */
+@media only screen and (max-width: 767px) {
+    [style*="padding: 60px"] {
+        padding: 40px 0 !important;
+    }
+
+    [style*="padding: 80px"] {
+        padding: 50px 0 !important;
+    }
+}
+
+/* Checkout Page Specific */
+@media only screen and (max-width: 991px) {
+    .checkout-page .col-lg-7,
+    .checkout-page .col-lg-5 {
+        margin-bottom: 30px;
+    }
+
+    .checkout-form h3 {
+        font-size: 18px;
+    }
+
+    .order-summary {
+        margin-top: 0;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .checkout-form {
+        padding: 20px 15px;
+    }
+
+    .checkout-form h3 {
+        font-size: 16px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-row .form-group {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .payment-methods .payment-option {
+        padding: 12px;
+    }
+
+    .advance-info {
+        padding: 15px;
+    }
+
+    .whatsapp-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .order-summary {
+        padding: 20px 15px;
+    }
+
+    .order-item {
+        font-size: 13px;
+    }
+
+    .promo-code-section {
+        padding: 15px !important;
+    }
+
+    .promo-input-group {
+        flex-direction: column !important;
+    }
+
+    .promo-input-group input,
+    .promo-input-group button {
+        width: 100% !important;
+    }
+
+    .promo-input-group button {
+        margin-top: 10px;
+    }
+}
+
+/* Cart Page Specific */
+@media only screen and (max-width: 991px) {
+    .cart-page .col-lg-8,
+    .cart-page .col-lg-4 {
+        margin-bottom: 30px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .cart-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .cart-table {
+        min-width: 500px;
+    }
+
+    .cart-product {
+        min-width: 200px;
+    }
+
+    .cart-product img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .cart-qty input {
+        width: 50px;
+    }
+
+    .cart-summary {
+        position: static !important;
+    }
+}
+
+/* Product List Page */
+@media only screen and (max-width: 575px) {
+    .product-filters {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .product-filters select {
+        width: 100%;
+    }
+}
+
+/* Blog List Page */
+@media only screen and (max-width: 991px) {
+    .blog-page .col-md-8,
+    .blog-page .col-md-4 {
+        margin-bottom: 30px;
+    }
+}
+
+/* Team Page */
+@media only screen and (max-width: 767px) {
+    .team-page .single-member {
+        max-width: 300px;
+        margin: 15px auto;
+    }
+}
+
+/* ========================================
+   UTILITY RESPONSIVE CLASSES
+   ======================================== */
+@media only screen and (max-width: 767px) {
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .text-center-mobile {
+        text-align: center !important;
+    }
+
+    .mb-mobile-30 {
+        margin-bottom: 30px !important;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   ORDER STEPS RESPONSIVE (Checkout)
+   ======================================== */
+@media only screen and (max-width: 767px) {
+    .order-steps {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .order-step {
+        margin: 5px;
+        flex: 0 0 auto;
+    }
+
+    .step-line {
+        display: none;
+    }
+
+    .order-step .step-number {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+    }
+
+    .order-step span:last-child {
+        font-size: 11px;
+    }
+}
+
+/* ========================================
+   ANIMATIONS FOR MOBILE (reduce for perf)
+   ======================================== */
+@media only screen and (max-width: 767px) {
+    .tile-gallery-overlay,
+    .product-img-overlay,
+    .single-product-img .aquaponic-btn {
+        transform: none;
+        opacity: 0;
+    }
+
+    .tile-gallery-block:hover .tile-gallery-overlay,
+    .single-product-img:hover .product-img-overlay,
+    .single-product-img:hover .aquaponic-btn {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+    .header-area,
+    .menubar,
+    .footer,
+    .responsive-menu,
+    .slicknav_menu {
+        display: none !important;
+    }
+
+    .hero-area {
+        padding: 20px 0;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+}

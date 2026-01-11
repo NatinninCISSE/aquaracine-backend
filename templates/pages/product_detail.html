@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Product Detail -->
+<section class="product-detail ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product-images">
+                    <div class="main-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" id="main-product-image">
+                        {% else %}
+                        <img src="{% static 'img/product/default.jpg' %}" alt="{{ product.name }}" id="main-product-image">
+                        {% endif %}
+                    </div>
+                    {% if product.image_2 or product.image_3 %}
+                    <div class="thumbnail-images">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" onclick="changeImage(this.src)">
+                        {% endif %}
+                        {% if product.image_2 %}
+                        <img src="{{ product.image_2.url }}" alt="{{ product.name }}" onclick="changeImage(this.src)">
+                        {% endif %}
+                        {% if product.image_3 %}
+                        <img src="{{ product.image_3.url }}" alt="{{ product.name }}" onclick="changeImage(this.src)">
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="product-info">
+                    <span class="product-category">{{ product.category.name }}</span>
+                    <h1>{{ product.name }}</h1>
+                    <div class="product-price">
+                        <span class="current-price">{{ product.price|floatformat:0 }} FCFA{% if product.unit %}/{{ product.unit }}{% endif %}</span>
+                        {% if product.old_price %}
+                        <span class="old-price">{{ product.old_price|floatformat:0 }} FCFA</span>
+                        {% endif %}
+                    </div>
+
+                    {% if product.is_in_stock %}
+                    <span class="stock-badge in-stock"><i class="fa fa-check"></i> En stock ({{ product.stock }} disponibles)</span>
+                    {% else %}
+                    <span class="stock-badge out-of-stock"><i class="fa fa-times"></i> Rupture de stock</span>
+                    {% endif %}
+
+                    <div class="product-description">
+                        <p>{{ product.description }}</p>
+                    </div>
+
+                    {% if product.is_in_stock %}
+                    <div class="product-actions">
+                        <div class="quantity-selector">
+                            <button class="qty-btn" onclick="decreaseQty()">-</button>
+                            <input type="number" id="quantity" value="1" min="1" max="{{ product.stock }}">
+                            <button class="qty-btn" onclick="increaseQty()">+</button>
+                        </div>
+                        <button class="aquaponic-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
+                    </div>
+                    {% endif %}
+
+                    <div class="product-meta">
+                        <p><strong>Catégorie:</strong> {{ product.category.name }}</p>
+                        {% if product.is_featured %}
+                        <p><span class="featured-badge">Produit vedette</span></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if product.full_description %}
+        <div class="row mt-50">
+            <div class="col-lg-12">
+                <div class="product-full-description">
+                    <h3>Description détaillée</h3>
+                    {{ product.full_description|safe }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.product-detail { background: #f9f9f9; }
+.product-images .main-image { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 15px; }
+.product-images .main-image img { width: 100%; border-radius: 5px; }
+.thumbnail-images { display: flex; gap: 10px; }
+.thumbnail-images img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 2px solid transparent; }
+.thumbnail-images img:hover { border-color: #1976d2; }
+.product-info { background: #fff; padding: 30px; border-radius: 10px; }
+.product-category { color: #1976d2; font-size: 14px; text-transform: uppercase; }
+.product-info h1 { font-size: 28px; margin: 10px 0; }
+.product-price .current-price { font-size: 28px; color: #2e7d32; font-weight: 700; }
+.product-price .old-price { font-size: 18px; color: #999; text-decoration: line-through; margin-left: 10px; }
+.stock-badge { display: inline-block; padding: 8px 15px; border-radius: 5px; margin: 15px 0; font-size: 14px; }
+.stock-badge.in-stock { background: #e8f5e9; color: #2e7d32; }
+.stock-badge.out-of-stock { background: #ffebee; color: #c62828; }
+.product-description { margin: 20px 0; line-height: 1.8; }
+.product-actions { display: flex; gap: 15px; align-items: center; margin: 25px 0; }
+.quantity-selector { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 5px; }
+.qty-btn { width: 40px; height: 40px; border: none; background: #f5f5f5; cursor: pointer; font-size: 18px; }
+.quantity-selector input { width: 60px; height: 40px; border: none; text-align: center; font-size: 16px; }
+.add-to-cart { padding: 12px 30px; }
+.featured-badge { background: #ff9800; color: #fff; padding: 5px 15px; border-radius: 20px; font-size: 12px; }
+.product-full-description { background: #fff; padding: 30px; border-radius: 10px; }
+.mt-50 { margin-top: 50px; }
+</style>
+
+<script>
+function changeImage(src) {
+    document.getElementById('main-product-image').src = src;
+}
+function increaseQty() {
+    var input = document.getElementById('quantity');
+    if (parseInt(input.value) < parseInt(input.max)) {
+        input.value = parseInt(input.value) + 1;
+    }
+}
+function decreaseQty() {
+    var input = document.getElementById('quantity');
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panier | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1976d2, #0d47a1); padding: 60px 0; color: #fff; text-align: center;">
+    <div class="container">
+        <h1>Votre Panier</h1>
+        <p>Gérez vos articles avant de passer commande</p>
+    </div>
+</section>
+
+<!-- Order Steps -->
+<div class="order-steps-container" style="background: #fff; padding: 30px 0; border-bottom: 1px solid #e0e0e0;">
+    <div class="container">
+        <div class="order-steps">
+            <div class="order-step active">
+                <span class="step-number">1</span>
+                <span>Panier</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="order-step">
+                <span class="step-number">2</span>
+                <span>Informations</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="order-step">
+                <span class="step-number">3</span>
+                <span>Paiement</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="order-step">
+                <span class="step-number">4</span>
+                <span>Confirmation</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Section -->
+<section class="cart-page ptb-100">
+    <div class="container">
+        <div class="cart-empty text-center" id="empty-cart">
+            <i class="fa fa-shopping-cart"></i>
+            <h3>Votre panier est vide</h3>
+            <p>Découvrez nos produits frais et ajoutez-les à votre panier</p>
+            <a href="{% url 'products' %}" class="aquaponic-btn">Voir nos produits</a>
+        </div>
+
+        <div class="cart-content" id="cart-content" style="display: none;">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="cart-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Prix</th>
+                                    <th>Quantité</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items">
+                                <!-- Cart items will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="cart-actions" style="margin-top: 20px; display: flex; justify-content: space-between;">
+                        <a href="{% url 'products' %}" class="aquaponic-btn" style="background: transparent; border: 2px solid #1976d2; color: #1976d2;">
+                            <i class="fa fa-arrow-left"></i> Continuer mes achats
+                        </a>
+                        <button type="button" class="aquaponic-btn" style="background: #f44336;" onclick="AquaCart.clearCart(); CartRenderer.render();">
+                            <i class="fa fa-trash"></i> Vider le panier
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="cart-summary">
+                        <h4><i class="fa fa-calculator"></i> Récapitulatif</h4>
+                        <div class="summary-row">
+                            <span>Sous-total</span>
+                            <span id="subtotal">0 FCFA</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Livraison estimée</span>
+                            <span id="shipping">1 500 FCFA</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">0 FCFA</span>
+                        </div>
+
+                        <div class="advance-preview" style="background: #e8f5e9; border-radius: 10px; padding: 15px; margin-top: 20px;">
+                            <p style="margin: 0 0 10px; font-size: 14px; color: #2e7d32;"><i class="fa fa-info-circle"></i> Paiement en 2 étapes :</p>
+                            <div class="summary-row" style="border: none; padding: 5px 0;">
+                                <span>Avance (50%)</span>
+                                <strong id="advance" style="color: #2e7d32;">0 FCFA</strong>
+                            </div>
+                            <div class="summary-row" style="border: none; padding: 5px 0;">
+                                <span>À la livraison</span>
+                                <strong id="remainder" style="color: #ff9800;">0 FCFA</strong>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'checkout' %}" class="aquaponic-btn checkout-btn" id="checkout-btn">
+                            <i class="fa fa-lock"></i> Passer la commande
+                        </a>
+                        <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #888;">
+                            Paiement sécurisé via Mobile Money
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    CartRenderer.render();
+
+    // Update advance amounts when cart changes
+    function updateAdvance() {
+        const advance = document.getElementById('advance');
+        const remainder = document.getElementById('remainder');
+        if (advance) advance.textContent = AquaCart.formatPrice(AquaCart.getAdvance());
+        if (remainder) remainder.textContent = AquaCart.formatPrice(AquaCart.getRemainder());
+    }
+
+    // Initial update
+    updateAdvance();
+
+    // Update on any cart change
+    const observer = new MutationObserver(updateAdvance);
+    const cartItems = document.getElementById('cart-items');
+    if (cartItems) {
+        observer.observe(cartItems, { childList: true, subtree: true });
+    }
+});
+</script>
+{% endblock %}

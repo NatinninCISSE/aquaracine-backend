@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nos Produits | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1976d2, #0d47a1); padding: 60px 0; color: #fff; text-align: center;">
+    <div class="container">
+        <h1>Nos Produits</h1>
+        <p>Découvrez nos produits frais issus de l'aquaponie</p>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="product-gallery ptb-100">
+    <div class="container">
+        <!-- Categories Filter -->
+        {% if categories %}
+        <div class="row mb-50">
+            <div class="col-lg-12 text-center">
+                <div class="category-filter">
+                    <a href="{% url 'products' %}" class="aquaponic-btn {% if not current_category %}active{% endif %}">Tous</a>
+                    {% for cat in categories %}
+                    <a href="{% url 'products' %}?category={{ cat.slug }}" class="aquaponic-btn {% if current_category == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-30">
+                <div class="single-product">
+                    <div class="single-product-img">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <img src="{% static 'img/product/default.jpg' %}" alt="{{ product.name }}">
+                        {% endif %}
+                        {% if product.is_featured %}
+                        <span class="product-badge">Vedette</span>
+                        {% endif %}
+                        <div class="product-img-overlay">
+                            <a href="{% url 'product_detail' product.slug %}" class="aquaponic-btn">Voir détails</a>
+                        </div>
+                    </div>
+                    <div class="single-product-info">
+                        <span class="product-category">{{ product.category.name }}</span>
+                        <p><a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a></p>
+                        <h4>
+                            {{ product.price|floatformat:0 }} FCFA{% if product.unit %}/{{ product.unit }}{% endif %}
+                            {% if product.old_price %}
+                            <small style="text-decoration: line-through; color: #999;">{{ product.old_price|floatformat:0 }} FCFA</small>
+                            {% endif %}
+                        </h4>
+                        {% if product.is_in_stock %}
+                        <span class="stock-status in-stock">En stock</span>
+                        {% else %}
+                        <span class="stock-status out-of-stock">Rupture</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-lg-12 text-center">
+                <p>Aucun produit disponible pour le moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.category-filter .aquaponic-btn { margin: 5px; }
+.category-filter .aquaponic-btn.active { background: #2e7d32; }
+.product-badge { position: absolute; top: 10px; left: 10px; background: #ff9800; color: #fff; padding: 5px 10px; border-radius: 3px; font-size: 12px; }
+.product-category { color: #1976d2; font-size: 12px; text-transform: uppercase; }
+.stock-status { font-size: 12px; padding: 3px 8px; border-radius: 3px; }
+.stock-status.in-stock { background: #e8f5e9; color: #2e7d32; }
+.stock-status.out-of-stock { background: #ffebee; color: #c62828; }
+.mb-30 { margin-bottom: 30px; }
+.mb-50 { margin-bottom: 50px; }
+</style>
+{% endblock %}

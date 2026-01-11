@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notre Équipe | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1976d2, #0d47a1); padding: 60px 0; color: #fff; text-align: center;">
+    <div class="container">
+        <h1>Notre Équipe</h1>
+        <p>Les personnes passionnées derrière Aqua-Racine</p>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-page ptb-100">
+    <div class="container">
+        <div class="row">
+            {% for member in team_members %}
+            <div class="col-lg-4 col-md-6 mb-30">
+                <div class="team-card">
+                    <div class="team-photo">
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+                        {% else %}
+                        <img src="{% static 'img/member/default.jpg' %}" alt="{{ member.name }}">
+                        {% endif %}
+                        <div class="team-social">
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank"><i class="fa fa-linkedin"></i></a>
+                            {% endif %}
+                            {% if member.facebook_url %}
+                            <a href="{{ member.facebook_url }}" target="_blank"><i class="fa fa-facebook"></i></a>
+                            {% endif %}
+                            {% if member.twitter_url %}
+                            <a href="{{ member.twitter_url }}" target="_blank"><i class="fa fa-twitter"></i></a>
+                            {% endif %}
+                            {% if member.email %}
+                            <a href="mailto:{{ member.email }}"><i class="fa fa-envelope"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>{{ member.name }}</h3>
+                        <span class="team-role">{{ member.role }}</span>
+                        {% if member.bio %}
+                        <p>{{ member.bio }}</p>
+                        {% endif %}
+                        {% if member.phone %}
+                        <p class="team-contact"><i class="fa fa-phone"></i> {{ member.phone }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default team members -->
+            <div class="col-lg-4 col-md-6 mb-30">
+                <div class="team-card">
+                    <div class="team-photo">
+                        <img src="{% static 'img/member/natinnin.png' %}" alt="CISSE Natinnin">
+                    </div>
+                    <div class="team-info">
+                        <h3>CISSE Natinnin</h3>
+                        <span class="team-role">Co-fondatrice</span>
+                        <p>Passionnée par l'agriculture durable et l'innovation technologique.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-30">
+                <div class="team-card">
+                    <div class="team-photo">
+                        <img src="{% static 'img/member/aicha.png' %}" alt="DOSSO Aicha">
+                    </div>
+                    <div class="team-info">
+                        <h3>DOSSO Moussokoura Aicha</h3>
+                        <span class="team-role">Co-fondatrice</span>
+                        <p>Experte en gestion de projet et développement commercial.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-30">
+                <div class="team-card">
+                    <div class="team-photo">
+                        <img src="{% static 'img/member/kati.jpg' %}" alt="SORO Djénébou">
+                    </div>
+                    <div class="team-info">
+                        <h3>SORO Katiéné Djénébou</h3>
+                        <span class="team-role">Co-fondatrice</span>
+                        <p>Spécialiste en aquaculture et systèmes aquaponiques.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<style>
+.team-page { background: #f9f9f9; }
+.team-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: transform 0.3s; }
+.team-card:hover { transform: translateY(-10px); }
+.team-photo { position: relative; overflow: hidden; }
+.team-photo img { width: 100%; height: 300px; object-fit: cover; }
+.team-social { position: absolute; bottom: -50px; left: 0; right: 0; background: rgba(25, 118, 210, 0.9); padding: 15px; text-align: center; transition: bottom 0.3s; }
+.team-card:hover .team-social { bottom: 0; }
+.team-social a { color: #fff; margin: 0 10px; font-size: 18px; }
+.team-social a:hover { color: #4caf50; }
+.team-info { padding: 25px; text-align: center; }
+.team-info h3 { margin: 0 0 5px; font-size: 20px; }
+.team-role { color: #4caf50; font-size: 14px; font-weight: 600; }
+.team-info p { margin-top: 15px; color: #666; line-height: 1.6; }
+.team-contact { color: #1976d2; font-size: 14px; }
+.mb-30 { margin-bottom: 30px; }
+</style>
+{% endblock %}

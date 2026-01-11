@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de votre demande de devis - Aqua-Racine</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .info-box h3 {
+            margin: 0 0 15px;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .info-label {
+            font-weight: 600;
+            width: 150px;
+            color: #555;
+        }
+        .info-value {
+            color: #333;
+        }
+        .quote-number {
+            display: inline-block;
+            background: #4caf50;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .steps {
+            margin: 30px 0;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #4caf50;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-content h4 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+        .step-content p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .cta {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .footer {
+            background: #f8f8f8;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+        .footer a {
+            color: #4caf50;
+            text-decoration: none;
+        }
+        .social-links {
+            margin: 15px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #4caf50;
+            font-size: 20px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Aqua-Racine</h1>
+            <p>Votre partenaire en aquaponie durable</p>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Bonjour {{ quote.first_name }} {{ quote.last_name }},</p>
+
+            <p>Nous avons bien reçu votre demande de devis et nous vous en remercions !</p>
+
+            <p>Votre demande a été enregistrée sous le numéro :</p>
+            <p style="text-align: center; margin: 20px 0;">
+                <span class="quote-number">Devis #{{ quote.pk }}</span>
+            </p>
+
+            <div class="info-box">
+                <h3>Récapitulatif de votre demande</h3>
+                <div class="info-row">
+                    <span class="info-label">Nom :</span>
+                    <span class="info-value">{{ quote.first_name }} {{ quote.last_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email :</span>
+                    <span class="info-value">{{ quote.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Téléphone :</span>
+                    <span class="info-value">{{ quote.phone }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ville :</span>
+                    <span class="info-value">{{ quote.city }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Taille du projet :</span>
+                    <span class="info-value">{{ quote.get_project_size_display }}</span>
+                </div>
+            </div>
+
+            <div class="steps">
+                <h3 style="color: #2e7d32;">Prochaines étapes</h3>
+
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Analyse de votre demande</h4>
+                        <p>Notre équipe technique étudie les détails de votre projet dans les 24h.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Prise de contact</h4>
+                        <p>Un conseiller vous contactera sous 48h pour affiner votre besoin.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Proposition personnalisée</h4>
+                        <p>Vous recevrez un devis détaillé adapté à votre projet.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p>En attendant, n'hésitez pas à consulter notre site pour en apprendre davantage sur nos solutions d'aquaponie, d'hydroponie et de pisciculture.</p>
+
+            <div class="cta">
+                <a href="https://aquaracine.ci" class="cta-button">Visiter notre site</a>
+            </div>
+
+            <p>À très bientôt,<br><strong>L'équipe Aqua-Racine</strong></p>
+        </div>
+
+        <div class="footer">
+            <div class="social-links">
+                <a href="#">Facebook</a> |
+                <a href="#">LinkedIn</a> |
+                <a href="#">Instagram</a>
+            </div>
+
+            <div class="contact-info">
+                <p><strong>Aqua-Racine</strong></p>
+                <p>Abidjan, Côte d'Ivoire</p>
+                <p>Tél : +225 07 67 20 35 32</p>
+                <p>Email : <a href="mailto:aquaracine@gmail.com">aquaracine@gmail.com</a></p>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 11px; color: #999;">
+                Cet email a été envoyé automatiquement suite à votre demande de devis sur notre site.
+                Merci de ne pas répondre directement à ce message.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1976d2, #0d47a1); padding: 60px 0; color: #fff; text-align: center;">
+    <div class="container">
+        <h1>Notre Blog</h1>
+        <p>Actualités, conseils et astuces sur l'aquaponie</p>
+    </div>
+</section>
+
+<!-- Blog Section -->
+<section class="blog-page ptb-100">
+    <div class="container">
+        <div class="row">
+            <!-- Blog Posts -->
+            <div class="col-lg-8">
+                <div class="row">
+                    {% for post in blog_posts %}
+                    <div class="col-md-6 mb-30">
+                        <div class="blog-card">
+                            <div class="blog-image">
+                                {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                {% else %}
+                                <img src="{% static 'img/blog/default.jpg' %}" alt="{{ post.title }}">
+                                {% endif %}
+                                {% if post.is_featured %}
+                                <span class="blog-badge">À la une</span>
+                                {% endif %}
+                            </div>
+                            <div class="blog-content">
+                                <div class="blog-meta">
+                                    <span><i class="fa fa-folder"></i> {{ post.category.name }}</span>
+                                    <span><i class="fa fa-calendar"></i> {{ post.published_date|date:"d M Y" }}</span>
+                                    <span><i class="fa fa-eye"></i> {{ post.views }}</span>
+                                </div>
+                                <h3><a href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a></h3>
+                                <p>{{ post.excerpt|truncatewords:20 }}</p>
+                                <a href="{% url 'blog_detail' post.slug %}" class="read-more">Lire la suite <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-center">Aucun article disponible pour le moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Categories -->
+                <div class="sidebar-widget">
+                    <h4>Catégories</h4>
+                    <ul class="category-list">
+                        {% for cat in blog_categories %}
+                        <li>
+                            <a href="{% url 'blog' %}?category={{ cat.slug }}">
+                                {{ cat.name }}
+                                <span class="count">{{ cat.post_count }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Recent Posts -->
+                {% if recent_posts %}
+                <div class="sidebar-widget">
+                    <h4>Articles récents</h4>
+                    {% for post in recent_posts %}
+                    <div class="recent-post">
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                        {% endif %}
+                        <div class="recent-post-info">
+                            <a href="{% url 'blog_detail' post.slug %}">{{ post.title|truncatewords:8 }}</a>
+                            <span>{{ post.published_date|date:"d M Y" }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Newsletter -->
+                <div class="sidebar-widget newsletter-widget">
+                    <h4>Newsletter</h4>
+                    <p>Recevez nos derniers articles par email</p>
+                    <form method="post" action="{% url 'newsletter_subscribe' %}">
+                        {% csrf_token %}
+                        <input type="email" name="email" placeholder="Votre email" required>
+                        <button type="submit" class="aquaponic-btn">S'inscrire</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.blog-page { background: #f9f9f9; }
+.blog-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 15px rgba(0,0,0,0.1); }
+.blog-image { position: relative; }
+.blog-image img { width: 100%; height: 200px; object-fit: cover; }
+.blog-badge { position: absolute; top: 15px; left: 15px; background: #ff9800; color: #fff; padding: 5px 12px; border-radius: 3px; font-size: 12px; }
+.blog-content { padding: 20px; }
+.blog-meta { margin-bottom: 10px; }
+.blog-meta span { font-size: 12px; color: #888; margin-right: 15px; }
+.blog-content h3 { font-size: 18px; margin: 10px 0; }
+.blog-content h3 a { color: #333; }
+.blog-content h3 a:hover { color: #1976d2; }
+.blog-content p { color: #666; font-size: 14px; line-height: 1.6; }
+.read-more { color: #1976d2; font-size: 14px; font-weight: 600; }
+
+.sidebar-widget { background: #fff; padding: 25px; border-radius: 10px; margin-bottom: 25px; }
+.sidebar-widget h4 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #1976d2; }
+.category-list { list-style: none; padding: 0; margin: 0; }
+.category-list li { padding: 10px 0; border-bottom: 1px solid #eee; }
+.category-list li a { display: flex; justify-content: space-between; color: #333; }
+.category-list li a:hover { color: #1976d2; }
+.category-list .count { background: #e3f2fd; color: #1976d2; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+
+.recent-post { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+.recent-post img { width: 70px; height: 70px; object-fit: cover; border-radius: 5px; }
+.recent-post-info a { display: block; color: #333; font-weight: 500; margin-bottom: 5px; }
+.recent-post-info span { font-size: 12px; color: #888; }
+
+.newsletter-widget { background: linear-gradient(135deg, #1976d2, #0d47a1); color: #fff; }
+.newsletter-widget h4 { border-bottom-color: #fff; }
+.newsletter-widget input { width: 100%; padding: 12px; border: none; border-radius: 5px; margin-bottom: 10px; }
+.newsletter-widget .aquaponic-btn { width: 100%; }
+
+.mb-30 { margin-bottom: 30px; }
+</style>
+{% endblock %}

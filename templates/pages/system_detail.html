@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ system.name }} | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<div class="system-detail-page">
+    <!-- Header -->
+    <div class="system-detail-header">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" style="background: transparent; padding: 0; margin-bottom: 15px;">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}" style="color: rgba(255,255,255,0.8);">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}#systemes" style="color: rgba(255,255,255,0.8);">Syst&egrave;mes</a></li>
+                    <li class="breadcrumb-item active" style="color: #fff;">{{ system.name }}</li>
+                </ol>
+            </nav>
+            <h1>{{ system.name }}</h1>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="system-detail-content">
+        <div class="container">
+            <div class="row">
+                <!-- Gallery -->
+                <div class="col-lg-6">
+                    <div class="system-gallery">
+                        <div class="system-main-image" id="main-image">
+                            {% if system.image %}
+                            <img src="{{ system.image.url }}" alt="{{ system.name }}" id="main-img">
+                            {% else %}
+                            <img src="{% static 'img/systems/default.jpg' %}" alt="{{ system.name }}" id="main-img">
+                            {% endif %}
+                        </div>
+                        <div class="system-thumbnails">
+                            {% if system.image %}
+                            <div class="system-thumb active" onclick="changeImage('{{ system.image.url }}', this)">
+                                <img src="{{ system.image.url }}" alt="">
+                            </div>
+                            {% endif %}
+                            {% if system.image_2 %}
+                            <div class="system-thumb" onclick="changeImage('{{ system.image_2.url }}', this)">
+                                <img src="{{ system.image_2.url }}" alt="">
+                            </div>
+                            {% endif %}
+                            {% if system.image_3 %}
+                            <div class="system-thumb" onclick="changeImage('{{ system.image_3.url }}', this)">
+                                <img src="{{ system.image_3.url }}" alt="">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="col-lg-6">
+                    <div class="system-info-card">
+                        <span class="system-type-badge">{{ system.get_system_type_display }}</span>
+                        <h2>{{ system.name }}</h2>
+                        <p style="color: #666; line-height: 1.8;">{{ system.description }}</p>
+
+                        <div class="system-detail-price">
+                            {% if system.old_price %}
+                            <span class="old">{{ system.old_price|floatformat:0 }} FCFA</span>
+                            {% endif %}
+                            <span class="current">{{ system.price|floatformat:0 }} FCFA</span>
+                        </div>
+
+                        <ul class="system-specs-list">
+                            <li>
+                                <i class="fa fa-arrows-alt"></i>
+                                <span><strong>Dimensions:</strong> {{ system.dimensions }}</span>
+                            </li>
+                            {% if system.fish_capacity %}
+                            <li>
+                                <i class="fa fa-tint"></i>
+                                <span><strong>Capacit&eacute; poissons:</strong> {{ system.fish_capacity }} poissons</span>
+                            </li>
+                            {% endif %}
+                            {% if system.plant_capacity %}
+                            <li>
+                                <i class="fa fa-leaf"></i>
+                                <span><strong>Capacit&eacute; plantes:</strong> {{ system.plant_capacity }} plantes</span>
+                            </li>
+                            {% endif %}
+                            {% if system.water_volume %}
+                            <li>
+                                <i class="fa fa-tint"></i>
+                                <span><strong>Volume d'eau:</strong> {{ system.water_volume }} litres</span>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <i class="fa fa-users"></i>
+                                <span><strong>Public cible:</strong> {{ system.target_audience }}</span>
+                            </li>
+                        </ul>
+
+                        {% if system.features_list %}
+                        <div class="system-features">
+                            <h4><i class="fa fa-check-circle" style="color: #4caf50; margin-right: 8px;"></i> Caract&eacute;ristiques</h4>
+                            <ul>
+                                {% for feature in system.features_list %}
+                                <li>{{ feature }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if system.includes_list %}
+                        <div class="system-features" style="margin-top: 20px;">
+                            <h4><i class="fa fa-cube" style="color: #1976d2; margin-right: 8px;"></i> Inclus dans le kit</h4>
+                            <ul>
+                                {% for item in system.includes_list %}
+                                <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <a href="#" class="order-system-btn" id="order-btn" data-system-id="{{ system.id }}" data-system-name="{{ system.name }}" data-system-price="{{ system.price }}">
+                            <i class="fa fa-shopping-cart"></i> Commander ce syst&egrave;me
+                        </a>
+
+                        <div style="margin-top: 20px; text-align: center;">
+                            <a href="https://wa.me/2250767203532?text=Bonjour, je suis int&eacute;ress&eacute;(e) par le syst&egrave;me {{ system.name }} &agrave; {{ system.price|floatformat:0 }} FCFA. Pouvez-vous me donner plus d'informations ?" target="_blank" style="color: #25D366; font-weight: 600;">
+                                <i class="fa fa-whatsapp"></i> Poser une question sur WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if system.full_description %}
+            <div class="row" style="margin-top: 40px;">
+                <div class="col-lg-12">
+                    <div class="system-info-card">
+                        <h3 style="margin-bottom: 20px;"><i class="fa fa-file-text-o" style="color: #4caf50; margin-right: 10px;"></i> Description compl&egrave;te</h3>
+                        <div class="system-full-description">
+                            {{ system.full_description|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Related Systems -->
+            {% if related_systems %}
+            <div class="row" style="margin-top: 60px;">
+                <div class="col-lg-12">
+                    <div class="sec-title">
+                        <h2>Syst&egrave;mes similaires</h2>
+                    </div>
+                </div>
+                {% for related in related_systems %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="system-card">
+                        <div class="system-badge">{{ related.get_system_type_display }}</div>
+                        <div class="system-image">
+                            {% if related.image %}
+                            <img src="{{ related.image.url }}" alt="{{ related.name }}">
+                            {% else %}
+                            <img src="{% static 'img/systems/default.jpg' %}" alt="{{ related.name }}">
+                            {% endif %}
+                        </div>
+                        <div class="system-content">
+                            <h4>{{ related.name }}</h4>
+                            <p class="system-desc">{{ related.description|truncatewords:15 }}</p>
+                            <div class="system-price">
+                                <span class="current-price">{{ related.price|floatformat:0 }} FCFA</span>
+                            </div>
+                            <a href="{% url 'system_detail' related.slug %}" class="system-btn">
+                                Voir les d&eacute;tails <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeImage(url, thumb) {
+    document.getElementById('main-img').src = url;
+    document.querySelectorAll('.system-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+}
+
+// Order button - redirect to checkout or WhatsApp
+document.getElementById('order-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const systemName = this.dataset.systemName;
+    const systemPrice = this.dataset.systemPrice;
+    const systemId = this.dataset.systemId;
+
+    // Add to cart
+    if (typeof AquaCart !== 'undefined') {
+        AquaCart.addItem({
+            id: 'system-' + systemId,
+            name: systemName,
+            price: parseFloat(systemPrice),
+            quantity: 1,
+            unit: 'unit&eacute;',
+            type: 'system'
+        });
+        AquaCart.showNotification('Syst&egrave;me ajout&eacute; au panier !', 'success');
+        setTimeout(() => {
+            window.location.href = '{% url "cart" %}';
+        }, 1000);
+    } else {
+        // Fallback to WhatsApp
+        const message = `Bonjour, je souhaite commander le syst&egrave;me "${systemName}" &agrave; ${parseInt(systemPrice).toLocaleString()} FCFA.`;
+        window.open(`https://wa.me/2250767203532?text=${encodeURIComponent(message)}`, '_blank');
+    }
+});
+</script>
+{% endblock %}

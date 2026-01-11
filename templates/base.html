@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block meta_description %}{{ settings.site_description|default:'Aqua-Racine - Solutions durables d aquaponie, pisciculture et hydroponie en Côte d Ivoire.' }}{% endblock %}">
+    <link rel="shortcut icon" href="{% static 'img/aquaracinelogo3.png' %}" type="image/x-icon">
+    <title>{% block title %}{{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icofont.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+    <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/quote-form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/quote-buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div id="preloader"></div>
+
+    <!-- Header -->
+    <header class="header-area ptb-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="header-left-content">
+                        <ul>
+                            <li><a href="tel:{{ settings.phone|default:'+2250767203532' }}"><i class="fa fa-phone"></i>{{ settings.phone|default:'+225 07 67 20 35 32' }}</a></li>
+                            <li><a href="mailto:{{ settings.email|default:'aquaracine@gmail.com' }}"><i class="fa fa-envelope"></i>{{ settings.email|default:'aquaracine@gmail.com' }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="header-right-content">
+                        <ul>
+                            <li><select><option value="Fr">Fr</option><option value="En">En</option></select></li>
+                            <li><a href="#" class="popup-show">Connexion</a>
+                                <div class="login-popup login-form contact-form">
+                                    <h4>Connexion</h4>
+                                    <form action="#">
+                                        <div class="row">
+                                            <div class="col-sm-12"><div class="contact-container"><input type="email" placeholder="Adresse e-mail"><i class="fa fa-envelope"></i></div></div>
+                                            <div class="col-sm-12"><div class="contact-container"><input type="password" placeholder="Mot de passe"><i class="fa fa-eye"></i></div></div>
+                                            <div class="col-sm-12 mtb-20"><button class="aquaponic-btn">CONNEXION</button></div>
+                                            <div class="col-sm-12"><p>Pas de compte ? <a href="#" class="registration-form-show">Créer</a></p></div>
+                                        </div>
+                                    </form>
+                                    <div class="popup-close"><i class="fa fa-close"></i></div>
+                                </div>
+                                <div class="login-popup registration-form contact-form">
+                                    <h4>Créer un compte</h4>
+                                    <form action="#">
+                                        <div class="row">
+                                            <div class="col-sm-12"><div class="contact-container"><input type="text" placeholder="Nom complet"><i class="fa fa-user"></i></div></div>
+                                            <div class="col-sm-12"><div class="contact-container"><input type="email" placeholder="Email"><i class="fa fa-envelope"></i></div></div>
+                                            <div class="col-sm-12"><div class="contact-container"><input type="password" placeholder="Mot de passe"><i class="fa fa-eye"></i></div></div>
+                                            <div class="col-sm-12 mtb-20"><button class="aquaponic-btn">Créer</button></div>
+                                        </div>
+                                    </form>
+                                    <div class="popup-close"><i class="fa fa-close"></i></div>
+                                </div>
+                            </li>
+                            <li><a href="{% url 'cart' %}" class="aquaponic-cart"><i class="fa fa-shopping-cart"></i> <span>0</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu -->
+    <div class="menubar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-5">
+                    <div class="logo">
+                        <a href="{% url 'home' %}">
+                            {% if settings.logo %}
+                                <img src="{{ settings.logo.url }}" alt="{{ settings.site_name }}">
+                            {% else %}
+                                <img src="{% static 'img/aquaracinelogo3.png' %}" alt="Aqua-Racine">
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-7">
+                    <div class="responsive-menu"></div>
+                    <div class="mainmenu">
+                        <ul id="primary-menu">
+                            <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}"><a href="{% url 'home' %}">Accueil</a></li>
+                            <li><a href="{% url 'home' %}#about">À propos</a></li>
+                            <li><a href="{% url 'products' %}">Produits <i class="fa fa-angle-down"></i></a>
+                                <ul>
+                                    <li><a href="{% url 'cart' %}">Panier</a></li>
+                                    <li><a href="{% url 'checkout' %}">Paiement</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{% url 'home' %}#gallery">Galerie</a></li>
+                            <li><a href="{% url 'home' %}#services">Services</a></li>
+                            <li><a href="{% url 'home' %}#devis" class="highlight-link">Demander un devis</a></li>
+                            <li><a href="{% url 'team' %}">Équipe</a></li>
+                            {% comment %}<li><a href="{% url 'blog' %}">Blog</a></li>{% endcomment %}
+                            <li><a href="{% url 'home' %}#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer ptb-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-5">
+                    <div class="footer-copyright">
+                        <p>© {% now "Y" %} {{ settings.site_name|default:'Aqua-Racine' }}. Tous droits réservés.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-7">
+                    <div class="footer-menu">
+                        <ul>
+                            <li><a href="#">Aide</a></li>
+                            <li><a href="{% url 'home' %}#about">À propos</a></li>
+                            {% comment %}<li><a href="#">FAQ</a></li>{% endcomment %}
+                            <li><a href="{% url 'home' %}#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.slicknav.min.js' %}"></script>
+    <script src="{% static 'js/jquery.circlechart.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/lightbox.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
+    <style>
+        .mainmenu ul li a.highlight-link{background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff!important;padding:8px 16px;border-radius:20px;font-weight:600}
+        .mainmenu ul li a.highlight-link:hover{background:linear-gradient(135deg,#388e3c,#1b5e20)}
+        .aquaponic-btn-outline{background:transparent!important;border:2px solid #fff!important;margin-left:10px}
+        .aquaponic-btn-outline:hover{background:#fff!important;color:#2e7d32!important}
+        .single-member-info span{display:block;color:#4caf50;font-size:13px;margin-bottom:10px}
+    </style>
+</body>
+</html>

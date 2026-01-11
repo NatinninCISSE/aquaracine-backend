@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Finaliser la commande | {{ settings.site_name|default:'Aqua-Racine' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header" style="background: linear-gradient(135deg, #1976d2, #0d47a1); padding: 60px 0; color: #fff; text-align: center;">
+    <div class="container">
+        <h1>Finaliser votre commande</h1>
+        <p>Renseignez vos informations pour passer commande</p>
+    </div>
+</section>
+
+<!-- Order Steps -->
+<div class="order-steps-container" style="background: #fff; padding: 30px 0; border-bottom: 1px solid #e0e0e0;">
+    <div class="container">
+        <div class="order-steps">
+            <div class="order-step completed">
+                <span class="step-number"><i class="fa fa-check"></i></span>
+                <span>Panier</span>
+            </div>
+            <div class="step-line" style="background: #4caf50;"></div>
+            <div class="order-step active">
+                <span class="step-number">2</span>
+                <span>Informations</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="order-step">
+                <span class="step-number">3</span>
+                <span>Paiement</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="order-step">
+                <span class="step-number">4</span>
+                <span>Confirmation</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Section -->
+<section class="checkout-page ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="checkout-form">
+                    <h3><i class="fa fa-user"></i> Informations de livraison</h3>
+                    <form id="checkout-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Prénom *</label>
+                                <input type="text" name="first_name" id="first_name" required placeholder="Votre prénom">
+                            </div>
+                            <div class="form-group">
+                                <label>Nom *</label>
+                                <input type="text" name="last_name" id="last_name" required placeholder="Votre nom">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" name="email" id="email" required placeholder="votre@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Téléphone *</label>
+                                <input type="tel" name="phone" id="phone" required placeholder="+225 XX XX XX XX XX">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Adresse de livraison *</label>
+                            <input type="text" name="address" id="address" required placeholder="Rue, quartier, repère...">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ville *</label>
+                                <input type="text" name="city" id="city" required placeholder="Ex: Abidjan">
+                            </div>
+                            <div class="form-group">
+                                <label>Commune *</label>
+                                <input type="text" name="commune" id="commune" required placeholder="Ex: Cocody">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Instructions de livraison (optionnel)</label>
+                            <textarea name="notes" id="notes" placeholder="Ex: Près du marché, portail bleu, appeler à l'arrivée..."></textarea>
+                        </div>
+
+                        <!-- Section Code Promo -->
+                        <div class="promo-code-section" style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 2px dashed #ddd;">
+                            <h4 style="font-size: 16px; margin-bottom: 15px; color: #333;">
+                                <i class="fa fa-gift" style="color: #4caf50;"></i> Vous avez un code promo ?
+                            </h4>
+                            <div class="promo-input-group" style="display: flex; gap: 10px;">
+                                <input type="text" id="promo-code-input" placeholder="Entrez votre code"
+                                    style="flex: 1; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; text-transform: uppercase;">
+                                <button type="button" id="apply-promo-btn"
+                                    style="padding: 12px 25px; background: #4caf50; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                    Appliquer
+                                </button>
+                            </div>
+                            <div id="promo-message" style="margin-top: 10px; font-size: 14px; display: none;"></div>
+                            <div id="promo-applied" style="margin-top: 15px; display: none; padding: 12px; background: #e8f5e9; border-radius: 8px; border: 1px solid #4caf50;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <span style="color: #2e7d32; font-weight: 600;"><i class="fa fa-check-circle"></i> <span id="promo-name"></span></span>
+                                        <span id="promo-code-display" style="display: block; font-size: 12px; color: #666;"></span>
+                                    </div>
+                                    <button type="button" id="remove-promo-btn" style="background: none; border: none; color: #f44336; cursor: pointer; font-size: 18px;">
+                                        <i class="fa fa-times-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 35px;"><i class="fa fa-credit-card"></i> Mode de paiement de l'avance</h3>
+
+                        <div class="payment-methods">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="orange_money" checked>
+                                <span class="payment-icon" style="background: #ff6600; color: #fff;"><i class="fa fa-mobile"></i></span>
+                                <div class="payment-details">
+                                    <span class="payment-label">Orange Money</span>
+                                    <span class="payment-desc">Paiement via Orange Money</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="mtn_money">
+                                <span class="payment-icon" style="background: #ffcc00; color: #000;"><i class="fa fa-mobile"></i></span>
+                                <div class="payment-details">
+                                    <span class="payment-label">MTN Money</span>
+                                    <span class="payment-desc">Paiement via MTN Mobile Money</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="wave">
+                                <span class="payment-icon" style="background: #1dc4e9; color: #fff;"><i class="fa fa-mobile"></i></span>
+                                <div class="payment-details">
+                                    <span class="payment-label">Wave</span>
+                                    <span class="payment-desc">Paiement via Wave</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="moov_money">
+                                <span class="payment-icon" style="background: #0066b3; color: #fff;"><i class="fa fa-mobile"></i></span>
+                                <div class="payment-details">
+                                    <span class="payment-label">Moov Money</span>
+                                    <span class="payment-desc">Paiement via Moov Money</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Avance Info -->
+                        <div class="advance-info">
+                            <h5><i class="fa fa-info-circle"></i> Paiement en 2 étapes</h5>
+                            <p><strong>1. Avance de 50%</strong> pour confirmer votre commande</p>
+                            <p><strong>2. Reste (50%)</strong> à payer à la livraison</p>
+                            <div style="margin-top: 15px;">
+                                <span class="advance-amount">Avance à payer maintenant : <strong id="checkout-advance">0 FCFA</strong></span>
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <span class="remainder-amount">Reste à la livraison : <strong id="checkout-remainder">0 FCFA</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp Button -->
+                        <button type="submit" class="whatsapp-btn" id="whatsapp-order-btn">
+                            <i class="fa fa-whatsapp"></i>
+                            Confirmer et envoyer via WhatsApp
+                        </button>
+
+                        <p style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                            <i class="fa fa-lock"></i> Vos données sont sécurisées. Après confirmation, vous serez redirigé vers WhatsApp pour finaliser avec notre équipe.
+                        </p>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="order-summary">
+                    <h4><i class="fa fa-shopping-bag"></i> Votre commande</h4>
+                    <div id="order-items">
+                        <!-- Items will be loaded dynamically -->
+                        <p class="text-center" style="color: #888;">Chargement...</p>
+                    </div>
+                    <div class="summary-totals">
+                        <div class="summary-row">
+                            <span>Sous-total</span>
+                            <span id="order-subtotal">0 FCFA</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Livraison</span>
+                            <span id="order-shipping">1 500 FCFA</span>
+                        </div>
+                        <div class="summary-row" id="discount-row" style="display: none; color: #4caf50;">
+                            <span><i class="fa fa-gift"></i> Réduction</span>
+                            <span id="order-discount">-0 FCFA</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="order-total">0 FCFA</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #e8f5e9; border-radius: 10px; padding: 15px; margin-top: 20px;">
+                        <div class="summary-row" style="border: none; color: #2e7d32; font-weight: 600;">
+                            <span><i class="fa fa-check-circle"></i> Avance (50%)</span>
+                            <span id="order-advance">0 FCFA</span>
+                        </div>
+                        <div class="summary-row" style="border: none; color: #ff9800;">
+                            <span><i class="fa fa-clock-o"></i> À la livraison</span>
+                            <span id="order-remainder">0 FCFA</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; padding: 15px; background: #f5f5f5; border-radius: 10px;">
+                        <h5 style="font-size: 14px; margin-bottom: 10px;"><i class="fa fa-shield"></i> Garanties</h5>
+                        <ul style="font-size: 13px; color: #666; padding-left: 20px; margin: 0;">
+                            <li>Produits frais garantis</li>
+                            <li>Livraison sous 24-48h</li>
+                            <li>Service client disponible</li>
+                            <li>Paiement sécurisé</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for AquaCart to be fully initialized
+    const cart = AquaCart.loadCart();
+
+    // Redirect if cart is empty
+    if (cart.length === 0) {
+        window.location.href = '{% url "cart" %}';
+        return;
+    }
+
+    // Function to update all totals
+    function updateTotals() {
+        const subtotal = AquaCart.getSubtotal();
+        const deliveryFee = AquaCart.getDeliveryFee();
+        const total = AquaCart.getTotal();
+        const advance = AquaCart.getAdvance();
+        const remainder = AquaCart.getRemainder();
+        const discount = AquaCart.getDiscount();
+
+        document.getElementById('order-subtotal').textContent = AquaCart.formatPrice(subtotal);
+        document.getElementById('order-shipping').textContent = AquaCart.formatPrice(deliveryFee);
+        document.getElementById('order-total').textContent = AquaCart.formatPrice(total);
+        document.getElementById('order-advance').textContent = AquaCart.formatPrice(advance);
+        document.getElementById('order-remainder').textContent = AquaCart.formatPrice(remainder);
+        document.getElementById('checkout-advance').textContent = AquaCart.formatPrice(advance);
+        document.getElementById('checkout-remainder').textContent = AquaCart.formatPrice(remainder);
+
+        // Show/hide discount row
+        const discountRow = document.getElementById('discount-row');
+        if (discount > 0 && AquaCart.promo.discount) {
+            discountRow.style.display = 'flex';
+            if (AquaCart.promo.discount.free_delivery) {
+                document.getElementById('order-discount').textContent = 'Livraison offerte !';
+            } else {
+                document.getElementById('order-discount').textContent = '-' + AquaCart.formatPrice(discount);
+            }
+        } else {
+            discountRow.style.display = 'none';
+        }
+    }
+
+    // Render order items
+    const orderItems = document.getElementById('order-items');
+    orderItems.innerHTML = cart.map(item => `
+        <div class="order-item">
+            <span>${item.name} x ${item.quantity}</span>
+            <span>${AquaCart.formatPrice(item.price * item.quantity)}</span>
+        </div>
+    `).join('');
+
+    // Initial totals update
+    updateTotals();
+
+    // Promo code elements
+    const promoInput = document.getElementById('promo-code-input');
+    const applyBtn = document.getElementById('apply-promo-btn');
+    const promoMessage = document.getElementById('promo-message');
+    const promoApplied = document.getElementById('promo-applied');
+    const removePromoBtn = document.getElementById('remove-promo-btn');
+
+    // Apply promo code handler
+    async function handleApplyPromo() {
+        const code = promoInput.value.trim();
+        if (!code) {
+            promoMessage.textContent = 'Veuillez entrer un code promo';
+            promoMessage.style.color = '#f44336';
+            promoMessage.style.display = 'block';
+            return;
+        }
+
+        applyBtn.disabled = true;
+        applyBtn.textContent = 'Validation...';
+
+        try {
+            const result = await AquaCart.validatePromoCode(code);
+
+            applyBtn.disabled = false;
+            applyBtn.textContent = 'Appliquer';
+
+            if (result.valid) {
+                promoMessage.style.display = 'none';
+                promoApplied.style.display = 'block';
+                promoInput.style.display = 'none';
+                applyBtn.style.display = 'none';
+
+                document.getElementById('promo-name').textContent = result.discount.name;
+                document.getElementById('promo-code-display').textContent = 'Code: ' + code.toUpperCase();
+
+                AquaCart.showNotification(result.message, 'success');
+                updateTotals();
+            } else {
+                promoMessage.textContent = result.message;
+                promoMessage.style.color = '#f44336';
+                promoMessage.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error applying promo:', error);
+            applyBtn.disabled = false;
+            applyBtn.textContent = 'Appliquer';
+            promoMessage.textContent = 'Erreur lors de la validation';
+            promoMessage.style.color = '#f44336';
+            promoMessage.style.display = 'block';
+        }
+    }
+
+    // Bind click event
+    if (applyBtn) {
+        applyBtn.onclick = handleApplyPromo;
+    }
+
+    // Remove promo code
+    if (removePromoBtn) {
+        removePromoBtn.onclick = function() {
+            AquaCart.clearPromo();
+            promoApplied.style.display = 'none';
+            promoInput.style.display = 'block';
+            promoInput.value = '';
+            applyBtn.style.display = 'block';
+            updateTotals();
+            AquaCart.showNotification('Code promo retiré', 'success');
+        };
+    }
+
+    // Allow Enter key to submit promo code
+    if (promoInput) {
+        promoInput.onkeypress = function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleApplyPromo();
+            }
+        };
+    }
+
+    // Handle form submission
+    document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Validate form
+        const firstName = document.getElementById('first_name').value.trim();
+        const lastName = document.getElementById('last_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const commune = document.getElementById('commune').value.trim();
+        const notes = document.getElementById('notes').value.trim();
+        const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+        if (!firstName || !lastName || !email || !phone || !address || !city || !commune) {
+            AquaCart.showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+            return;
+        }
+
+        // Send to WhatsApp
+        const customerInfo = {
+            firstName,
+            lastName,
+            email,
+            phone,
+            address,
+            city,
+            commune,
+            notes,
+            paymentMethod
+        };
+
+        AquaCart.sendToWhatsApp(customerInfo);
+
+        // Mark promo code as used if applied
+        if (AquaCart.promo.code) {
+            await AquaCart.markPromoUsed();
+        }
+
+        // Clear cart and promo after sending
+        setTimeout(() => {
+            AquaCart.clearCart();
+            AquaCart.clearPromo();
+            window.location.href = '{% url "order_success" %}';
+        }, 1500);
+    });
+});
+</script>
+{% endblock %}

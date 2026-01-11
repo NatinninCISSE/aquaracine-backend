@@ -1,0 +1,662 @@
+/*
+ * Aqua-Racine - Styles pour le formulaire de demande de devis
+ * et les notifications système
+ */
+
+/* ========================================
+   SECTION DEMANDE DE DEVIS
+   ======================================== */
+
+.quote-section {
+    background: linear-gradient(135deg, #f8fdf8 0%, #e8f5e9 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.quote-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../img/hero-area/hero-1.jpg') center/cover no-repeat;
+    opacity: 0.05;
+    z-index: 0;
+}
+
+.quote-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.quote-section .sec-title {
+    margin-bottom: 50px;
+}
+
+.quote-section .sec-title h2 {
+    color: #2e7d32;
+    font-size: 32px;
+}
+
+.quote-section .sec-title p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* Formulaire de devis */
+.quote-form-wrapper {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.quote-form-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e8f5e9;
+}
+
+.quote-form-header h3 {
+    color: #2e7d32;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.quote-form-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Étapes du formulaire */
+.form-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    gap: 10px;
+}
+
+.form-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border-radius: 25px;
+    font-size: 13px;
+    color: #888;
+    transition: all 0.3s ease;
+}
+
+.form-step.active {
+    background: #2e7d32;
+    color: #fff;
+}
+
+.form-step.completed {
+    background: #81c784;
+    color: #fff;
+}
+
+.form-step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.form-step.active .form-step-number,
+.form-step.completed .form-step-number {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Sections du formulaire */
+.form-section {
+    margin-bottom: 35px;
+}
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section-title i {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.form-section-title h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Champs de formulaire */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-group.full-width {
+    flex: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+}
+
+.form-group label .required {
+    color: #e53935;
+    margin-left: 3px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: #e53935;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.field-error {
+    display: block;
+    color: #e53935;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Types d'installation (checkboxes stylisées) */
+#installation-types-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.installation-type-option {
+    position: relative;
+}
+
+.installation-type-option input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.installation-type-option label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.installation-type-option label:hover {
+    border-color: #81c784;
+    background: #f1f8f1;
+}
+
+.installation-type-option input:checked + label {
+    border-color: #4caf50;
+    background: #e8f5e9;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+}
+
+.installation-type-option label i {
+    font-size: 32px;
+    color: #4caf50;
+    margin-bottom: 10px;
+}
+
+.installation-type-option .inst-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.installation-type-option .inst-desc {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.4;
+}
+
+/* Options par défaut si l'API n'est pas disponible */
+.installation-type-default {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.installation-type-default .inst-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.installation-type-default .inst-option:hover {
+    border-color: #81c784;
+}
+
+.installation-type-default .inst-option.selected {
+    border-color: #4caf50;
+    background: #e8f5e9;
+}
+
+.installation-type-default .inst-option input {
+    width: auto;
+    margin: 0;
+}
+
+.installation-type-default .inst-option i {
+    font-size: 24px;
+    color: #4caf50;
+}
+
+.installation-type-default .inst-option span {
+    font-weight: 500;
+    color: #333;
+}
+
+/* Taille du projet (radio buttons stylisés) */
+.project-size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.project-size-option {
+    position: relative;
+}
+
+.project-size-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.project-size-option label {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #f5f5f5;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.project-size-option label:hover {
+    border-color: #81c784;
+}
+
+.project-size-option input:checked + label {
+    background: #4caf50;
+    border-color: #4caf50;
+    color: #fff;
+}
+
+/* Checkboxes infrastructure */
+.infrastructure-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.infrastructure-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.infrastructure-option:hover {
+    background: #f1f8f1;
+}
+
+.infrastructure-option input {
+    width: auto !important;
+    min-width: 18px;
+    height: 18px;
+    accent-color: #4caf50;
+}
+
+.infrastructure-option label {
+    margin: 0 !important;
+    font-weight: normal !important;
+    cursor: pointer;
+}
+
+/* Bouton de soumission */
+.submit-section {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e8f5e9;
+}
+
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 50px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.submit-btn:disabled {
+    background: #bdbdbd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submit-btn i {
+    font-size: 18px;
+}
+
+.submit-note {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #888;
+}
+
+.submit-note i {
+    color: #4caf50;
+    margin-right: 5px;
+}
+
+/* ========================================
+   NOTIFICATIONS
+   ======================================== */
+
+.ar-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    max-width: 400px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
+.ar-notification.show {
+    transform: translateX(0);
+}
+
+.ar-notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid #4caf50;
+}
+
+.ar-notification-success .ar-notification-content {
+    border-left-color: #4caf50;
+}
+
+.ar-notification-error .ar-notification-content {
+    border-left-color: #e53935;
+}
+
+.ar-notification-content i:first-child {
+    font-size: 24px;
+}
+
+.ar-notification-success .ar-notification-content i:first-child {
+    color: #4caf50;
+}
+
+.ar-notification-error .ar-notification-content i:first-child {
+    color: #e53935;
+}
+
+.ar-notification-content span {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.ar-notification-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.ar-notification-close:hover {
+    color: #333;
+}
+
+/* ========================================
+   ICÔNES D'INSTALLATION PAR DÉFAUT
+   ======================================== */
+
+.icon-pisciculture::before { content: "\f578"; font-family: "Font Awesome 5 Free"; }
+.icon-hydroponie::before { content: "\f4d8"; font-family: "Font Awesome 5 Free"; }
+.icon-aquaponie::before { content: "\f773"; font-family: "Font Awesome 5 Free"; }
+
+/* ========================================
+   FAQ SECTION (bonus)
+   ======================================== */
+
+.faq-section {
+    padding: 80px 0;
+    background: #fff;
+}
+
+.faq-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    background: #f9f9f9;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #f1f8f1;
+}
+
+.faq-question i {
+    color: #4caf50;
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-question {
+    background: #e8f5e9;
+}
+
+.faq-item.active .faq-question i {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+}
+
+.faq-answer-content {
+    padding: 20px 25px;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .quote-form-wrapper {
+        padding: 25px;
+        margin: 0 15px;
+    }
+
+    .form-steps {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        min-width: 100%;
+    }
+
+    #installation-types-container {
+        grid-template-columns: 1fr;
+    }
+
+    .project-size-options {
+        flex-direction: column;
+    }
+
+    .infrastructure-options {
+        grid-template-columns: 1fr;
+    }
+
+    .submit-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ar-notification {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+    }
+
+    .quote-section .sec-title h2 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .quote-form-wrapper {
+        padding: 20px 15px;
+    }
+
+    .form-section-title h4 {
+        font-size: 16px;
+    }
+
+    .installation-type-option label {
+        padding: 15px;
+    }
+
+    .installation-type-option label i {
+        font-size: 24px;
+    }
+}
