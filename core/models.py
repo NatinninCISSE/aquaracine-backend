@@ -4,7 +4,12 @@ Models for Aqua-Racine website management.
 from django.db import models
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
-from ckeditor.fields import RichTextField
+
+# CKEditor est optionnel - utiliser TextField comme fallback
+try:
+    from ckeditor.fields import RichTextField
+except ImportError:
+    RichTextField = models.TextField
 
 
 class TimeStampedModel(models.Model):
