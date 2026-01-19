@@ -4,7 +4,6 @@ Django settings for Aqua-Racine project.
 
 import os
 from pathlib import Path
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,11 +22,16 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
     'http://localhost:8000,http://127.0.0.1:8000'
 ).split(',')
 
+# Check if optional packages are installed
+def is_package_installed(package_name):
+    try:
+        __import__(package_name)
+        return True
+    except ImportError:
+        return False
+
 # Application definition
 INSTALLED_APPS = [
-    # Jazzmin admin theme (must be before django.contrib.admin)
-    'jazzmin',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,17 +39,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third party apps
+    # Third party apps (only if installed)
     'rest_framework',
     'corsheaders',
-    'django_filters',
-    'drf_spectacular',
-    'ckeditor',
-    'ckeditor_uploader',
 
     # Local apps
     'core',
 ]
+
+# Add optional apps only if installed
+if is_package_installed('jazzmin'):
+    INSTALLED_APPS.insert(0, 'jazzmin')
+if is_package_installed('django_filters'):
+    INSTALLED_APPS.insert(-1, 'django_filters')
+if is_package_installed('drf_spectacular'):
+    INSTALLED_APPS.insert(-1, 'drf_spectacular')
+if is_package_installed('ckeditor'):
+    INSTALLED_APPS.insert(-1, 'ckeditor')
+    INSTALLED_APPS.insert(-1, 'ckeditor_uploader')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -152,32 +163,37 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 12,
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# DRF Spectacular Settings
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Aqua-Racine API',
-    'DESCRIPTION': 'API pour la gestion du site Aqua-Racine - Aquaponie en Côte d\'Ivoire',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
+# Add django_filters backend if installed
+if is_package_installed('django_filters'):
+    REST_FRAMEWORK['DEFAULT_FILTER_BACKENDS'].insert(0, 'django_filters.rest_framework.DjangoFilterBackend')
 
-# CKEditor Configuration
-CKEDITOR_UPLOAD_PATH = 'uploads/'
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        'width': '100%',
-    },
-}
+# Add drf_spectacular schema if installed
+if is_package_installed('drf_spectacular'):
+    REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
+    SPECTACULAR_SETTINGS = {
+        'TITLE': 'Aqua-Racine API',
+        'DESCRIPTION': 'API pour la gestion du site Aqua-Racine - Aquaponie en Côte d\'Ivoire',
+        'VERSION': '1.0.0',
+        'SERVE_INCLUDE_SCHEMA': False,
+    }
+
+# CKEditor Configuration (only if installed)
+if is_package_installed('ckeditor'):
+    CKEDITOR_UPLOAD_PATH = 'uploads/'
+    CKEDITOR_CONFIGS = {
+        'default': {
+            'toolbar': 'full',
+            'height': 300,
+            'width': '100%',
+        },
+    }
 
 # Email Configuration
 EMAIL_BACKEND = os.environ.get(
@@ -191,116 +207,24 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@aquaracine.ci')
 
-# Jazzmin Admin Theme Configuration
-JAZZMIN_SETTINGS = {
-    "site_title": "Aqua-Racine Admin",
-    "site_header": "Aqua-Racine",
-    "site_brand": "Aqua-Racine",
-    "site_logo": None,
-    "login_logo": None,
-    "login_logo_dark": None,
-    "site_logo_classes": "img-circle",
-    "site_icon": None,
-    "welcome_sign": "Bienvenue dans le backoffice Aqua-Racine",
-    "copyright": "Aqua-Racine 2025",
-    "search_model": ["core.Product", "core.Service", "core.QuoteRequest"],
-    "user_avatar": None,
-
-    # Top Menu
-    "topmenu_links": [
-        {"name": "Accueil", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Voir le site", "url": "/", "new_window": True},
-        {"model": "auth.User"},
-    ],
-
-    # Side Menu
-    "show_sidebar": True,
-    "navigation_expanded": True,
-    "hide_apps": [],
-    "hide_models": [],
-    "order_with_respect_to": [
-        "core",
-        "core.SiteSettings",
-        "core.HeroSlide",
-        "core.Service",
-        "core.Product",
-        "core.ProductCategory",
-        "core.TeamMember",
-        "core.BlogPost",
-        "core.QuoteRequest",
-        "core.ContactMessage",
-        "core.Newsletter",
-        "auth",
-    ],
-
-    # Icons
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        "core.SiteSettings": "fas fa-cog",
-        "core.HeroSlide": "fas fa-images",
-        "core.Service": "fas fa-concierge-bell",
-        "core.Product": "fas fa-fish",
-        "core.ProductCategory": "fas fa-tags",
-        "core.TeamMember": "fas fa-user-tie",
-        "core.BlogPost": "fas fa-newspaper",
-        "core.BlogCategory": "fas fa-folder",
-        "core.QuoteRequest": "fas fa-file-invoice-dollar",
-        "core.ContactMessage": "fas fa-envelope",
-        "core.Newsletter": "fas fa-mail-bulk",
-        "core.TimelineStep": "fas fa-stream",
-        "core.GalleryImage": "fas fa-photo-video",
-        "core.Advantage": "fas fa-chart-pie",
-        "core.FAQ": "fas fa-question-circle",
-        "core.Testimonial": "fas fa-quote-right",
-    },
-
-    # UI Tweaks
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-    "related_modal_active": True,
-    "custom_css": None,
-    "custom_js": None,
-    "use_google_fonts_cdn": True,
-    "show_ui_builder": False,
-
-    # Change view
-    "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
-    },
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": False,
-    "brand_colour": "navbar-success",
-    "accent": "accent-teal",
-    "navbar": "navbar-dark",
-    "no_navbar_border": False,
-    "navbar_fixed": True,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-success",
-    "sidebar_nav_small_text": False,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme": "default",
-    "dark_mode_theme": None,
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success",
-    },
-}
+# Jazzmin Admin Theme Configuration (only if installed)
+if is_package_installed('jazzmin'):
+    JAZZMIN_SETTINGS = {
+        "site_title": "Aqua-Racine Admin",
+        "site_header": "Aqua-Racine",
+        "site_brand": "Aqua-Racine",
+        "welcome_sign": "Bienvenue dans le backoffice Aqua-Racine",
+        "copyright": "Aqua-Racine 2025",
+        "show_sidebar": True,
+        "navigation_expanded": True,
+        "changeform_format": "horizontal_tabs",
+    }
+    JAZZMIN_UI_TWEAKS = {
+        "brand_colour": "navbar-success",
+        "accent": "accent-teal",
+        "navbar": "navbar-dark",
+        "navbar_fixed": True,
+        "sidebar_fixed": True,
+        "sidebar": "sidebar-dark-success",
+        "theme": "default",
+    }
