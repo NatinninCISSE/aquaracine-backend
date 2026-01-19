@@ -120,6 +120,12 @@
 
     {% block content %}{% endblock %}
 
+    <!-- Bouton Panier Flottant -->
+    <a href="{% url 'cart' %}" class="floating-cart-btn" id="floating-cart">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="cart-count" id="floating-cart-count">0</span>
+    </a>
+
     <!-- Footer -->
     <footer class="footer ptb-30">
         <div class="container">

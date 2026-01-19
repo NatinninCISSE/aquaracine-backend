@@ -194,10 +194,20 @@ const AquaCart = {
     updateCartBadge: function() {
         const cart = this.loadCart();
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        const badges = document.querySelectorAll('.aquaponic-cart span, .cart-badge');
+        const badges = document.querySelectorAll('.aquaponic-cart span, .cart-badge, #floating-cart-count');
         badges.forEach(badge => {
             badge.textContent = totalItems;
         });
+
+        // Afficher/masquer le bouton flottant
+        const floatingCart = document.getElementById('floating-cart');
+        if (floatingCart) {
+            if (totalItems > 0) {
+                floatingCart.classList.remove('hidden');
+            } else {
+                floatingCart.classList.add('hidden');
+            }
+        }
     },
 
     // Afficher une notification
@@ -323,6 +333,7 @@ const CartRenderer = {
         const cartContent = document.getElementById('cart-content');
         const emptyCart = document.getElementById('empty-cart');
         const cartItems = document.getElementById('cart-items');
+        const cartMobileItems = document.getElementById('cart-mobile-items');
 
         if (cart.length === 0) {
             if (emptyCart) emptyCart.style.display = 'block';
@@ -333,6 +344,7 @@ const CartRenderer = {
         if (emptyCart) emptyCart.style.display = 'none';
         if (cartContent) cartContent.style.display = 'block';
 
+        // Rendu table desktop
         if (cartItems) {
             cartItems.innerHTML = cart.map(item => `
                 <tr data-id="${item.id}">
@@ -357,45 +369,78 @@ const CartRenderer = {
                 </tr>
             `).join('');
 
-            // Événements pour quantité
-            cartItems.querySelectorAll('.qty-minus').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const input = cartItems.querySelector(`.qty-input[data-id="${id}"]`);
-                    const newQty = Math.max(1, parseInt(input.value) - 1);
-                    AquaCart.updateQuantity(id, newQty);
-                    this.render();
-                });
-            });
+            this.bindCartEvents(cartItems);
+        }
 
-            cartItems.querySelectorAll('.qty-plus').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const input = cartItems.querySelector(`.qty-input[data-id="${id}"]`);
-                    AquaCart.updateQuantity(id, parseInt(input.value) + 1);
-                    this.render();
-                });
-            });
+        // Rendu cartes mobile
+        if (cartMobileItems) {
+            cartMobileItems.innerHTML = cart.map(item => `
+                <div class="cart-mobile-card" data-id="${item.id}">
+                    <div class="cart-mobile-card-header">
+                        <img src="${item.image || '/static/img/product/default.jpg'}" alt="${item.name}" class="cart-mobile-card-img">
+                        <div class="cart-mobile-card-info">
+                            <h5>${item.name}</h5>
+                            <span class="price">${AquaCart.formatPrice(item.price)}${item.unit ? '/' + item.unit : ''}</span>
+                        </div>
+                    </div>
+                    <div class="cart-mobile-card-footer">
+                        <div class="cart-mobile-card-qty">
+                            <button class="qty-minus" data-id="${item.id}">-</button>
+                            <input type="number" value="${item.quantity}" min="1" class="qty-input" data-id="${item.id}">
+                            <button class="qty-plus" data-id="${item.id}">+</button>
+                        </div>
+                        <div class="cart-mobile-card-total">
+                            <span class="total-price">${AquaCart.formatPrice(item.price * item.quantity)}</span>
+                            <button class="remove-btn remove-item" data-id="${item.id}"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
 
-            cartItems.querySelectorAll('.qty-input').forEach(input => {
-                input.addEventListener('change', () => {
-                    AquaCart.updateQuantity(input.dataset.id, parseInt(input.value) || 1);
-                    this.render();
-                });
-            });
-
-            cartItems.querySelectorAll('.remove-item').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    AquaCart.removeFromCart(btn.dataset.id);
-                    this.render();
-                });
-            });
+            this.bindCartEvents(cartMobileItems);
         }
 
         // Mettre à jour les totaux
         document.getElementById('subtotal')?.textContent && (document.getElementById('subtotal').textContent = AquaCart.formatPrice(AquaCart.getSubtotal()));
         document.getElementById('shipping')?.textContent && (document.getElementById('shipping').textContent = AquaCart.formatPrice(AquaCart.config.deliveryFee));
         document.getElementById('total')?.textContent && (document.getElementById('total').textContent = AquaCart.formatPrice(AquaCart.getTotal()));
+    },
+
+    bindCartEvents: function(container) {
+        const self = this;
+
+        container.querySelectorAll('.qty-minus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const input = container.querySelector(`.qty-input[data-id="${id}"]`);
+                const newQty = Math.max(1, parseInt(input.value) - 1);
+                AquaCart.updateQuantity(id, newQty);
+                self.render();
+            });
+        });
+
+        container.querySelectorAll('.qty-plus').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const input = container.querySelector(`.qty-input[data-id="${id}"]`);
+                AquaCart.updateQuantity(id, parseInt(input.value) + 1);
+                self.render();
+            });
+        });
+
+        container.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', () => {
+                AquaCart.updateQuantity(input.dataset.id, parseInt(input.value) || 1);
+                self.render();
+            });
+        });
+
+        container.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                AquaCart.removeFromCart(btn.dataset.id);
+                self.render();
+            });
+        });
     }
 };
 

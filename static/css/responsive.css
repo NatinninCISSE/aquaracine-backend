@@ -645,51 +645,75 @@
         font-size: 16px;
     }
 
-    /* Team - Mobile responsive */
+    /* Team - Mobile responsive - afficher 3 membres en grille */
     .team-member .row .row {
         display: flex;
         flex-wrap: wrap;
-        margin: 0 -8px;
+        margin: 0 -5px;
         justify-content: center;
     }
 
     .team-member .row .row > .col-lg-4,
-    .team-member .row .row > .col-sm-6 {
-        width: 50% !important;
-        flex: 0 0 50% !important;
-        max-width: 50% !important;
-        padding: 0 8px !important;
+    .team-member .row .row > .col-sm-6,
+    .team-member .row .row > [class*="col-"] {
+        width: 33.333% !important;
+        flex: 0 0 33.333% !important;
+        max-width: 33.333% !important;
+        padding: 0 5px !important;
     }
 
     .single-member {
-        margin: 10px 0;
+        margin: 8px 0;
         max-width: 100%;
     }
 
     .single-member-img img {
         width: 100%;
-        height: 140px;
+        height: 120px;
         object-fit: cover;
     }
 
     .single-member-info {
         padding: 8px 5px;
+        text-align: center;
     }
 
     .single-member-info p a {
-        font-size: 13px;
+        font-size: 11px;
+        line-height: 1.3;
     }
 
     .single-member-info span {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .single-member-info .read-more {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .team-member .sec-title {
         margin-bottom: 10px;
+    }
+
+    /* Produits section - texte centré */
+    .single-product-info {
+        text-align: center;
+    }
+
+    .single-product-info p,
+    .single-product-info h4 {
+        text-align: center;
+    }
+
+    /* Bouton "Voir tous nos produits" - centrer */
+    .product-gallery .text-center,
+    .product-btn-wrapper {
+        text-align: center !important;
+    }
+
+    .product-gallery .aquaponic-btn {
+        display: inline-block;
+        margin: 0 auto;
     }
 
     /* Contact */
