@@ -645,17 +645,16 @@
         font-size: 16px;
     }
 
-    /* Team - Mobile 2-column grid */
-    .team-member .row {
+    /* Team - Mobile responsive */
+    .team-member .row .row {
         display: flex;
         flex-wrap: wrap;
         margin: 0 -8px;
+        justify-content: center;
     }
 
-    .team-member .col-lg-3,
-    .team-member .col-md-4,
-    .team-member .col-md-6,
-    .team-member [class*="col-"] {
+    .team-member .row .row > .col-lg-4,
+    .team-member .row .row > .col-sm-6 {
         width: 50% !important;
         flex: 0 0 50% !important;
         max-width: 50% !important;
@@ -682,6 +681,10 @@
     }
 
     .single-member-info span {
+        font-size: 11px;
+    }
+
+    .single-member-info .read-more {
         font-size: 11px;
     }
 
