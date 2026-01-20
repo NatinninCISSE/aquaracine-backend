@@ -6,8 +6,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+
+# django_filters est optionnel
+try:
+    from django_filters.rest_framework import DjangoFilterBackend
+    HAS_DJANGO_FILTERS = True
+except ImportError:
+    DjangoFilterBackend = None
+    HAS_DJANGO_FILTERS = False
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.core.mail import send_mail
@@ -105,7 +112,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for products."""
     queryset = Product.objects.filter(is_active=True)
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] if HAS_DJANGO_FILTERS else [SearchFilter, OrderingFilter]
     filterset_fields = ['category', 'is_featured', 'is_active']
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'created_at', 'name', 'order']
@@ -154,7 +161,7 @@ class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for blog posts."""
     queryset = BlogPost.objects.filter(is_published=True)
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] if HAS_DJANGO_FILTERS else [SearchFilter, OrderingFilter]
     filterset_fields = ['category', 'is_featured']
     search_fields = ['title', 'excerpt', 'content']
     ordering_fields = ['published_date', 'views', 'title']
@@ -204,7 +211,7 @@ class GalleryImageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GalleryImage.objects.filter(is_active=True)
     serializer_class = GalleryImageSerializer
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend] if HAS_DJANGO_FILTERS else []
     filterset_fields = ['category']
 
 
@@ -227,7 +234,7 @@ class FAQViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = FAQ.objects.filter(is_active=True)
     serializer_class = FAQSerializer
     permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend] if HAS_DJANGO_FILTERS else []
     filterset_fields = ['category']
 
 
