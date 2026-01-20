@@ -563,66 +563,153 @@
         display: none;
     }
 
-    /* Products - Mobile 2-column grid COMPACT */
+    /* =============================================
+       PRODUCTS SECTION - MOBILE DESIGN MODERNE
+       ============================================= */
+
+    /* Section titre */
+    .product-gallery .sec-title,
+    section.ptb-100 .sec-title {
+        text-align: center !important;
+        margin-bottom: 25px !important;
+        padding: 0 15px !important;
+    }
+
+    .product-gallery .sec-title h2 {
+        font-size: 24px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .product-gallery .sec-title p {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        color: #666 !important;
+    }
+
+    /* Grille produits */
     .product-gallery .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin: 0 -5px;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        margin: 0 !important;
+        padding: 0 10px !important;
+        gap: 12px !important;
     }
 
     .product-gallery .col-lg-3,
     .product-gallery .col-md-4,
     .product-gallery .col-md-6,
     .product-gallery [class*="col-"] {
-        width: 50% !important;
-        flex: 0 0 50% !important;
-        max-width: 50% !important;
-        padding: 0 5px !important;
+        width: calc(50% - 6px) !important;
+        flex: 0 0 calc(50% - 6px) !important;
+        max-width: calc(50% - 6px) !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
+    /* Carte produit */
     .single-product {
-        margin-bottom: 15px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+        border-radius: 16px !important;
+        overflow: hidden !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+        transition: transform 0.3s ease !important;
+        position: relative !important;
     }
 
+    /* Image produit */
     .single-product-img {
-        margin-bottom: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: relative !important;
+        overflow: hidden !important;
     }
 
     .single-product-img img {
-        width: 100%;
-        height: 110px;
-        object-fit: cover;
+        width: 100% !important;
+        height: 130px !important;
+        object-fit: cover !important;
+        display: block !important;
+        transition: transform 0.3s ease !important;
     }
 
+    /* Badge promo (si ancien prix) */
+    .single-product-img::after {
+        content: none !important;
+    }
+
+    /* Info produit */
     .single-product-info {
-        padding: 5px 5px 0 !important;
+        padding: 12px 10px 15px !important;
+        text-align: center !important;
+        background: #fff !important;
+        position: relative !important;
     }
 
-    .single-product-info h4 {
-        font-size: 13px !important;
-        line-height: 1.2 !important;
-        margin: 3px 0 !important;
+    /* Nom produit */
+    .single-product-info h4,
+    .single-product-info h4 a {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.3 !important;
+        margin: 0 0 8px 0 !important;
+        color: #333 !important;
+        text-decoration: none !important;
     }
 
+    /* Prix */
     .single-product-info p {
-        font-size: 11px !important;
-        margin: 0 0 3px !important;
-        line-height: 1.2;
-    }
-
-    .buy-product {
-        padding: 4px 12px;
-        font-size: 11px;
-    }
-
-    .single-product-info .buy-product {
-        bottom: -14px;
-    }
-
-    /* Supprimer padding/margin excessifs des produits */
-    .single-product-info p a {
+        font-size: 16px !important;
+        font-weight: 700 !important;
         margin: 0 !important;
+        line-height: 1.3 !important;
+        color: #27ae60 !important;
+    }
+
+    .single-product-info p a {
+        color: #27ae60 !important;
+        text-decoration: none !important;
+    }
+
+    /* Ancien prix barré */
+    .single-product-info .old-price,
+    .single-product-info del {
+        font-size: 12px !important;
+        color: #999 !important;
+        font-weight: 400 !important;
+        text-decoration: line-through !important;
+        margin-right: 5px !important;
+    }
+
+    /* Bouton acheter - caché sur mobile */
+    .single-product-info .buy-product,
+    .buy-product {
+        display: none !important;
+    }
+
+    /* Bouton voir tous les produits */
+    .product-gallery .row.mt-4,
+    .product-gallery > .container > .row:last-child {
+        margin-top: 25px !important;
         padding: 0 !important;
+    }
+
+    .product-gallery .col-lg-12.text-center {
+        padding: 0 15px !important;
+    }
+
+    .product-gallery .aquaponic-btn {
+        display: block !important;
+        width: 100% !important;
+        max-width: 280px !important;
+        margin: 0 auto !important;
+        padding: 14px 30px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border-radius: 30px !important;
+        text-align: center !important;
+        box-shadow: 0 4px 15px rgba(241, 165, 46, 0.4) !important;
     }
 
     /* Testimonials */
@@ -788,43 +875,6 @@
 
     .team-member .single-member-info .read-more i {
         display: none !important;
-    }
-
-    /* Produits section - texte centré */
-    .single-product-info {
-        text-align: center;
-    }
-
-    .single-product-info p,
-    .single-product-info h4 {
-        text-align: center;
-    }
-
-    /* Section produits - titre et description centrés */
-    .product-gallery .sec-title,
-    .product-gallery .sec-title h2,
-    .product-gallery .sec-title p,
-    section.ptb-100 .sec-title,
-    section.ptb-100 .sec-title h2,
-    section.ptb-100 .sec-title p {
-        text-align: center !important;
-    }
-
-    /* Bouton "Voir tous nos produits" - centrer FORCÉ */
-    .product-gallery .text-center,
-    .product-btn-wrapper,
-    .product-gallery > .container > .row + .text-center,
-    .product-gallery .col-12.text-center {
-        text-align: center !important;
-        display: block !important;
-        width: 100% !important;
-    }
-
-    .product-gallery .aquaponic-btn,
-    .product-gallery .text-center .aquaponic-btn {
-        display: inline-block !important;
-        margin: 20px auto 0 !important;
-        float: none !important;
     }
 
     /* Contact */
