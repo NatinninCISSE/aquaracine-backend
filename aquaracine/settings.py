@@ -91,35 +91,44 @@ TEMPLATES = [
 WSGI_APPLICATION = 'aquaracine.wsgi.application'
 
 # Database
-# Use MySQL on PythonAnywhere, SQLite for local dev
-if os.environ.get('PYTHONANYWHERE_DOMAIN'):
-    # PythonAnywhere MySQL configuration
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME', ''),
-            'USER': os.environ.get('DB_USER', ''),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-            'HOST': os.environ.get('DB_HOST', ''),
-            'PORT': '3306',
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            },
-        }
-    }
-elif os.environ.get('DATABASE_URL'):
-    # Other cloud platforms (Render, Railway)
-    DATABASES = {
-        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'), conn_max_age=600)
-    }
-else:
-    # Local development with SQLite
-    DATABASES = {
+# Use MySQL on PythonAnywhere if configured, otherwise SQLite
+def get_database_config():
+    """Get database configuration with fallback to SQLite."""
+    # Check if MySQL credentials are provided
+    db_name = os.environ.get('DB_NAME', '')
+    db_user = os.environ.get('DB_USER', '')
+    db_password = os.environ.get('DB_PASSWORD', '')
+    db_host = os.environ.get('DB_HOST', '')
+
+    # If all MySQL credentials are provided, try to use MySQL
+    if db_name and db_user and db_host:
+        try:
+            import MySQLdb  # noqa: F401
+            return {
+                'default': {
+                    'ENGINE': 'django.db.backends.mysql',
+                    'NAME': db_name,
+                    'USER': db_user,
+                    'PASSWORD': db_password,
+                    'HOST': db_host,
+                    'PORT': '3306',
+                    'OPTIONS': {
+                        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                    },
+                }
+            }
+        except ImportError:
+            pass  # MySQL driver not available, fall through to SQLite
+
+    # Fallback to SQLite
+    return {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
+DATABASES = get_database_config()
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
