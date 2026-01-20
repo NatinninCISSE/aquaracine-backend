@@ -547,6 +547,18 @@
     </div>
 </section>
 
+<!-- Success Popup Modal -->
+<div id="success-popup" class="success-popup-overlay" style="display: none;">
+    <div class="success-popup-content">
+        <div class="success-popup-icon">
+            <i class="fa fa-check-circle"></i>
+        </div>
+        <h3 id="popup-title">Merci !</h3>
+        <p id="popup-message"></p>
+        <button class="aquaponic-btn" onclick="closeSuccessPopup()">Fermer</button>
+    </div>
+</div>
+
 {% if messages %}
 <div class="notification-container">
     {% for message in messages %}
@@ -560,7 +572,172 @@
 {% endblock %}
 
 {% block extra_js %}
+<style>
+/* Success Popup Styles */
+.success-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.success-popup-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.success-popup-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.success-popup-icon i {
+    font-size: 40px;
+    color: #fff;
+}
+
+.success-popup-content h3 {
+    color: #2e7d32;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.success-popup-content p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+</style>
+
 <script>
+// Success Popup Functions
+function showSuccessPopup(title, message) {
+    document.getElementById('popup-title').textContent = title;
+    document.getElementById('popup-message').textContent = message;
+    document.getElementById('success-popup').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSuccessPopup() {
+    document.getElementById('success-popup').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close popup on overlay click
+document.getElementById('success-popup').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeSuccessPopup();
+    }
+});
+
+// Newsletter Form AJAX Submit
+document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessPopup(
+                'Merci pour votre inscription !',
+                'Vous êtes maintenant abonné(e) à notre newsletter. Vous recevrez nos actualités et conseils en aquaponie directement dans votre boîte mail.'
+            );
+            form.reset();
+        } else {
+            showSuccessPopup('Oops !', data.message || 'Une erreur est survenue. Veuillez réessayer.');
+        }
+    })
+    .catch(error => {
+        showSuccessPopup('Erreur', 'Une erreur est survenue. Veuillez réessayer plus tard.');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
+});
+
+// Contact Form AJAX Submit
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi...';
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessPopup(
+                'Message envoyé !',
+                'Merci de nous avoir contactés. Notre équipe vous répondra dans les meilleurs délais.'
+            );
+            form.reset();
+        } else {
+            showSuccessPopup('Oops !', data.message || 'Une erreur est survenue. Veuillez réessayer.');
+        }
+    })
+    .catch(error => {
+        showSuccessPopup('Erreur', 'Une erreur est survenue. Veuillez réessayer plus tard.');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
+});
+
 // Auto-hide notifications
 document.querySelectorAll('.notification-close').forEach(btn => {
     btn.addEventListener('click', function() {

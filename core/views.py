@@ -22,6 +22,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
@@ -553,32 +554,63 @@ class SubmitContactView(View):
     """Handle contact form submission."""
 
     def post(self, request):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
         try:
-            message = ContactMessage.objects.create(
-                name=request.POST.get('name'),
-                email=request.POST.get('email'),
-                phone=request.POST.get('phone', ''),
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone', '')
+            message_text = request.POST.get('message')
+
+            if not name or not email or not message_text:
+                if is_ajax:
+                    return JsonResponse({'success': False, 'message': 'Veuillez remplir tous les champs obligatoires.'})
+                messages.error(request, 'Veuillez remplir tous les champs obligatoires.')
+                return redirect('home')
+
+            contact_message = ContactMessage.objects.create(
+                name=name,
+                email=email,
+                phone=phone,
                 subject=request.POST.get('subject', 'Message depuis le site'),
-                message=request.POST.get('message'),
+                message=message_text,
             )
 
-            # Send notification
+            # Send email notification to aquaracine@gmail.com
             try:
-                admin_email = SiteSettings.get_settings().email
+                email_subject = f"[Aqua-Racine] Nouveau message de contact - {name}"
+                email_body = f"""
+Nouveau message de contact reçu sur le site Aqua-Racine :
+
+Nom : {name}
+Email : {email}
+Téléphone : {phone or 'Non renseigné'}
+
+Message :
+{message_text}
+
+---
+Ce message a été envoyé depuis le formulaire de contact du site web.
+"""
                 send_mail(
-                    subject=f"Nouveau message de contact - {message.name}",
-                    message=f"Nouveau message de {message.name} ({message.email}):\n\n{message.message}",
+                    subject=email_subject,
+                    message=email_body,
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[admin_email],
-                    fail_silently=True
+                    recipient_list=['aquaracine@gmail.com'],
+                    fail_silently=False
                 )
             except Exception as e:
                 print(f"Email sending failed: {e}")
+
+            if is_ajax:
+                return JsonResponse({'success': True, 'message': 'Message envoyé avec succès!'})
 
             messages.success(request, 'Votre message a été envoyé avec succès!')
             return redirect('home')
 
         except Exception as e:
+            if is_ajax:
+                return JsonResponse({'success': False, 'message': f'Une erreur est survenue: {str(e)}'})
             messages.error(request, f'Une erreur est survenue: {str(e)}')
             return redirect('home')
 
@@ -587,20 +619,60 @@ class NewsletterSubscribeFormView(View):
     """Handle newsletter subscription form."""
 
     def post(self, request):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
         email = request.POST.get('email')
-        if email:
-            newsletter, created = Newsletter.objects.get_or_create(
-                email=email,
-                defaults={'is_active': True}
-            )
-            if not created and not newsletter.is_active:
+        name = request.POST.get('name', '')
+        phone = request.POST.get('phone', '')
+
+        if not email:
+            if is_ajax:
+                return JsonResponse({'success': False, 'message': 'Veuillez fournir une adresse email valide.'})
+            messages.error(request, 'Veuillez fournir une adresse email valide.')
+            return redirect('home')
+
+        newsletter, created = Newsletter.objects.get_or_create(
+            email=email,
+            defaults={'is_active': True}
+        )
+
+        if not created:
+            if newsletter.is_active:
+                if is_ajax:
+                    return JsonResponse({'success': False, 'message': 'Cette adresse email est déjà inscrite à notre newsletter.'})
+                messages.info(request, 'Cette adresse email est déjà inscrite.')
+                return redirect('home')
+            else:
                 newsletter.is_active = True
                 newsletter.save()
 
-            messages.success(request, 'Vous êtes inscrit à notre newsletter!')
-        else:
-            messages.error(request, 'Veuillez fournir une adresse email valide.')
+        # Send email notification about new subscriber
+        try:
+            email_subject = f"[Aqua-Racine] Nouvel abonné newsletter"
+            email_body = f"""
+Nouvel abonné à la newsletter Aqua-Racine :
 
+Nom : {name or 'Non renseigné'}
+Email : {email}
+Téléphone : {phone or 'Non renseigné'}
+
+---
+Inscription depuis le formulaire newsletter du site web.
+"""
+            send_mail(
+                subject=email_subject,
+                message=email_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=['aquaracine@gmail.com'],
+                fail_silently=True
+            )
+        except Exception as e:
+            print(f"Newsletter notification email failed: {e}")
+
+        if is_ajax:
+            return JsonResponse({'success': True, 'message': 'Inscription réussie!'})
+
+        messages.success(request, 'Vous êtes inscrit à notre newsletter!')
         return redirect('home')
 
 
