@@ -28,8 +28,8 @@ class SiteSettings(models.Model):
     site_favicon = models.ImageField(upload_to='site/', blank=True, null=True, verbose_name="Favicon")
 
     # Contact Information
-    phone = models.CharField(max_length=20, default="+225 07 07 07 07 07", verbose_name="Téléphone")
-    email = models.EmailField(default="contact@aquaracine.ci", verbose_name="Email")
+    phone = models.CharField(max_length=100, default="+225 07 67 20 35 32 / +225 07 07 36 18 79 / +225 07 47 46 77 73", verbose_name="Téléphone")
+    email = models.EmailField(default="aquaracine@gmail.com", verbose_name="Email")
     address = models.TextField(default="Abidjan, Côte d'Ivoire", verbose_name="Adresse")
 
     # Social Media
