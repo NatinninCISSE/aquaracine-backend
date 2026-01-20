@@ -1013,28 +1013,38 @@
    PANIER MOBILE - FORMAT CARTE
    ======================================== */
 @media (max-width: 767px) {
-    /* Cacher le tableau sur mobile - FORCER */
-    .cart-table table,
-    .cart-table thead,
-    .cart-table tbody,
-    .cart-table tr,
-    .cart-table th,
-    .cart-table td {
+    /* FORCER masquer le tableau sur mobile */
+    .cart-table > table {
         display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        overflow: hidden !important;
     }
 
-    /* Afficher les cartes sur mobile */
-    .cart-mobile-cards {
+    /* Afficher les cartes sur mobile - FORCER */
+    .cart-mobile-cards,
+    #cart-mobile-items {
         display: block !important;
+        visibility: visible !important;
     }
 
     /* Empêcher le scroll horizontal */
     .cart-table {
-        overflow-x: visible;
-        min-width: auto;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        min-width: auto !important;
+        max-width: 100% !important;
     }
 
-    .cart-page .container {
+    .cart-page,
+    .cart-page .container,
+    .cart-page .row,
+    .cart-page .col-lg-8 {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+    }
+
+    body {
         overflow-x: hidden;
     }
 
