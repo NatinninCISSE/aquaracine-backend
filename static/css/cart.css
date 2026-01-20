@@ -1013,14 +1013,29 @@
    PANIER MOBILE - FORMAT CARTE
    ======================================== */
 @media (max-width: 767px) {
-    /* Cacher le tableau sur mobile */
-    .cart-table table {
-        display: none;
+    /* Cacher le tableau sur mobile - FORCER */
+    .cart-table table,
+    .cart-table thead,
+    .cart-table tbody,
+    .cart-table tr,
+    .cart-table th,
+    .cart-table td {
+        display: none !important;
     }
 
     /* Afficher les cartes sur mobile */
     .cart-mobile-cards {
         display: block !important;
+    }
+
+    /* Empêcher le scroll horizontal */
+    .cart-table {
+        overflow-x: visible;
+        min-width: auto;
+    }
+
+    .cart-page .container {
+        overflow-x: hidden;
     }
 
     .cart-mobile-card {

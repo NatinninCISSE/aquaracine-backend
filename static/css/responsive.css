@@ -705,6 +705,16 @@
         text-align: center;
     }
 
+    /* Section produits - titre et description centrés */
+    .product-gallery .sec-title,
+    .product-gallery .sec-title h2,
+    .product-gallery .sec-title p,
+    section.ptb-100 .sec-title,
+    section.ptb-100 .sec-title h2,
+    section.ptb-100 .sec-title p {
+        text-align: center !important;
+    }
+
     /* Bouton "Voir tous nos produits" - centrer */
     .product-gallery .text-center,
     .product-btn-wrapper {
