@@ -26,7 +26,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
 from .models import (
-    SiteSettings, HeroSlide, Service, ProductCategory, Product,
+    SiteSettings, PhoneNumber, HeroSlide, Service, ProductCategory, Product,
     TeamMember, BlogCategory, BlogPost, TimelineStep, GalleryImage,
     Advantage, Testimonial, FAQ, InstallationType, QuoteRequest,
     ContactMessage, Newsletter, SystemModel, Award,
@@ -357,6 +357,7 @@ class BaseContextMixin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['settings'] = SiteSettings.get_settings()
+        context['phone_numbers'] = PhoneNumber.objects.filter(is_active=True)
         context['installation_types'] = InstallationType.objects.filter(is_active=True)
         return context
 

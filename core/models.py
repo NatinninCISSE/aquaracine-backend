@@ -72,6 +72,31 @@ class SiteSettings(models.Model):
         return obj
 
 
+class PhoneNumber(models.Model):
+    """Multiple phone numbers for the site."""
+    number = models.CharField(max_length=20, verbose_name="Numéro de téléphone")
+    label = models.CharField(max_length=50, blank=True, verbose_name="Libellé",
+                            help_text="Ex: Principal, WhatsApp, Service client")
+    is_whatsapp = models.BooleanField(default=False, verbose_name="WhatsApp")
+    is_active = models.BooleanField(default=True, verbose_name="Actif")
+    order = models.PositiveIntegerField(default=0, verbose_name="Ordre d'affichage")
+
+    class Meta:
+        verbose_name = "Numéro de téléphone"
+        verbose_name_plural = "Numéros de téléphone"
+        ordering = ['order']
+
+    def __str__(self):
+        if self.label:
+            return f"{self.number} ({self.label})"
+        return self.number
+
+    @property
+    def tel_link(self):
+        """Returns the phone number formatted for tel: links (no spaces)."""
+        return self.number.replace(" ", "").replace("-", "")
+
+
 class HeroSlide(TimeStampedModel):
     """Hero section carousel slides."""
     title = models.CharField(max_length=200, verbose_name="Titre")

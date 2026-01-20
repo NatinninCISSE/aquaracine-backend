@@ -5,13 +5,38 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.db.models import Count
 from .models import (
-    SiteSettings, HeroSlide, Service, ProductCategory, Product,
+    SiteSettings, PhoneNumber, HeroSlide, Service, ProductCategory, Product,
     TeamMember, BlogCategory, BlogPost, TimelineStep, GalleryImage,
     Advantage, Testimonial, FAQ, InstallationType, QuoteRequest,
     ContactMessage, Newsletter, SystemModel, Award,
     FishSpecies, CropType, BasinType, HydroSystemType, TrainingType,
     QuizQuestion, GamePrize, GameParticipation
 )
+
+
+# ============================================
+# PHONE NUMBERS
+# ============================================
+
+@admin.register(PhoneNumber)
+class PhoneNumberAdmin(admin.ModelAdmin):
+    """Admin for phone numbers."""
+
+    list_display = ['number', 'label', 'is_whatsapp', 'order', 'is_active']
+    list_filter = ['is_whatsapp', 'is_active']
+    list_editable = ['label', 'is_whatsapp', 'order', 'is_active']
+    search_fields = ['number', 'label']
+    ordering = ['order']
+
+    fieldsets = (
+        (None, {
+            'fields': ('number', 'label', 'is_whatsapp'),
+            'description': 'Ajoutez autant de numéros que vous souhaitez. Ils seront affichés dans l\'en-tête du site.'
+        }),
+        ('Options', {
+            'fields': ('order', 'is_active')
+        }),
+    )
 
 
 # ============================================

@@ -35,9 +35,12 @@
                 <div class="col-md-7">
                     <div class="header-left-content">
                         <ul>
-                            <li><a href="tel:+2250767203532"><i class="fa fa-phone"></i>{{ settings.phone|default:'+225 07 67 20 35 32' }}</a></li>
-                            <li><a href="tel:+2250707361879"><i class="fa fa-phone"></i>+225 07 07 36 18 79</a></li>
-                            <li><a href="mailto:aquaracine@gmail.com"><i class="fa fa-envelope"></i>{{ settings.email|default:'aquaracine@gmail.com' }}</a></li>
+                            {% for phone in phone_numbers %}
+                            <li><a href="tel:{{ phone.tel_link }}"><i class="fa fa-phone{% if phone.is_whatsapp %} whatsapp-icon{% endif %}"></i>{{ phone.number }}</a></li>
+                            {% empty %}
+                            <li><a href="tel:+2250767203532"><i class="fa fa-phone"></i>+225 07 67 20 35 32</a></li>
+                            {% endfor %}
+                            <li><a href="mailto:{{ settings.email|default:'aquaracine@gmail.com' }}"><i class="fa fa-envelope"></i>{{ settings.email|default:'aquaracine@gmail.com' }}</a></li>
                         </ul>
                     </div>
                 </div>
