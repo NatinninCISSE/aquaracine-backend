@@ -21,9 +21,6 @@ urlpatterns = [
     # API
     path('api/', include('core.urls')),
 
-    # CKEditor
-    path('ckeditor/', include('ckeditor_uploader.urls')),
-
     # ========== PAGES ==========
     # Home
     path('', HomePageView.as_view(), name='home'),
@@ -56,6 +53,13 @@ urlpatterns = [
     path('contact/envoyer/', SubmitContactView.as_view(), name='submit_contact'),
     path('newsletter/inscription/', NewsletterSubscribeFormView.as_view(), name='newsletter_subscribe'),
 ]
+
+# CKEditor URLs (optionnel)
+try:
+    from ckeditor_uploader import urls as ckeditor_urls
+    urlpatterns.append(path('ckeditor/', include(ckeditor_urls)))
+except ImportError:
+    pass  # CKEditor not installed
 
 # Serve media and static files in development
 if settings.DEBUG:
