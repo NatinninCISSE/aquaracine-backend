@@ -1672,3 +1672,30 @@
         font-size: 12pt;
     }
 }
+
+/* ========================================
+   CENTRAGE - Message "Aucun produit"
+   ======================================== */
+.product-gallery .col-lg-12.text-center,
+.product-gallery .text-center,
+section .col-lg-12.text-center {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+.product-gallery .col-lg-12.text-center p,
+section .col-lg-12.text-center p {
+    text-align: center !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
+}
+
+.product-gallery .col-lg-12.text-center .aquaponic-btn,
+section .col-lg-12.text-center .aquaponic-btn {
+    margin: 0 auto !important;
+    display: inline-block !important;
+}
