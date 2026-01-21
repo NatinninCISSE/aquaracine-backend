@@ -55,11 +55,45 @@
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+/* Sidebar text colors - ensure white text on dark background */
+.main-sidebar,
+.main-sidebar .nav-sidebar .nav-link,
+.main-sidebar .nav-sidebar .nav-link p,
+.main-sidebar .brand-link,
+.main-sidebar .brand-link .brand-text,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link,
+[class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link {
+    color: #ffffff !important;
+}
+
+/* Sidebar section headers */
+.main-sidebar .nav-header,
+.sidebar-dark-primary .nav-header,
+[class*="sidebar-dark"] .nav-header {
+    color: #81c784 !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    padding: 10px 15px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Sidebar links hover state */
+.main-sidebar .nav-sidebar .nav-link:hover,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
+    background: rgba(76, 175, 80, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* Active link */
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar .nav-link.active {
     background: var(--aqua-gradient) !important;
     box-shadow: 0 2px 10px rgba(76, 175, 80, 0.4);
     border-radius: 5px;
     margin: 0 10px;
+    color: #ffffff !important;
 }
 
 .nav-sidebar .nav-link {
@@ -72,12 +106,48 @@
     background: rgba(76, 175, 80, 0.3) !important;
 }
 
-.nav-sidebar .nav-icon {
-    color: var(--aqua-primary-light) !important;
+/* Sidebar icons */
+.nav-sidebar .nav-icon,
+.main-sidebar .nav-icon,
+.sidebar-dark-primary .nav-icon {
+    color: #81c784 !important;
 }
 
-.nav-sidebar .nav-link.active .nav-icon {
+.nav-sidebar .nav-link.active .nav-icon,
+.main-sidebar .nav-link.active .nav-icon {
     color: #fff !important;
+}
+
+/* Sidebar filter input */
+.main-sidebar .form-control-sidebar,
+.sidebar-dark-primary .form-control-sidebar {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.main-sidebar .form-control-sidebar::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Sidebar treeview menu */
+.nav-sidebar .nav-treeview {
+    background: rgba(0, 0, 0, 0.15) !important;
+}
+
+.nav-sidebar .nav-treeview > .nav-item > .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.nav-sidebar .nav-treeview > .nav-item > .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Plus/Add buttons in sidebar */
+.main-sidebar .badge,
+.main-sidebar .right {
+    color: #81c784 !important;
 }
 
 /* ============================================
