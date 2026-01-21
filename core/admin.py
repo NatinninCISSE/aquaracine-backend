@@ -1051,7 +1051,7 @@ class AquaRacineAdminSite(AdminSite):
         # Recent items for dashboard lists
         recent_quotes = QuoteRequest.objects.select_related().prefetch_related('installation_types').order_by('-created_at')[:5]
         recent_messages = ContactMessage.objects.order_by('-created_at')[:5]
-        recent_subscribers = Newsletter.objects.filter(is_active=True).order_by('-subscribed_at')[:5]
+        recent_subscribers = Newsletter.objects.filter(is_active=True).order_by('-created_at')[:5]
         recent_game_participations = GameParticipation.objects.select_related('prize').order_by('-played_at')[:5]
 
         # Build stats dictionary
@@ -1129,7 +1129,7 @@ def custom_admin_index(request, extra_context=None):
     # Recent items
     extra_context['recent_quotes'] = QuoteRequest.objects.select_related().prefetch_related('installation_types').order_by('-created_at')[:5]
     extra_context['recent_messages'] = ContactMessage.objects.order_by('-created_at')[:5]
-    extra_context['recent_subscribers'] = Newsletter.objects.filter(is_active=True).order_by('-subscribed_at')[:5]
+    extra_context['recent_subscribers'] = Newsletter.objects.filter(is_active=True).order_by('-created_at')[:5]
     extra_context['recent_game_participations'] = GameParticipation.objects.select_related('prize').order_by('-played_at')[:5]
 
     return original_index(request, extra_context=extra_context)
