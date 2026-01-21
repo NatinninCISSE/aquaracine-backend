@@ -108,6 +108,25 @@ class HeroSlideAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'subtitle', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/heroslide_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = HeroSlide.objects.count()
+        active = HeroSlide.objects.filter(is_active=True).count()
+        with_button = HeroSlide.objects.exclude(button_text='').exclude(button_text__isnull=True).count()
+        with_description = HeroSlide.objects.exclude(description='').exclude(description__isnull=True).count()
+        slides_preview = list(HeroSlide.objects.filter(is_active=True).order_by('order')[:6])
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'with_button': with_button,
+            'with_description': with_description,
+            'slides_preview': slides_preview,
+        }
+        return super().changelist_view(request, extra_context)
 
     fieldsets = (
         (None, {
@@ -188,6 +207,27 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     ordering = ['order']
+    change_list_template = 'admin/core/productcategory_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = ProductCategory.objects.count()
+        active = ProductCategory.objects.filter(is_active=True).count()
+        total_products = Product.objects.filter(is_active=True).count()
+        avg_products = round(total_products / total) if total > 0 else 0
+        empty_categories = ProductCategory.objects.annotate(
+            prod_count=Count('products', filter=Q(products__is_active=True))
+        ).filter(prod_count=0).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'total_products': total_products,
+            'avg_products': avg_products,
+            'empty_categories': empty_categories,
+        }
+        return super().changelist_view(request, extra_context)
 
     def product_count(self, obj):
         return obj.products.filter(is_active=True).count()
@@ -344,6 +384,23 @@ class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'post_count']
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
+    change_list_template = 'admin/core/blogcategory_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = BlogCategory.objects.count()
+        total_posts = BlogPost.objects.filter(is_published=True).count()
+        avg_posts = round(total_posts / total) if total > 0 else 0
+        total_views = BlogPost.objects.aggregate(total=Sum('views'))['total'] or 0
+
+        extra_context['kpi'] = {
+            'total': total,
+            'total_posts': total_posts,
+            'avg_posts': avg_posts,
+            'total_views': total_views,
+        }
+        return super().changelist_view(request, extra_context)
 
     def post_count(self, obj):
         return obj.posts.filter(is_published=True).count()
@@ -435,6 +492,23 @@ class TimelineStepAdmin(admin.ModelAdmin):
     list_editable = ['is_active']
     search_fields = ['title', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/timelinestep_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = TimelineStep.objects.count()
+        active = TimelineStep.objects.filter(is_active=True).count()
+        with_image = TimelineStep.objects.exclude(image='').exclude(image__isnull=True).count()
+        with_video = TimelineStep.objects.exclude(video_url='').exclude(video_url__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'with_image': with_image,
+            'with_video': with_video,
+        }
+        return super().changelist_view(request, extra_context)
 
     def has_image(self, obj):
         return bool(obj.image)
@@ -516,6 +590,23 @@ class AdvantageAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/advantage_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = Advantage.objects.count()
+        active = Advantage.objects.filter(is_active=True).count()
+        avg_percentage = Advantage.objects.filter(is_active=True).aggregate(avg=Avg('percentage'))['avg'] or 0
+        with_icon = Advantage.objects.exclude(icon='').exclude(icon__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'avg_percentage': round(avg_percentage),
+            'with_icon': with_icon,
+        }
+        return super().changelist_view(request, extra_context)
 
     def percentage_display(self, obj):
         color = obj.color or '#4CAF50'
@@ -541,6 +632,25 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'role', 'content']
     ordering = ['order']
+    change_list_template = 'admin/core/testimonial_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = Testimonial.objects.count()
+        active = Testimonial.objects.filter(is_active=True).count()
+        avg_rating = Testimonial.objects.filter(is_active=True).aggregate(avg=Avg('rating'))['avg'] or 0
+        five_stars = Testimonial.objects.filter(rating=5).count()
+        with_photo = Testimonial.objects.exclude(photo='').exclude(photo__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'avg_rating': round(avg_rating, 1),
+            'five_stars': five_stars,
+            'with_photo': with_photo,
+        }
+        return super().changelist_view(request, extra_context)
 
     def photo_preview(self, obj):
         if obj.photo:
@@ -567,6 +677,23 @@ class FAQAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['question', 'answer']
     ordering = ['order']
+    change_list_template = 'admin/core/faq_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = FAQ.objects.count()
+        active = FAQ.objects.filter(is_active=True).count()
+        categories = FAQ.objects.values('category').distinct().count()
+        avg_per_category = round(total / categories) if categories > 0 else 0
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'categories': categories,
+            'avg_per_category': avg_per_category,
+        }
+        return super().changelist_view(request, extra_context)
 
     def question_short(self, obj):
         return obj.question[:80] + '...' if len(obj.question) > 80 else obj.question
@@ -586,6 +713,23 @@ class InstallationTypeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/installationtype_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = InstallationType.objects.count()
+        active = InstallationType.objects.filter(is_active=True).count()
+        total_quotes = QuoteRequest.objects.count()
+        avg_price = InstallationType.objects.filter(base_price__isnull=False).aggregate(avg=Avg('base_price'))['avg'] or 0
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'total_quotes': total_quotes,
+            'avg_price': f"{avg_price:,.0f}".replace(",", " "),
+        }
+        return super().changelist_view(request, extra_context)
 
     def base_price_display(self, obj):
         if obj.base_price:
@@ -911,6 +1055,27 @@ class SystemModelAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', 'target_audience']
     prepopulated_fields = {'slug': ('name',)}
     ordering = ['order', '-created_at']
+    change_list_template = 'admin/core/systemmodel_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = SystemModel.objects.count()
+        active = SystemModel.objects.filter(is_active=True).count()
+        featured = SystemModel.objects.filter(is_featured=True).count()
+        avg_price = SystemModel.objects.filter(is_active=True).aggregate(avg=Avg('price'))['avg'] or 0
+        types_count = SystemModel.objects.values('system_type').distinct().count()
+        by_type = list(SystemModel.objects.values('system_type').annotate(count=Count('id')).order_by('-count'))
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'featured': featured,
+            'avg_price': f"{avg_price:,.0f}".replace(",", " "),
+            'types_count': types_count,
+            'by_type': by_type,
+        }
+        return super().changelist_view(request, extra_context)
 
     fieldsets = (
         ('Informations principales', {
@@ -1034,6 +1199,30 @@ class QuizQuestionAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['question', 'option_1', 'option_2', 'option_3', 'option_4']
     ordering = ['order', '-created_at']
+    change_list_template = 'admin/core/quizquestion_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = QuizQuestion.objects.count()
+        active = QuizQuestion.objects.filter(is_active=True).count()
+        total_participations = GameParticipation.objects.count()
+
+        # Calculer score moyen
+        participations_with_score = GameParticipation.objects.filter(quiz_total__gt=0)
+        if participations_with_score.exists():
+            scores = [p.quiz_score / p.quiz_total * 100 for p in participations_with_score]
+            avg_score = round(sum(scores) / len(scores)) if scores else 0
+        else:
+            avg_score = 0
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'total_participations': total_participations,
+            'avg_score': avg_score,
+        }
+        return super().changelist_view(request, extra_context)
 
     fieldsets = (
         ('Question', {
@@ -1093,6 +1282,37 @@ class GamePrizeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']  # Required for autocomplete
     ordering = ['order']
+    change_list_template = 'admin/core/gameprize_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = GamePrize.objects.count()
+        active = GamePrize.objects.filter(is_active=True).count()
+        winning = GamePrize.objects.filter(is_winning_prize=True).count()
+        losing = GamePrize.objects.filter(is_winning_prize=False).count()
+        total_won = GameParticipation.objects.filter(prize__is_winning_prize=True).count()
+
+        # Répartition par type
+        by_type = list(GamePrize.objects.values('prize_type').annotate(count=Count('id')).order_by('-count'))
+        prize_types = {
+            'discount': 'Réduction',
+            'free_delivery': 'Livraison gratuite',
+            'free_item': 'Article offert',
+            'lost': 'Perdu',
+        }
+        for item in by_type:
+            item['prize_type_display'] = prize_types.get(item['prize_type'], item['prize_type'])
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'winning': winning,
+            'losing': losing,
+            'total_won': total_won,
+            'by_type': by_type,
+        }
+        return super().changelist_view(request, extra_context)
 
     fieldsets = (
         ('Informations du prix', {
@@ -1291,6 +1511,21 @@ class FishSpeciesAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']
     ordering = ['order', 'name']
+    change_list_template = 'admin/core/fishspecies_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = FishSpecies.objects.count()
+        active = FishSpecies.objects.filter(is_active=True).count()
+        with_image = FishSpecies.objects.exclude(image='').exclude(image__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'with_image': with_image,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -1307,6 +1542,25 @@ class CropTypeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']
     ordering = ['order', 'name']
+    change_list_template = 'admin/core/croptype_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = CropType.objects.count()
+        active = CropType.objects.filter(is_active=True).count()
+        categories = CropType.objects.values('category').distinct().count()
+        with_image = CropType.objects.exclude(image='').exclude(image__isnull=True).count()
+        by_category = list(CropType.objects.values('category').annotate(count=Count('id')).order_by('-count'))
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'categories': categories,
+            'with_image': with_image,
+            'by_category': by_category,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -1323,6 +1577,21 @@ class BasinTypeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']
     ordering = ['order', 'name']
+    change_list_template = 'admin/core/basintype_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = BasinType.objects.count()
+        active = BasinType.objects.filter(is_active=True).count()
+        with_image = BasinType.objects.exclude(image='').exclude(image__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'with_image': with_image,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -1339,6 +1608,23 @@ class HydroSystemTypeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'code', 'description']
     ordering = ['order', 'name']
+    change_list_template = 'admin/core/hydrosystemtype_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = HydroSystemType.objects.count()
+        active = HydroSystemType.objects.filter(is_active=True).count()
+        with_code = HydroSystemType.objects.exclude(code='').exclude(code__isnull=True).count()
+        with_image = HydroSystemType.objects.exclude(image='').exclude(image__isnull=True).count()
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'with_code': with_code,
+            'with_image': with_image,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -1355,6 +1641,25 @@ class TrainingTypeAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'description']
     ordering = ['order', 'name']
+    change_list_template = 'admin/core/trainingtype_changelist.html'
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = TrainingType.objects.count()
+        active = TrainingType.objects.filter(is_active=True).count()
+        avg_price = TrainingType.objects.filter(price__isnull=False).aggregate(avg=Avg('price'))['avg'] or 0
+        categories = TrainingType.objects.values('category').distinct().count()
+        by_category = list(TrainingType.objects.values('category').annotate(count=Count('id')).order_by('-count'))
+
+        extra_context['kpi'] = {
+            'total': total,
+            'active': active,
+            'avg_price': f"{avg_price:,.0f}".replace(",", " "),
+            'categories': categories,
+            'by_category': by_category,
+        }
+        return super().changelist_view(request, extra_context)
 
     def price_display(self, obj):
         if obj.price:

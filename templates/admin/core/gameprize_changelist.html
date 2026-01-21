@@ -1,0 +1,204 @@
+{% extends "admin/change_list.html" %}
+{% load static i18n %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.kpi-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+}
+
+.kpi-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 160px;
+    flex: 1;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.kpi-card.highlight {
+    background: linear-gradient(135deg, #1e2a4a 0%, #2d3e5f 100%);
+    color: #fff;
+}
+
+.kpi-card.success {
+    background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+    color: #fff;
+}
+
+.kpi-card.gold {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #fff;
+}
+
+.kpi-card.danger {
+    background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+    color: #fff;
+}
+
+.kpi-card.info {
+    background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);
+    color: #fff;
+}
+
+.kpi-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(30, 42, 74, 0.1);
+}
+
+.kpi-card.highlight .kpi-icon,
+.kpi-card.success .kpi-icon,
+.kpi-card.gold .kpi-icon,
+.kpi-card.danger .kpi-icon,
+.kpi-card.info .kpi-icon {
+    background: rgba(255,255,255,0.2);
+}
+
+.kpi-content {
+    flex: 1;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e2a4a;
+    line-height: 1;
+}
+
+.kpi-card.highlight .kpi-value,
+.kpi-card.success .kpi-value,
+.kpi-card.gold .kpi-value,
+.kpi-card.danger .kpi-value,
+.kpi-card.info .kpi-value {
+    color: #fff;
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-card.highlight .kpi-label,
+.kpi-card.success .kpi-label,
+.kpi-card.gold .kpi-label,
+.kpi-card.danger .kpi-label,
+.kpi-card.info .kpi-label {
+    color: rgba(255,255,255,0.8);
+}
+
+.prize-breakdown {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+
+.prize-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.prize-item:last-child {
+    border-bottom: none;
+}
+
+.prize-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.prize-badge.discount { background: #e8f5e9; color: #2e7d32; }
+.prize-badge.free_delivery { background: #e3f2fd; color: #1976d2; }
+.prize-badge.free_item { background: #fff3e0; color: #f57c00; }
+.prize-badge.lost { background: #ffebee; color: #c62828; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kpi-dashboard">
+    <div class="kpi-card highlight">
+        <div class="kpi-icon">🎡</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.total }}</div>
+            <div class="kpi-label">Total Prix</div>
+        </div>
+    </div>
+
+    <div class="kpi-card success">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.active }}</div>
+            <div class="kpi-label">Actifs</div>
+        </div>
+    </div>
+
+    <div class="kpi-card gold">
+        <div class="kpi-icon">🏆</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.winning }}</div>
+            <div class="kpi-label">Prix Gagnants</div>
+        </div>
+    </div>
+
+    <div class="kpi-card danger">
+        <div class="kpi-icon">😢</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.losing }}</div>
+            <div class="kpi-label">Cases Perdantes</div>
+        </div>
+    </div>
+
+    <div class="kpi-card info">
+        <div class="kpi-icon">🎁</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.total_won }}</div>
+            <div class="kpi-label">Prix Remportés</div>
+        </div>
+    </div>
+</div>
+
+{% if kpi.by_type %}
+<div class="prize-breakdown">
+    <h4 style="margin: 0 0 15px 0; color: #1e2a4a;">Répartition par Type</h4>
+    {% for item in kpi.by_type %}
+    <div class="prize-item">
+        <span class="prize-badge {{ item.prize_type }}">{{ item.prize_type_display }}</span>
+        <strong>{{ item.count }} prix</strong>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{{ block.super }}
+{% endblock %}

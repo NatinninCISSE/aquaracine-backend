@@ -1,0 +1,151 @@
+{% extends "admin/change_list.html" %}
+{% load static i18n %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.kpi-dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+}
+
+.kpi-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 160px;
+    flex: 1;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.kpi-card.highlight {
+    background: linear-gradient(135deg, #1e2a4a 0%, #2d3e5f 100%);
+    color: #fff;
+}
+
+.kpi-card.success {
+    background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+    color: #fff;
+}
+
+.kpi-card.purple {
+    background: linear-gradient(135deg, #673ab7 0%, #9c27b0 100%);
+    color: #fff;
+}
+
+.kpi-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(30, 42, 74, 0.1);
+}
+
+.kpi-card.highlight .kpi-icon,
+.kpi-card.success .kpi-icon,
+.kpi-card.purple .kpi-icon {
+    background: rgba(255,255,255,0.2);
+}
+
+.kpi-content {
+    flex: 1;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e2a4a;
+    line-height: 1;
+}
+
+.kpi-card.highlight .kpi-value,
+.kpi-card.success .kpi-value,
+.kpi-card.purple .kpi-value {
+    color: #fff;
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.kpi-card.highlight .kpi-label,
+.kpi-card.success .kpi-label,
+.kpi-card.purple .kpi-label {
+    color: rgba(255,255,255,0.8);
+}
+
+.category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.category-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="kpi-dashboard">
+    <div class="kpi-card highlight">
+        <div class="kpi-icon">❓</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.total }}</div>
+            <div class="kpi-label">Total Questions</div>
+        </div>
+    </div>
+
+    <div class="kpi-card success">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.active }}</div>
+            <div class="kpi-label">Actives</div>
+        </div>
+    </div>
+
+    <div class="kpi-card purple">
+        <div class="kpi-icon">📁</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.categories }}</div>
+            <div class="kpi-label">Catégories</div>
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-content">
+            <div class="kpi-value">{{ kpi.avg_per_category }}</div>
+            <div class="kpi-label">Moy. par Catégorie</div>
+        </div>
+    </div>
+</div>
+
+{{ block.super }}
+{% endblock %}
