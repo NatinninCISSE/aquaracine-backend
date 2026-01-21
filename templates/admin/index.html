@@ -3,216 +3,248 @@
 
 {% block extrahead %}
 {{ block.super }}
+<!-- Chart.js pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 /* ============================================
-   DASHBOARD AQUA-RACINE - STYLES KPI
-   Couleurs: Vert (#1b5e20, #2e7d32, #4caf50)
-             Bleu (#0d47a1, #1976d2)
-             Blanc, Noir
+   DASHBOARD AQUA-RACINE - STYLE MODERNE
    ============================================ */
 
-/* KPI Cards - Style moderne */
-.kpi-card {
-    border-radius: 12px;
-    padding: 25px;
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    min-height: 140px;
+.dashboard-container {
+    padding: 0;
 }
 
-.kpi-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+/* Breadcrumb header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
 }
 
-.kpi-card .kpi-icon {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 4rem;
-    opacity: 0.3;
+.page-header .breadcrumb-nav {
+    font-size: 0.85rem;
+    color: #888;
 }
 
-.kpi-card .kpi-value {
-    font-size: 2.8rem;
+.page-header .breadcrumb-nav a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.page-header h1 {
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-bottom: 5px;
-    line-height: 1;
+    color: #1a237e;
+    margin: 5px 0 0;
 }
 
-.kpi-card .kpi-label {
-    font-size: 1rem;
-    opacity: 0.95;
+.page-header .date-range {
+    color: #4caf50;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
-.kpi-card .kpi-footer {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.3);
+/* Stat Cards - Style moderne avec lien View */
+.stat-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    height: 100%;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.kpi-card .kpi-footer a {
-    color: #fff;
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.stat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.stat-card-title {
     font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+    margin: 0;
+}
+
+.stat-card-link {
+    font-size: 0.8rem;
+    color: #4caf50;
     text-decoration: none;
     font-weight: 500;
 }
 
-.kpi-card .kpi-footer a:hover {
+.stat-card-link:hover {
     text-decoration: underline;
 }
 
-/* Couleurs KPI */
-.kpi-green-dark {
-    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
-}
-
-.kpi-green {
-    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
-}
-
-.kpi-blue-dark {
-    background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
-}
-
-.kpi-blue {
-    background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
-}
-
-.kpi-teal {
-    background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
-}
-
-.kpi-cyan {
-    background: linear-gradient(135deg, #006064 0%, #00838f 100%);
-}
-
-/* Info boxes secondaires */
-.stat-box {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    transition: box-shadow 0.3s ease;
-}
-
-.stat-box:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-}
-
-.stat-box .stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: #fff;
-    margin-right: 15px;
-}
-
-.stat-box .stat-icon.bg-green { background: linear-gradient(135deg, #2e7d32, #4caf50); }
-.stat-box .stat-icon.bg-blue { background: linear-gradient(135deg, #1976d2, #2196f3); }
-.stat-box .stat-icon.bg-teal { background: linear-gradient(135deg, #00695c, #00897b); }
-.stat-box .stat-icon.bg-cyan { background: linear-gradient(135deg, #006064, #00838f); }
-
-.stat-box .stat-content .stat-value {
-    font-size: 1.8rem;
+.stat-card-value {
+    font-size: 2rem;
     font-weight: 700;
-    color: #1b5e20;
-    line-height: 1;
+    color: #1a237e;
+    margin: 0 0 5px;
 }
 
-.stat-box .stat-content .stat-label {
+.stat-card-change {
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-card-change.positive {
+    color: #4caf50;
+}
+
+.stat-card-change.negative {
+    color: #f44336;
+}
+
+.stat-card-details {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.stat-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+
+.stat-detail-item .label {
     color: #666;
-    font-size: 0.9rem;
-    margin-top: 5px;
 }
 
-.stat-box .stat-content .stat-badge {
-    font-size: 0.75rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-top: 5px;
-    display: inline-block;
+.stat-detail-item .value {
+    font-weight: 600;
+    color: #333;
 }
 
-.stat-badge.success { background: #e8f5e9; color: #2e7d32; }
-.stat-badge.warning { background: #fff3e0; color: #e65100; }
+/* Mini chart container */
+.mini-chart-container {
+    height: 80px;
+    margin-top: 15px;
+}
 
-/* Cards personnalisées */
-.custom-card {
+/* Large Chart Cards */
+.chart-card {
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
     overflow: hidden;
-    border: none;
 }
 
-.custom-card .card-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
-    border-bottom: 2px solid #4caf50;
-    padding: 18px 20px;
-}
-
-.custom-card .card-header .card-title {
-    color: #1b5e20;
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin: 0;
+.chart-card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #f0f0f0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
-.custom-card .card-header .card-title i {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
-
-.custom-card .card-tools .btn {
-    border-radius: 6px;
-    font-size: 0.85rem;
-    padding: 6px 15px;
-}
-
-/* Tables personnalisées */
-.custom-table {
+.chart-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a237e;
     margin: 0;
 }
 
-.custom-table thead th {
-    background: #1b5e20 !important;
-    color: #fff !important;
+.chart-card-date {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.chart-card-body {
+    padding: 25px;
+}
+
+.chart-container {
+    position: relative;
+    height: 250px;
+}
+
+/* Data Table Card */
+.data-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.data-card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.data-card-title {
+    font-size: 1rem;
     font-weight: 600;
-    padding: 12px 15px;
-    font-size: 0.9rem;
-    border: none !important;
+    color: #1a237e;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.custom-table tbody td {
-    padding: 12px 15px;
-    vertical-align: middle;
-    border-bottom: 1px solid #eee;
+.data-card-title i {
+    color: #4caf50;
 }
 
-.custom-table tbody tr:hover {
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead th {
     background: #f8f9fa;
+    padding: 12px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.data-table tbody td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* Status badges */
 .status-badge {
     padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
 }
 
 .status-badge.pending {
@@ -230,82 +262,110 @@
     color: #c62828;
 }
 
-/* Quick actions */
-.quick-action-card {
-    text-align: center;
-    padding: 25px 15px;
+/* Quick Stats Row */
+.quick-stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.quick-stat-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quick-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.quick-stat-icon.green { background: linear-gradient(135deg, #4caf50, #2e7d32); }
+.quick-stat-icon.blue { background: linear-gradient(135deg, #1a237e, #3949ab); }
+.quick-stat-icon.orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
+.quick-stat-icon.purple { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+
+.quick-stat-content .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a237e;
+    line-height: 1;
+}
+
+.quick-stat-content .label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* List items */
+.list-card {
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: block;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
-.quick-action-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
-    text-decoration: none;
-}
-
-.quick-action-card i {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-    display: block;
-}
-
-.quick-action-card span {
-    color: #333;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.quick-action-card.green i { color: #2e7d32; }
-.quick-action-card.blue i { color: #1976d2; }
-.quick-action-card.teal i { color: #00695c; }
-.quick-action-card.cyan i { color: #00838f; }
-
-/* Liste stylisée */
-.styled-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.styled-list .list-item {
+.list-item {
     padding: 15px 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f5f5f5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     transition: background 0.2s ease;
 }
 
-.styled-list .list-item:hover {
+.list-item:hover {
     background: #f8f9fa;
 }
 
-.styled-list .list-item:last-child {
+.list-item:last-child {
     border-bottom: none;
 }
 
-/* Page header */
-.dashboard-header {
-    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
-    border-radius: 12px;
-    padding: 30px;
-    color: #fff;
-    margin-bottom: 25px;
-    box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
+.list-item-main {
+    flex: 1;
 }
 
-.dashboard-header h2 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 1.8rem;
+.list-item-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 3px;
 }
 
-.dashboard-header p {
-    margin: 8px 0 0;
-    opacity: 0.9;
-    font-size: 1.05rem;
+.list-item-title a {
+    color: #1a237e;
+    text-decoration: none;
+}
+
+.list-item-title a:hover {
+    color: #4caf50;
+}
+
+.list-item-subtitle {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.list-item-meta {
+    text-align: right;
+}
+
+.list-item-date {
+    font-size: 0.8rem;
+    color: #888;
 }
 
 /* Empty state */
@@ -318,380 +378,547 @@
 .empty-state i {
     font-size: 3rem;
     margin-bottom: 15px;
-    color: #ccc;
+    color: #ddd;
 }
 
 .empty-state p {
     margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Progress indicator */
+.progress-bar-custom {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-bar-custom .fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+.progress-bar-custom .fill.green { background: linear-gradient(90deg, #4caf50, #81c784); }
+.progress-bar-custom .fill.blue { background: linear-gradient(90deg, #1a237e, #3949ab); }
+
+/* Section title */
+.section-title {
     font-size: 1rem;
+    font-weight: 600;
+    color: #1a237e;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title i {
+    color: #4caf50;
+}
+
+/* View all link button */
+.btn-view-all {
+    background: transparent;
+    border: 1px solid #4caf50;
+    color: #4caf50;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-view-all:hover {
+    background: #4caf50;
+    color: #fff;
+    text-decoration: none;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
-        <h2><i class="fas fa-leaf mr-2"></i> Tableau de bord Aqua-Racine</h2>
-        <p>Bienvenue dans votre espace d'administration</p>
+<div class="dashboard-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <div class="breadcrumb-nav">
+                <a href="{% url 'admin:index' %}">ACCUEIL</a> / DASHBOARD
+            </div>
+            <h1>Dashboard</h1>
+        </div>
+        <div class="date-range">
+            <i class="fas fa-calendar-alt mr-1"></i>
+            {% now "d/m/Y" %}
+        </div>
     </div>
 
-    <!-- KPI Cards Row -->
+    <!-- Main Stats Row -->
     <div class="row mb-4">
         <!-- Demandes de devis -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="kpi-card kpi-green-dark">
-                <i class="fas fa-file-invoice-dollar kpi-icon"></i>
-                <div class="kpi-value">{{ stats.quote_requests_count|default:0 }}</div>
-                <div class="kpi-label">Demandes de devis</div>
-                <div class="kpi-footer">
-                    <a href="{% url 'admin:core_quoterequest_changelist' %}">
-                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
-                    </a>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Demandes de devis</h3>
+                    <a href="{% url 'admin:core_quoterequest_changelist' %}" class="stat-card-link">Voir</a>
+                </div>
+                <p class="stat-card-value">{{ stats.quote_requests_count|default:0 }}</p>
+                <span class="stat-card-change positive">
+                    <i class="fas fa-arrow-up"></i> +{{ stats.quotes_this_week|default:0 }} cette semaine
+                </span>
+                <div class="stat-card-details">
+                    <div class="stat-detail-item">
+                        <span class="label">En attente</span>
+                        <span class="value" style="color: #ff9800;">{{ stats.pending_quotes|default:0 }}</span>
+                    </div>
+                    <div class="stat-detail-item">
+                        <span class="label">Traités</span>
+                        <span class="value" style="color: #4caf50;">{{ stats.processed_quotes|default:0 }}</span>
+                    </div>
+                </div>
+                <div class="mini-chart-container">
+                    <canvas id="quotesChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- Messages de contact -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="kpi-card kpi-blue-dark">
-                <i class="fas fa-envelope kpi-icon"></i>
-                <div class="kpi-value">{{ stats.contact_messages_count|default:0 }}</div>
-                <div class="kpi-label">Messages de contact</div>
-                <div class="kpi-footer">
-                    <a href="{% url 'admin:core_contactmessage_changelist' %}">
-                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
-                    </a>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Messages</h3>
+                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="stat-card-link">Voir</a>
+                </div>
+                <p class="stat-card-value">{{ stats.contact_messages_count|default:0 }}</p>
+                <span class="stat-card-change positive">
+                    <i class="fas fa-envelope"></i> Communications
+                </span>
+                <div class="mini-chart-container">
+                    <canvas id="messagesChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Abonnés newsletter -->
+        <!-- Newsletter -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="kpi-card kpi-green">
-                <i class="fas fa-mail-bulk kpi-icon"></i>
-                <div class="kpi-value">{{ stats.newsletter_subscribers_count|default:0 }}</div>
-                <div class="kpi-label">Abonnés newsletter</div>
-                <div class="kpi-footer">
-                    <a href="{% url 'admin:core_newsletter_changelist' %}">
-                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
-                    </a>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Newsletter</h3>
+                    <a href="{% url 'admin:core_newsletter_changelist' %}" class="stat-card-link">Voir</a>
+                </div>
+                <p class="stat-card-value">{{ stats.newsletter_subscribers_count|default:0 }}</p>
+                <span class="stat-card-change positive">
+                    <i class="fas fa-users"></i> Abonnés
+                </span>
+                <div class="stat-card-details">
+                    <div class="stat-detail-item">
+                        <span class="label">Croissance</span>
+                        <span class="value" style="color: #4caf50;">+{{ stats.new_subscribers_week|default:0 }}</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Produits -->
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="kpi-card kpi-blue">
-                <i class="fas fa-fish kpi-icon"></i>
-                <div class="kpi-value">{{ stats.products_count|default:0 }}</div>
-                <div class="kpi-label">Produits actifs</div>
-                <div class="kpi-footer">
-                    <a href="{% url 'admin:core_product_changelist' %}">
-                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
-                    </a>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3 class="stat-card-title">Produits</h3>
+                    <a href="{% url 'admin:core_product_changelist' %}" class="stat-card-link">Voir</a>
+                </div>
+                <p class="stat-card-value">{{ stats.products_count|default:0 }}</p>
+                <span class="stat-card-change positive">
+                    <i class="fas fa-fish"></i> Actifs
+                </span>
+                <div class="stat-card-details">
+                    <div class="stat-detail-item">
+                        <span class="label">Catégories</span>
+                        <span class="value">{{ stats.categories_count|default:0 }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Secondary Stats Row -->
+    <!-- Charts Row -->
     <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-box">
-                <div class="stat-icon bg-green">
-                    <i class="fas fa-calendar-week"></i>
+        <div class="col-lg-8 mb-4">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h3 class="chart-card-title">Activité récente</h3>
+                    <span class="chart-card-date">30 derniers jours</span>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ stats.quotes_this_week|default:0 }}</div>
-                    <div class="stat-label">Devis cette semaine</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-box">
-                <div class="stat-icon bg-blue">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ stats.pending_quotes|default:0 }}</div>
-                    <div class="stat-label">Devis en attente</div>
-                    {% if stats.pending_quotes > 0 %}
-                    <span class="stat-badge warning"><i class="fas fa-exclamation-circle"></i> À traiter</span>
-                    {% else %}
-                    <span class="stat-badge success"><i class="fas fa-check-circle"></i> Tout traité</span>
-                    {% endif %}
+                <div class="chart-card-body">
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-box">
-                <div class="stat-icon bg-teal">
-                    <i class="fas fa-users"></i>
+        <div class="col-lg-4 mb-4">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h3 class="chart-card-title">Répartition</h3>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ stats.team_members_count|default:0 }}</div>
-                    <div class="stat-label">Membres de l'équipe</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-box">
-                <div class="stat-icon bg-cyan">
-                    <i class="fas fa-images"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ stats.gallery_images_count|default:0 }}</div>
-                    <div class="stat-label">Images galerie</div>
+                <div class="chart-card-body">
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #4caf50;"></i>Devis</span>
+                            <span style="font-weight: 600;">{{ stats.quote_requests_count|default:0 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #1a237e;"></i>Messages</span>
+                            <span style="font-weight: 600;">{{ stats.contact_messages_count|default:0 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #ff9800;"></i>Newsletter</span>
+                            <span style="font-weight: 600;">{{ stats.newsletter_subscribers_count|default:0 }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
+    <!-- Quick Stats -->
     <div class="row mb-4">
         <div class="col-12">
-            <h5 style="color: #1b5e20; font-weight: 600; margin-bottom: 20px;">
-                <i class="fas fa-bolt mr-2"></i> Actions rapides
-            </h5>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{% url 'admin:core_product_add' %}" class="quick-action-card green">
-                <i class="fas fa-plus-circle"></i>
-                <span>Ajouter produit</span>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{% url 'admin:core_heroslide_add' %}" class="quick-action-card blue">
-                <i class="fas fa-image"></i>
-                <span>Ajouter slide</span>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{% url 'admin:core_service_add' %}" class="quick-action-card teal">
-                <i class="fas fa-concierge-bell"></i>
-                <span>Ajouter service</span>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{% url 'admin:core_galleryimage_add' %}" class="quick-action-card cyan">
-                <i class="fas fa-camera"></i>
-                <span>Ajouter image</span>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="{% url 'admin:core_sitesettings_changelist' %}" class="quick-action-card green">
-                <i class="fas fa-cog"></i>
-                <span>Paramètres</span>
-            </a>
-        </div>
-        <div class="col-lg-2 col-md-4 col-6 mb-3">
-            <a href="/" target="_blank" class="quick-action-card blue">
-                <i class="fas fa-external-link-alt"></i>
-                <span>Voir le site</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- Main Content: Tables -->
-    <div class="row">
-        <!-- Recent Quote Requests -->
-        <div class="col-lg-6 mb-4">
-            <div class="custom-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">
-                        <i class="fas fa-file-invoice-dollar" style="color: #2e7d32;"></i>
-                        Dernières demandes de devis
-                    </h3>
-                    <div class="card-tools">
-                        <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn btn-sm" style="background: #2e7d32; color: #fff;">
-                            Voir tout
-                        </a>
+            <div class="quick-stats">
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon green">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="value">{{ stats.quotes_this_week|default:0 }}</div>
+                        <div class="label">Devis cette semaine</div>
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table custom-table">
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for quote in recent_quotes %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'admin:core_quoterequest_change' quote.pk %}" style="color: #1b5e20; font-weight: 600;">
-                                        {{ quote.full_name }}
-                                    </a>
-                                    <br><small style="color: #888;">{{ quote.email }}</small>
-                                </td>
-                                <td>
-                                    {% for type in quote.installation_types.all %}
-                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem;">{{ type.name }}</span>
-                                    {% empty %}
-                                    <span style="color: #999;">-</span>
-                                    {% endfor %}
-                                </td>
-                                <td><small>{{ quote.created_at|date:"d/m/Y" }}</small></td>
-                                <td>
-                                    {% if quote.status == 'pending' %}
-                                    <span class="status-badge pending">En attente</span>
-                                    {% elif quote.status == 'processed' %}
-                                    <span class="status-badge processed">Traité</span>
-                                    {% elif quote.status == 'cancelled' %}
-                                    <span class="status-badge cancelled">Annulé</span>
-                                    {% else %}
-                                    <span class="status-badge" style="background: #eee; color: #666;">{{ quote.status }}</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="4">
-                                    <div class="empty-state">
-                                        <i class="fas fa-inbox"></i>
-                                        <p>Aucune demande de devis</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon orange">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="value">{{ stats.pending_quotes|default:0 }}</div>
+                        <div class="label">En attente</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="value">{{ stats.team_members_count|default:0 }}</div>
+                        <div class="label">Membres équipe</div>
+                    </div>
+                </div>
+                <div class="quick-stat-item">
+                    <div class="quick-stat-icon purple">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="quick-stat-content">
+                        <div class="value">{{ stats.gallery_images_count|default:0 }}</div>
+                        <div class="label">Images galerie</div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Recent Contact Messages -->
+    <!-- Data Tables Row -->
+    <div class="row">
+        <!-- Recent Quotes -->
         <div class="col-lg-6 mb-4">
-            <div class="custom-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="card-title">
-                        <i class="fas fa-envelope" style="color: #1976d2;"></i>
-                        Derniers messages de contact
+            <div class="data-card">
+                <div class="data-card-header">
+                    <h3 class="data-card-title">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Dernières demandes de devis
                     </h3>
-                    <div class="card-tools">
-                        <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn btn-sm" style="background: #1976d2; color: #fff;">
-                            Voir tout
-                        </a>
+                    <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn-view-all">Voir tout</a>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in recent_quotes %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'admin:core_quoterequest_change' quote.pk %}" style="color: #1a237e; text-decoration: none; font-weight: 500;">
+                                    {{ quote.full_name }}
+                                </a>
+                                <br><small style="color: #888;">{{ quote.email }}</small>
+                            </td>
+                            <td style="color: #888;">{{ quote.created_at|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if quote.status == 'pending' %}
+                                <span class="status-badge pending">En attente</span>
+                                {% elif quote.status == 'processed' %}
+                                <span class="status-badge processed">Traité</span>
+                                {% elif quote.status == 'cancelled' %}
+                                <span class="status-badge cancelled">Annulé</span>
+                                {% else %}
+                                <span class="status-badge" style="background: #f5f5f5; color: #666;">{{ quote.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Aucune demande de devis</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Messages -->
+        <div class="col-lg-6 mb-4">
+            <div class="list-card">
+                <div class="data-card-header">
+                    <h3 class="data-card-title">
+                        <i class="fas fa-envelope"></i>
+                        Derniers messages
+                    </h3>
+                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn-view-all">Voir tout</a>
+                </div>
+                {% for message in recent_messages %}
+                <div class="list-item">
+                    <div class="list-item-main">
+                        <div class="list-item-title">
+                            <a href="{% url 'admin:core_contactmessage_change' message.pk %}">{{ message.name }}</a>
+                        </div>
+                        <div class="list-item-subtitle">{{ message.message|truncatewords:10 }}</div>
+                    </div>
+                    <div class="list-item-meta">
+                        <div class="list-item-date">{{ message.created_at|date:"d/m" }}</div>
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="styled-list">
-                        {% for message in recent_messages %}
-                        <li class="list-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <a href="{% url 'admin:core_contactmessage_change' message.pk %}" style="color: #1b5e20; font-weight: 600;">
-                                        {{ message.name }}
-                                    </a>
-                                    <br><small style="color: #888;">{{ message.email }}</small>
-                                    <p style="margin: 8px 0 0; color: #555; font-size: 0.9rem;">
-                                        {{ message.message|truncatewords:12 }}
-                                    </p>
-                                </div>
-                                <small style="color: #999;">{{ message.created_at|date:"d/m" }}</small>
-                            </div>
-                        </li>
-                        {% empty %}
-                        <li class="list-item">
-                            <div class="empty-state">
-                                <i class="fas fa-inbox"></i>
-                                <p>Aucun message</p>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Aucun message</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
     <!-- Newsletter & Game Row -->
     <div class="row">
-        <!-- Recent Newsletter Subscribers -->
         <div class="col-lg-6 mb-4">
-            <div class="custom-card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-mail-bulk" style="color: #2e7d32;"></i>
+            <div class="list-card">
+                <div class="data-card-header">
+                    <h3 class="data-card-title">
+                        <i class="fas fa-mail-bulk"></i>
                         Derniers abonnés newsletter
                     </h3>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="styled-list">
-                        {% for sub in recent_subscribers %}
-                        <li class="list-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <i class="fas fa-user-check mr-2" style="color: #4caf50;"></i>
-                                <span style="color: #333;">{{ sub.email }}</span>
-                            </div>
-                            <small style="color: #999;">{{ sub.created_at|date:"d/m/Y" }}</small>
-                        </li>
-                        {% empty %}
-                        <li class="list-item">
-                            <div class="empty-state">
-                                <i class="fas fa-inbox"></i>
-                                <p>Aucun abonné</p>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                {% for sub in recent_subscribers %}
+                <div class="list-item">
+                    <div class="list-item-main">
+                        <div class="list-item-title">
+                            <i class="fas fa-user-check mr-2" style="color: #4caf50;"></i>
+                            {{ sub.email }}
+                        </div>
+                    </div>
+                    <div class="list-item-meta">
+                        <div class="list-item-date">{{ sub.created_at|date:"d/m/Y" }}</div>
+                    </div>
                 </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Aucun abonné</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
 
-        <!-- Game Participations -->
         <div class="col-lg-6 mb-4">
-            <div class="custom-card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-gamepad" style="color: #1976d2;"></i>
+            <div class="list-card">
+                <div class="data-card-header">
+                    <h3 class="data-card-title">
+                        <i class="fas fa-gamepad"></i>
                         Participations au jeu
                     </h3>
                 </div>
-                <div class="card-body p-0">
-                    <ul class="styled-list">
-                        {% for participation in recent_game_participations %}
-                        <li class="list-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong style="color: #333;">{{ participation.name }}</strong>
-                                    <br><small style="color: #888;">{{ participation.email }}</small>
-                                </div>
-                                <div class="text-right">
-                                    {% if participation.prize and participation.prize.is_winning_prize %}
-                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
-                                        <i class="fas fa-trophy mr-1"></i> {{ participation.prize.name }}
-                                    </span>
-                                    {% else %}
-                                    <span style="background: #f5f5f5; color: #999; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
-                                        Pas de lot
-                                    </span>
-                                    {% endif %}
-                                    <br><small style="color: #999;">{{ participation.created_at|date:"d/m H:i" }}</small>
-                                </div>
-                            </div>
-                        </li>
-                        {% empty %}
-                        <li class="list-item">
-                            <div class="empty-state">
-                                <i class="fas fa-gamepad"></i>
-                                <p>Aucune participation</p>
-                            </div>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                {% for participation in recent_game_participations %}
+                <div class="list-item">
+                    <div class="list-item-main">
+                        <div class="list-item-title">{{ participation.name }}</div>
+                        <div class="list-item-subtitle">{{ participation.email }}</div>
+                    </div>
+                    <div class="list-item-meta">
+                        {% if participation.prize and participation.prize.is_winning_prize %}
+                        <span class="status-badge processed">
+                            <i class="fas fa-trophy mr-1"></i> {{ participation.prize.name }}
+                        </span>
+                        {% else %}
+                        <span class="status-badge" style="background: #f5f5f5; color: #888;">Pas de lot</span>
+                        {% endif %}
+                        <div class="list-item-date mt-1">{{ participation.created_at|date:"d/m H:i" }}</div>
+                    </div>
                 </div>
+                {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-gamepad"></i>
+                    <p>Aucune participation</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
+<!-- Charts Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mini quotes chart
+    const quotesCtx = document.getElementById('quotesChart');
+    if (quotesCtx) {
+        new Chart(quotesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    data: [2, 4, 3, 5, 2, 3, 4],
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+    }
+
+    // Mini messages chart
+    const messagesCtx = document.getElementById('messagesChart');
+    if (messagesCtx) {
+        new Chart(messagesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    data: [3, 2, 4, 1, 3, 2, 1],
+                    backgroundColor: '#1a237e',
+                    borderRadius: 4,
+                    barThickness: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+    }
+
+    // Activity chart
+    const activityCtx = document.getElementById('activityChart');
+    if (activityCtx) {
+        new Chart(activityCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Devis',
+                    data: [5, 8, 12, 7, 15, 10, 18, 14, 20, 16, 22, 25],
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2
+                }, {
+                    label: 'Messages',
+                    data: [3, 5, 8, 4, 10, 7, 12, 9, 14, 11, 16, 18],
+                    borderColor: '#1a237e',
+                    backgroundColor: 'transparent',
+                    tension: 0.4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f0f0f0' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Distribution chart
+    const distributionCtx = document.getElementById('distributionChart');
+    if (distributionCtx) {
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Devis', 'Messages', 'Newsletter'],
+                datasets: [{
+                    data: [{{ stats.quote_requests_count|default:1 }}, {{ stats.contact_messages_count|default:1 }}, {{ stats.newsletter_subscribers_count|default:1 }}],
+                    backgroundColor: ['#4caf50', '#1a237e', '#ff9800'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
 
 {% block sidebar %}
