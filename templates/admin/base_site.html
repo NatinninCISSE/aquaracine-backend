@@ -16,29 +16,42 @@
 {{ block.super }}
 <style type="text/css">
 /* ===========================================
-   THEME AQUA-RACINE - STYLE MODERNE DARK SIDEBAR
-   Inspiré du design professionnel
+   THEME AQUA-RACINE - STYLE DASHBOARD MODERNE
+   Sidebar bleu foncé, accents orange/jaune
    =========================================== */
 
-/* SIDEBAR - Fond BLEU FONCE (#1e2a3a) */
+:root {
+    --sidebar-bg: #1e2a4a;
+    --sidebar-dark: #151d33;
+    --accent-orange: #f5a623;
+    --accent-yellow: #ffc107;
+    --text-light: rgba(255,255,255,0.7);
+    --text-white: #ffffff;
+    --bg-light: #f0f2f5;
+    --card-shadow: 0 2px 20px rgba(0,0,0,0.08);
+}
+
+/* SIDEBAR - Fond BLEU FONCE */
 .main-sidebar,
 .main-sidebar.sidebar-dark-primary,
 .main-sidebar.sidebar-dark-success,
 .main-sidebar.sidebar-light-success,
 .main-sidebar.sidebar-light-primary,
 [class*="sidebar-"] {
-    background: linear-gradient(180deg, #1a237e 0%, #0d1b2a 100%) !important;
+    background: linear-gradient(180deg, #1e2a4a 0%, #151d33 100%) !important;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.1) !important;
 }
 
-/* Logo/Brand - Fond légèrement plus clair */
+/* Logo/Brand avec avatar style */
 .brand-link,
 .main-sidebar .brand-link,
 .sidebar-dark-primary .brand-link,
 .sidebar-light-success .brand-link {
-    background: rgba(255,255,255,0.05) !important;
+    background: transparent !important;
     color: #ffffff !important;
-    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-    padding: 15px !important;
+    border-bottom: none !important;
+    padding: 20px 15px !important;
+    text-align: center !important;
 }
 
 .brand-link .brand-text,
@@ -46,9 +59,27 @@
 .main-sidebar .brand-text {
     color: #ffffff !important;
     font-weight: 600 !important;
+    font-size: 1.1rem !important;
 }
 
-/* TOUS les liens du menu - TEXTE BLANC/GRIS CLAIR */
+/* Image logo ronde style avatar */
+.brand-link .brand-image,
+.main-sidebar .brand-image {
+    border-radius: 50% !important;
+    border: 3px solid rgba(255,255,255,0.2) !important;
+    padding: 5px !important;
+    background: rgba(255,255,255,0.1) !important;
+    max-height: 50px !important;
+}
+
+/* User info sous le logo */
+.user-panel {
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    padding-bottom: 15px !important;
+    margin-bottom: 10px !important;
+}
+
+/* TOUS les liens du menu */
 .nav-sidebar .nav-link,
 .nav-sidebar .nav-link p,
 .nav-sidebar > .nav-item > .nav-link,
@@ -57,50 +88,54 @@
 .main-sidebar .nav-link,
 .main-sidebar .nav-link p,
 .main-sidebar a {
-    color: rgba(255,255,255,0.7) !important;
+    color: rgba(255,255,255,0.6) !important;
     font-size: 0.9rem !important;
     padding: 12px 20px !important;
     transition: all 0.3s ease !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
 }
 
-/* Headers de section - Style discret */
+/* Headers de section */
 .nav-header,
 .main-sidebar .nav-header,
 .sidebar .nav-header {
-    color: rgba(255,255,255,0.4) !important;
+    color: rgba(255,255,255,0.3) !important;
     background: transparent !important;
-    padding: 20px 20px 10px !important;
+    padding: 20px 20px 8px !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
-    font-size: 0.7rem !important;
-    letter-spacing: 1px !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 1.5px !important;
 }
 
 /* Hover sur liens */
 .nav-sidebar .nav-link:hover,
 .nav-sidebar > .nav-item > .nav-link:hover,
 .main-sidebar .nav-link:hover {
-    background: rgba(255,255,255,0.08) !important;
+    background: rgba(255,255,255,0.05) !important;
     color: #ffffff !important;
-    padding-left: 25px !important;
+    border-left: 3px solid #f5a623 !important;
+    padding-left: 17px !important;
 }
 
-/* Lien ACTIF - Fond coloré avec accent */
+/* Lien ACTIF - avec accent orange */
 .nav-sidebar .nav-link.active,
 .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-light-success .nav-sidebar > .nav-item > .nav-link.active,
 .main-sidebar .nav-link.active,
 .nav-sidebar .nav-item.menu-open > .nav-link {
-    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%) !important;
+    background: rgba(245, 166, 35, 0.15) !important;
     color: #ffffff !important;
-    border-radius: 8px !important;
-    margin: 5px 12px !important;
-    padding: 12px 15px !important;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+    border-left: 3px solid #f5a623 !important;
+    padding-left: 17px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
 }
 
-/* ICÔNES - Style moderne */
+/* ICÔNES */
 .nav-icon,
 .main-sidebar .nav-icon,
 .main-sidebar .fas,
@@ -108,19 +143,20 @@
 .main-sidebar .fa,
 .main-sidebar i,
 .nav-sidebar .nav-icon {
-    color: rgba(255,255,255,0.6) !important;
+    color: rgba(255,255,255,0.5) !important;
     width: 25px !important;
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
+    margin-right: 10px !important;
 }
 
 .nav-sidebar .nav-link.active .nav-icon,
-.nav-sidebar .nav-link.active i {
-    color: #ffffff !important;
+.nav-sidebar .nav-link.active i,
+.nav-sidebar .nav-link:hover .nav-icon,
+.nav-sidebar .nav-link:hover i {
+    color: #f5a623 !important;
 }
 
-/* ============================================
-   BOUTONS AJOUTER - Style pill vert
-   ============================================ */
+/* BOUTONS AJOUTER - Style orange */
 .badge,
 .main-sidebar .badge,
 .nav-sidebar .badge,
@@ -133,12 +169,12 @@
 .bg-primary,
 a.badge,
 span.badge {
-    background: #4caf50 !important;
-    color: #ffffff !important;
-    padding: 4px 10px !important;
-    border-radius: 12px !important;
-    font-size: 0.7rem !important;
-    font-weight: 600 !important;
+    background: #f5a623 !important;
+    color: #1e2a4a !important;
+    padding: 3px 8px !important;
+    border-radius: 10px !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
     border: none !important;
 }
 
@@ -146,11 +182,12 @@ span.badge {
 .form-control-sidebar,
 .main-sidebar .form-control-sidebar,
 .sidebar-search input {
-    background: rgba(255,255,255,0.1) !important;
+    background: rgba(255,255,255,0.08) !important;
     border: 1px solid rgba(255,255,255,0.1) !important;
     color: #ffffff !important;
-    border-radius: 8px !important;
-    padding: 10px 15px !important;
+    border-radius: 25px !important;
+    padding: 10px 20px !important;
+    font-size: 0.85rem !important;
 }
 
 .form-control-sidebar::placeholder {
@@ -158,31 +195,25 @@ span.badge {
 }
 
 /* ============================================
-   NAVBAR SUPERIEURE - Fond BLANC
+   NAVBAR SUPERIEURE - Fond très clair/blanc
    ============================================ */
 .main-header,
 .main-header.navbar,
 nav.main-header {
     background: #ffffff !important;
-    border-bottom: 1px solid #e9ecef !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    border-bottom: none !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05) !important;
 }
 
 .main-header .nav-link,
 .main-header .navbar-nav .nav-link {
-    color: #333 !important;
+    color: #1e2a4a !important;
 }
 
 .main-header .nav-link:hover {
-    background: #f8f9fa !important;
-    color: #1a237e !important;
-}
-
-/* User dropdown */
-.navbar-nav .dropdown-menu {
+    background: #f0f2f5 !important;
+    color: #f5a623 !important;
     border-radius: 8px !important;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.1) !important;
-    border: none !important;
 }
 
 /* ============================================
@@ -190,50 +221,40 @@ nav.main-header {
    ============================================ */
 .nav-treeview,
 .main-sidebar .nav-treeview {
-    background: rgba(0,0,0,0.2) !important;
-    margin: 0 10px !important;
-    border-radius: 8px !important;
+    background: rgba(0,0,0,0.15) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
 }
 
 .nav-treeview .nav-link,
 .nav-treeview > .nav-item > .nav-link {
-    color: rgba(255,255,255,0.6) !important;
-    padding: 10px 15px 10px 40px !important;
+    color: rgba(255,255,255,0.5) !important;
+    padding: 10px 15px 10px 50px !important;
     font-size: 0.85rem !important;
 }
 
 .nav-treeview .nav-link:hover {
     color: #ffffff !important;
     background: rgba(255,255,255,0.05) !important;
-    padding-left: 45px !important;
 }
 
 /* ============================================
    CONTENU PRINCIPAL
    ============================================ */
 .content-wrapper {
-    background: #f4f6f9 !important;
+    background: #f0f2f5 !important;
 }
 
 .content-header {
     background: transparent !important;
     border-bottom: none !important;
-    padding: 20px 0 !important;
+    padding: 20px 0 10px !important;
 }
 
 .content-header h1 {
-    color: #1a237e !important;
+    color: #1e2a4a !important;
     font-weight: 600 !important;
-    font-size: 1.5rem !important;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-    background: transparent !important;
-}
-
-.breadcrumb-item a {
-    color: #4caf50 !important;
+    font-size: 1.4rem !important;
 }
 
 /* ============================================
@@ -241,13 +262,13 @@ nav.main-header {
    ============================================ */
 .btn-primary,
 .btn-outline-primary:hover {
-    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%) !important;
+    background: #f5a623 !important;
     border: none !important;
-    color: #ffffff !important;
+    color: #1e2a4a !important;
     border-radius: 8px !important;
-    padding: 10px 20px !important;
-    font-weight: 500 !important;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+    padding: 10px 25px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3) !important;
 }
 
 .btn-success,
@@ -260,44 +281,45 @@ nav.main-header {
 
 .btn-info,
 .btn-outline-info:hover {
-    background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%) !important;
+    background: #1e2a4a !important;
     border: none !important;
     color: #ffffff !important;
     border-radius: 8px !important;
 }
 
 .btn-secondary {
-    background: #f4f6f9 !important;
-    border: 1px solid #dee2e6 !important;
-    color: #333 !important;
+    background: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    color: #1e2a4a !important;
     border-radius: 8px !important;
 }
 
 /* ============================================
-   CARDS - Style moderne avec ombres
+   CARDS - Style moderne avec coins arrondis
    ============================================ */
 .card {
     border: none !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06) !important;
     overflow: hidden;
+    background: #ffffff !important;
 }
 
 .card-header {
     background: #ffffff !important;
-    border-bottom: 1px solid #f0f0f0 !important;
-    padding: 20px !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    padding: 20px 25px !important;
 }
 
 .card-title {
-    color: #1a237e !important;
+    color: #1e2a4a !important;
     font-weight: 600 !important;
     font-size: 1rem !important;
     margin: 0 !important;
 }
 
 .card-body {
-    padding: 20px !important;
+    padding: 25px !important;
 }
 
 /* ============================================
@@ -311,22 +333,22 @@ nav.main-header {
     background: #f8f9fa !important;
     color: #666 !important;
     font-weight: 600 !important;
-    font-size: 0.8rem !important;
+    font-size: 0.75rem !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
-    border-bottom: 2px solid #e9ecef !important;
-    padding: 15px !important;
+    border-bottom: none !important;
+    padding: 15px 20px !important;
 }
 
 .table tbody td {
-    padding: 15px !important;
+    padding: 15px 20px !important;
     vertical-align: middle !important;
-    border-bottom: 1px solid #f0f0f0 !important;
+    border-bottom: 1px solid #f5f5f5 !important;
     color: #333 !important;
 }
 
 .table tbody tr:hover {
-    background: #f8f9fa !important;
+    background: #fafafa !important;
 }
 
 /* ============================================
@@ -335,23 +357,23 @@ nav.main-header {
 .main-footer {
     background: #ffffff !important;
     color: #666 !important;
-    border-top: 1px solid #e9ecef !important;
-    padding: 15px 20px !important;
+    border-top: 1px solid #f0f0f0 !important;
+    padding: 15px 25px !important;
 }
 
 .main-footer a {
-    color: #4caf50 !important;
+    color: #f5a623 !important;
 }
 
 /* ============================================
    SCROLLBAR PERSONNALISÉE
    ============================================ */
 .main-sidebar::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .main-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.15);
     border-radius: 3px;
 }
 
@@ -363,37 +385,31 @@ nav.main-header {
    FORMS
    ============================================ */
 .form-control {
-    border-radius: 8px !important;
-    border: 1px solid #dee2e6 !important;
-    padding: 10px 15px !important;
+    border-radius: 10px !important;
+    border: 1px solid #e0e0e0 !important;
+    padding: 12px 18px !important;
+    font-size: 0.9rem !important;
 }
 
 .form-control:focus {
-    border-color: #4caf50 !important;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1) !important;
+    border-color: #f5a623 !important;
+    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1) !important;
 }
 
 /* ============================================
-   SMALL BOX (Info boxes)
+   SMALL BOX & INFO BOX
    ============================================ */
 .small-box {
-    border-radius: 12px !important;
+    border-radius: 15px !important;
     overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
 }
 
 .info-box {
-    border-radius: 12px !important;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08) !important;
     border: none !important;
-}
-
-/* ============================================
-   ALERTS
-   ============================================ */
-.alert {
-    border-radius: 8px !important;
-    border: none !important;
+    background: #ffffff !important;
 }
 
 /* ============================================
@@ -403,12 +419,33 @@ nav.main-header {
     border-radius: 8px !important;
     margin: 0 3px !important;
     border: none !important;
-    color: #333 !important;
+    color: #1e2a4a !important;
+    background: #f0f2f5 !important;
 }
 
 .page-item.active .page-link {
-    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%) !important;
-    color: #fff !important;
+    background: #f5a623 !important;
+    color: #1e2a4a !important;
+}
+
+/* ============================================
+   DROPDOWN MENUS
+   ============================================ */
+.dropdown-menu {
+    border-radius: 12px !important;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.12) !important;
+    border: none !important;
+    padding: 10px !important;
+}
+
+.dropdown-item {
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+}
+
+.dropdown-item:hover {
+    background: #f0f2f5 !important;
+    color: #f5a623 !important;
 }
 </style>
 {% endblock %}

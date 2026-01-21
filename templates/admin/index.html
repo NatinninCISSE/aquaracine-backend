@@ -3,58 +3,45 @@
 
 {% block extrahead %}
 {{ block.super }}
-<!-- Chart.js pour les graphiques -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 /* ============================================
-   DASHBOARD AQUA-RACINE - STYLE MODERNE
+   DASHBOARD USER STYLE - MODERNE
+   Cartes blanches, icônes orange, graphiques
    ============================================ */
 
-.dashboard-container {
-    padding: 0;
+.dashboard-wrapper {
+    padding: 10px 0;
 }
 
-/* Breadcrumb header */
-.page-header {
+/* Header du dashboard */
+.dashboard-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e2a4a;
+    margin-bottom: 25px;
+}
+
+/* ============================================
+   STAT CARDS - Style épuré avec icône
+   ============================================ */
+.stat-cards-row {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e9ecef;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
-.page-header .breadcrumb-nav {
-    font-size: 0.85rem;
-    color: #888;
-}
-
-.page-header .breadcrumb-nav a {
-    color: #4caf50;
-    text-decoration: none;
-}
-
-.page-header h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #1a237e;
-    margin: 5px 0 0;
-}
-
-.page-header .date-range {
-    color: #4caf50;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-/* Stat Cards - Style moderne avec lien View */
 .stat-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 15px;
     padding: 25px;
+    flex: 1;
+    min-width: 200px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-    height: 100%;
-    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -63,108 +50,138 @@
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
 }
 
-.stat-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 15px;
+.stat-card-content {
+    flex: 1;
 }
 
-.stat-card-title {
-    font-size: 0.9rem;
-    color: #666;
+.stat-card-label {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 8px;
     font-weight: 500;
-    margin: 0;
-}
-
-.stat-card-link {
-    font-size: 0.8rem;
-    color: #4caf50;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.stat-card-link:hover {
-    text-decoration: underline;
 }
 
 .stat-card-value {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: #1a237e;
-    margin: 0 0 5px;
+    color: #1e2a4a;
+    line-height: 1;
+    margin-bottom: 5px;
 }
 
 .stat-card-change {
-    font-size: 0.85rem;
-    display: inline-flex;
+    font-size: 0.8rem;
+    color: #4caf50;
+    display: flex;
     align-items: center;
     gap: 5px;
-}
-
-.stat-card-change.positive {
-    color: #4caf50;
 }
 
 .stat-card-change.negative {
     color: #f44336;
 }
 
-.stat-card-details {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.stat-detail-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-}
-
-.stat-detail-item .label {
-    color: #666;
-}
-
-.stat-detail-item .value {
-    font-weight: 600;
-    color: #333;
-}
-
-/* Mini chart container */
-.mini-chart-container {
-    height: 80px;
-    margin-top: 15px;
-}
-
-/* Large Chart Cards */
-.chart-card {
-    background: #fff;
+.stat-card-icon {
+    width: 45px;
+    height: 45px;
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-left: 15px;
+}
+
+.stat-card-icon.orange {
+    background: rgba(245, 166, 35, 0.15);
+    color: #f5a623;
+}
+
+.stat-card-icon.blue {
+    background: rgba(30, 42, 74, 0.1);
+    color: #1e2a4a;
+}
+
+.stat-card-icon.green {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+.stat-card-icon.red {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+}
+
+/* ============================================
+   CHART CARDS
+   ============================================ */
+.chart-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.chart-card {
+    background: #ffffff;
+    border-radius: 15px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
     overflow: hidden;
 }
 
+.chart-card.large {
+    flex: 2;
+    min-width: 400px;
+}
+
+.chart-card.small {
+    flex: 1;
+    min-width: 280px;
+}
+
 .chart-card-header {
     padding: 20px 25px;
-    border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .chart-card-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #1a237e;
+    color: #1e2a4a;
     margin: 0;
 }
 
-.chart-card-date {
-    font-size: 0.85rem;
+.chart-card-subtitle {
+    font-size: 0.8rem;
     color: #888;
+}
+
+.chart-card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.chart-btn {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chart-btn.active {
+    background: #f5a623;
+    color: #1e2a4a;
+}
+
+.chart-btn:not(.active) {
+    background: #f0f2f5;
+    color: #666;
 }
 
 .chart-card-body {
@@ -173,29 +190,92 @@
 
 .chart-container {
     position: relative;
-    height: 250px;
+    height: 280px;
 }
 
-/* Data Table Card */
+.chart-container.small {
+    height: 200px;
+}
+
+/* Donut chart avec pourcentage au centre */
+.donut-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-center {
+    position: absolute;
+    text-align: center;
+}
+
+.donut-center .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e2a4a;
+}
+
+.donut-center .label {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Chart legend custom */
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.legend-item .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.legend-item .label {
+    color: #666;
+    flex: 1;
+}
+
+.legend-item .value {
+    font-weight: 600;
+    color: #1e2a4a;
+}
+
+/* ============================================
+   DATA TABLES
+   ============================================ */
 .data-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 15px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
     overflow: hidden;
+    margin-bottom: 25px;
 }
 
 .data-card-header {
     padding: 20px 25px;
-    border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .data-card-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #1a237e;
+    color: #1e2a4a;
     margin: 0;
     display: flex;
     align-items: center;
@@ -203,48 +283,66 @@
 }
 
 .data-card-title i {
-    color: #4caf50;
+    color: #f5a623;
 }
 
+.btn-view-all {
+    background: #f5a623;
+    color: #1e2a4a;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-view-all:hover {
+    background: #e09000;
+    color: #1e2a4a;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Table styles */
 .data-table {
     width: 100%;
     border-collapse: collapse;
 }
 
 .data-table thead th {
-    background: #f8f9fa;
-    padding: 12px 20px;
+    background: #fafafa;
+    padding: 15px 20px;
     text-align: left;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #666;
+    color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid #e9ecef;
 }
 
 .data-table tbody td {
-    padding: 15px 20px;
+    padding: 18px 20px;
     border-bottom: 1px solid #f5f5f5;
     font-size: 0.9rem;
     color: #333;
-}
-
-.data-table tbody tr:hover {
-    background: #f8f9fa;
 }
 
 .data-table tbody tr:last-child td {
     border-bottom: none;
 }
 
+.data-table tbody tr:hover {
+    background: #fafafa;
+}
+
 /* Status badges */
 .status-badge {
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
-    display: inline-block;
 }
 
 .status-badge.pending {
@@ -262,64 +360,16 @@
     color: #c62828;
 }
 
-/* Quick Stats Row */
-.quick-stats {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.quick-stat-item {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    flex: 1;
-    min-width: 150px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.quick-stat-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: #fff;
-}
-
-.quick-stat-icon.green { background: linear-gradient(135deg, #4caf50, #2e7d32); }
-.quick-stat-icon.blue { background: linear-gradient(135deg, #1a237e, #3949ab); }
-.quick-stat-icon.orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
-.quick-stat-icon.purple { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
-
-.quick-stat-content .value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a237e;
-    line-height: 1;
-}
-
-.quick-stat-content .label {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 5px;
-}
-
 /* List items */
 .list-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #ffffff;
+    border-radius: 15px;
     box-shadow: 0 2px 20px rgba(0,0,0,0.06);
     overflow: hidden;
 }
 
 .list-item {
-    padding: 15px 20px;
+    padding: 18px 25px;
     border-bottom: 1px solid #f5f5f5;
     display: flex;
     justify-content: space-between;
@@ -328,7 +378,7 @@
 }
 
 .list-item:hover {
-    background: #f8f9fa;
+    background: #fafafa;
 }
 
 .list-item:last-child {
@@ -341,17 +391,18 @@
 
 .list-item-title {
     font-weight: 600;
-    color: #333;
-    margin-bottom: 3px;
+    color: #1e2a4a;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
 }
 
 .list-item-title a {
-    color: #1a237e;
+    color: #1e2a4a;
     text-decoration: none;
 }
 
 .list-item-title a:hover {
-    color: #4caf50;
+    color: #f5a623;
 }
 
 .list-item-subtitle {
@@ -371,7 +422,7 @@
 /* Empty state */
 .empty-state {
     text-align: center;
-    padding: 40px 20px;
+    padding: 50px 20px;
     color: #999;
 }
 
@@ -383,490 +434,424 @@
 
 .empty-state p {
     margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Quick stats horizontal */
+.quick-stats-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.quick-stat {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 25px;
+    flex: 1;
+    min-width: 180px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.quick-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.quick-stat-icon.orange {
+    background: linear-gradient(135deg, #f5a623 0%, #ffc107 100%);
+    color: #fff;
+}
+.quick-stat-icon.blue {
+    background: linear-gradient(135deg, #1e2a4a 0%, #2d3e5f 100%);
+    color: #fff;
+}
+.quick-stat-icon.green {
+    background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+    color: #fff;
+}
+.quick-stat-icon.purple {
+    background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+    color: #fff;
+}
+
+.quick-stat-content .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e2a4a;
+    line-height: 1;
+}
+
+.quick-stat-content .label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* Rating stars */
+.rating-stars {
+    color: #f5a623;
     font-size: 0.9rem;
 }
 
-/* Progress indicator */
-.progress-bar-custom {
-    height: 6px;
-    background: #e9ecef;
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 8px;
-}
-
-.progress-bar-custom .fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.6s ease;
-}
-
-.progress-bar-custom .fill.green { background: linear-gradient(90deg, #4caf50, #81c784); }
-.progress-bar-custom .fill.blue { background: linear-gradient(90deg, #1a237e, #3949ab); }
-
-/* Section title */
-.section-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1a237e;
-    margin-bottom: 20px;
+/* Two column layout */
+.two-columns {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    gap: 25px;
+    flex-wrap: wrap;
 }
 
-.section-title i {
-    color: #4caf50;
-}
-
-/* View all link button */
-.btn-view-all {
-    background: transparent;
-    border: 1px solid #4caf50;
-    color: #4caf50;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.btn-view-all:hover {
-    background: #4caf50;
-    color: #fff;
-    text-decoration: none;
+.two-columns > * {
+    flex: 1;
+    min-width: 300px;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <!-- Page Header -->
-    <div class="page-header">
-        <div>
-            <div class="breadcrumb-nav">
-                <a href="{% url 'admin:index' %}">ACCUEIL</a> / DASHBOARD
-            </div>
-            <h1>Dashboard</h1>
-        </div>
-        <div class="date-range">
-            <i class="fas fa-calendar-alt mr-1"></i>
-            {% now "d/m/Y" %}
-        </div>
-    </div>
+<div class="dashboard-wrapper">
+    <h1 class="dashboard-title">Dashboard User</h1>
 
-    <!-- Main Stats Row -->
-    <div class="row mb-4">
-        <!-- Demandes de devis -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3 class="stat-card-title">Demandes de devis</h3>
-                    <a href="{% url 'admin:core_quoterequest_changelist' %}" class="stat-card-link">Voir</a>
-                </div>
-                <p class="stat-card-value">{{ stats.quote_requests_count|default:0 }}</p>
-                <span class="stat-card-change positive">
+    <!-- Main Stat Cards -->
+    <div class="stat-cards-row">
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <div class="stat-card-label">Demandes devis</div>
+                <div class="stat-card-value">{{ stats.quote_requests_count|default:0 }}</div>
+                <div class="stat-card-change">
                     <i class="fas fa-arrow-up"></i> +{{ stats.quotes_this_week|default:0 }} cette semaine
-                </span>
-                <div class="stat-card-details">
-                    <div class="stat-detail-item">
-                        <span class="label">En attente</span>
-                        <span class="value" style="color: #ff9800;">{{ stats.pending_quotes|default:0 }}</span>
-                    </div>
-                    <div class="stat-detail-item">
-                        <span class="label">Traités</span>
-                        <span class="value" style="color: #4caf50;">{{ stats.processed_quotes|default:0 }}</span>
-                    </div>
                 </div>
-                <div class="mini-chart-container">
-                    <canvas id="quotesChart"></canvas>
-                </div>
+            </div>
+            <div class="stat-card-icon orange">
+                <i class="fas fa-file-invoice-dollar"></i>
             </div>
         </div>
 
-        <!-- Messages de contact -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3 class="stat-card-title">Messages</h3>
-                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="stat-card-link">Voir</a>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <div class="stat-card-label">Messages</div>
+                <div class="stat-card-value">{{ stats.contact_messages_count|default:0 }}</div>
+                <div class="stat-card-change">
+                    <i class="fas fa-envelope"></i> Contact
                 </div>
-                <p class="stat-card-value">{{ stats.contact_messages_count|default:0 }}</p>
-                <span class="stat-card-change positive">
-                    <i class="fas fa-envelope"></i> Communications
-                </span>
-                <div class="mini-chart-container">
-                    <canvas id="messagesChart"></canvas>
-                </div>
+            </div>
+            <div class="stat-card-icon blue">
+                <i class="fas fa-envelope"></i>
             </div>
         </div>
 
-        <!-- Newsletter -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3 class="stat-card-title">Newsletter</h3>
-                    <a href="{% url 'admin:core_newsletter_changelist' %}" class="stat-card-link">Voir</a>
-                </div>
-                <p class="stat-card-value">{{ stats.newsletter_subscribers_count|default:0 }}</p>
-                <span class="stat-card-change positive">
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <div class="stat-card-label">Newsletter</div>
+                <div class="stat-card-value">{{ stats.newsletter_subscribers_count|default:0 }}</div>
+                <div class="stat-card-change">
                     <i class="fas fa-users"></i> Abonnés
-                </span>
-                <div class="stat-card-details">
-                    <div class="stat-detail-item">
-                        <span class="label">Croissance</span>
-                        <span class="value" style="color: #4caf50;">+{{ stats.new_subscribers_week|default:0 }}</span>
-                    </div>
                 </div>
+            </div>
+            <div class="stat-card-icon green">
+                <i class="fas fa-mail-bulk"></i>
             </div>
         </div>
 
-        <!-- Produits -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card">
-                <div class="stat-card-header">
-                    <h3 class="stat-card-title">Produits</h3>
-                    <a href="{% url 'admin:core_product_changelist' %}" class="stat-card-link">Voir</a>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <div class="stat-card-label">Produits</div>
+                <div class="stat-card-value">{{ stats.products_count|default:0 }}</div>
+                <div class="stat-card-change">
+                    <i class="fas fa-star"></i> Actifs
                 </div>
-                <p class="stat-card-value">{{ stats.products_count|default:0 }}</p>
-                <span class="stat-card-change positive">
-                    <i class="fas fa-fish"></i> Actifs
-                </span>
-                <div class="stat-card-details">
-                    <div class="stat-detail-item">
-                        <span class="label">Catégories</span>
-                        <span class="value">{{ stats.categories_count|default:0 }}</span>
-                    </div>
-                </div>
+            </div>
+            <div class="stat-card-icon orange">
+                <i class="fas fa-fish"></i>
             </div>
         </div>
     </div>
 
     <!-- Charts Row -->
-    <div class="row mb-4">
-        <div class="col-lg-8 mb-4">
-            <div class="chart-card">
-                <div class="chart-card-header">
-                    <h3 class="chart-card-title">Activité récente</h3>
-                    <span class="chart-card-date">30 derniers jours</span>
+    <div class="chart-row">
+        <!-- Bar Chart -->
+        <div class="chart-card large">
+            <div class="chart-card-header">
+                <div>
+                    <h3 class="chart-card-title">Résultats</h3>
+                    <span class="chart-card-subtitle">Activité mensuelle</span>
                 </div>
-                <div class="chart-card-body">
-                    <div class="chart-container">
-                        <canvas id="activityChart"></canvas>
-                    </div>
+                <div class="chart-card-actions">
+                    <button class="chart-btn active">2024</button>
+                    <button class="chart-btn">2025</button>
+                </div>
+            </div>
+            <div class="chart-card-body">
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4 mb-4">
-            <div class="chart-card">
-                <div class="chart-card-header">
-                    <h3 class="chart-card-title">Répartition</h3>
-                </div>
-                <div class="chart-card-body">
-                    <div class="chart-container">
-                        <canvas id="distributionChart"></canvas>
-                    </div>
-                    <div class="mt-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #4caf50;"></i>Devis</span>
-                            <span style="font-weight: 600;">{{ stats.quote_requests_count|default:0 }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #1a237e;"></i>Messages</span>
-                            <span style="font-weight: 600;">{{ stats.contact_messages_count|default:0 }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span style="font-size: 0.85rem;"><i class="fas fa-circle mr-2" style="color: #ff9800;"></i>Newsletter</span>
-                            <span style="font-weight: 600;">{{ stats.newsletter_subscribers_count|default:0 }}</span>
-                        </div>
+        <!-- Donut Chart -->
+        <div class="chart-card small">
+            <div class="chart-card-header">
+                <h3 class="chart-card-title">Répartition</h3>
+            </div>
+            <div class="chart-card-body">
+                <div class="donut-wrapper">
+                    <div class="chart-container small">
+                        <canvas id="donutChart"></canvas>
                     </div>
                 </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="dot" style="background: #f5a623;"></span>
+                        <span class="label">Devis</span>
+                        <span class="value">{{ stats.quote_requests_count|default:0 }}</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot" style="background: #1e2a4a;"></span>
+                        <span class="label">Messages</span>
+                        <span class="value">{{ stats.contact_messages_count|default:0 }}</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="dot" style="background: #4caf50;"></span>
+                        <span class="label">Newsletter</span>
+                        <span class="value">{{ stats.newsletter_subscribers_count|default:0 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Line Chart Full Width -->
+    <div class="chart-card" style="margin-bottom: 25px;">
+        <div class="chart-card-header">
+            <div>
+                <h3 class="chart-card-title">Tendances</h3>
+                <span class="chart-card-subtitle">Évolution sur l'année</span>
+            </div>
+        </div>
+        <div class="chart-card-body">
+            <div class="chart-container">
+                <canvas id="lineChart"></canvas>
             </div>
         </div>
     </div>
 
     <!-- Quick Stats -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="quick-stats">
-                <div class="quick-stat-item">
-                    <div class="quick-stat-icon green">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div class="quick-stat-content">
-                        <div class="value">{{ stats.quotes_this_week|default:0 }}</div>
-                        <div class="label">Devis cette semaine</div>
-                    </div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="quick-stat-icon orange">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="quick-stat-content">
-                        <div class="value">{{ stats.pending_quotes|default:0 }}</div>
-                        <div class="label">En attente</div>
-                    </div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="quick-stat-icon blue">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="quick-stat-content">
-                        <div class="value">{{ stats.team_members_count|default:0 }}</div>
-                        <div class="label">Membres équipe</div>
-                    </div>
-                </div>
-                <div class="quick-stat-item">
-                    <div class="quick-stat-icon purple">
-                        <i class="fas fa-images"></i>
-                    </div>
-                    <div class="quick-stat-content">
-                        <div class="value">{{ stats.gallery_images_count|default:0 }}</div>
-                        <div class="label">Images galerie</div>
-                    </div>
-                </div>
+    <div class="quick-stats-row">
+        <div class="quick-stat">
+            <div class="quick-stat-icon orange">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="quick-stat-content">
+                <div class="value">{{ stats.quotes_this_week|default:0 }}</div>
+                <div class="label">Devis cette semaine</div>
+            </div>
+        </div>
+        <div class="quick-stat">
+            <div class="quick-stat-icon blue">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="quick-stat-content">
+                <div class="value">{{ stats.pending_quotes|default:0 }}</div>
+                <div class="label">En attente</div>
+            </div>
+        </div>
+        <div class="quick-stat">
+            <div class="quick-stat-icon green">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="quick-stat-content">
+                <div class="value">{{ stats.team_members_count|default:0 }}</div>
+                <div class="label">Membres équipe</div>
+            </div>
+        </div>
+        <div class="quick-stat">
+            <div class="quick-stat-icon purple">
+                <i class="fas fa-images"></i>
+            </div>
+            <div class="quick-stat-content">
+                <div class="value">{{ stats.gallery_images_count|default:0 }}</div>
+                <div class="label">Images galerie</div>
             </div>
         </div>
     </div>
 
-    <!-- Data Tables Row -->
-    <div class="row">
+    <!-- Data Tables -->
+    <div class="two-columns">
         <!-- Recent Quotes -->
-        <div class="col-lg-6 mb-4">
-            <div class="data-card">
-                <div class="data-card-header">
-                    <h3 class="data-card-title">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        Dernières demandes de devis
-                    </h3>
-                    <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn-view-all">Voir tout</a>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Client</th>
-                            <th>Date</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for quote in recent_quotes %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'admin:core_quoterequest_change' quote.pk %}" style="color: #1a237e; text-decoration: none; font-weight: 500;">
-                                    {{ quote.full_name }}
-                                </a>
-                                <br><small style="color: #888;">{{ quote.email }}</small>
-                            </td>
-                            <td style="color: #888;">{{ quote.created_at|date:"d/m/Y" }}</td>
-                            <td>
-                                {% if quote.status == 'pending' %}
-                                <span class="status-badge pending">En attente</span>
-                                {% elif quote.status == 'processed' %}
-                                <span class="status-badge processed">Traité</span>
-                                {% elif quote.status == 'cancelled' %}
-                                <span class="status-badge cancelled">Annulé</span>
-                                {% else %}
-                                <span class="status-badge" style="background: #f5f5f5; color: #666;">{{ quote.status }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="3">
-                                <div class="empty-state">
-                                    <i class="fas fa-inbox"></i>
-                                    <p>Aucune demande de devis</p>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="data-card">
+            <div class="data-card-header">
+                <h3 class="data-card-title">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Dernières demandes
+                </h3>
+                <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn-view-all">Voir tout</a>
             </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote in recent_quotes %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'admin:core_quoterequest_change' quote.pk %}" style="color: #1e2a4a; text-decoration: none; font-weight: 500;">
+                                {{ quote.full_name }}
+                            </a>
+                            <br><small style="color: #888;">{{ quote.email }}</small>
+                        </td>
+                        <td style="color: #888;">{{ quote.created_at|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if quote.status == 'pending' %}
+                            <span class="status-badge pending">En attente</span>
+                            {% elif quote.status == 'processed' %}
+                            <span class="status-badge processed">Traité</span>
+                            {% elif quote.status == 'cancelled' %}
+                            <span class="status-badge cancelled">Annulé</span>
+                            {% else %}
+                            <span class="status-badge" style="background: #f5f5f5; color: #666;">{{ quote.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Aucune demande</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         <!-- Recent Messages -->
-        <div class="col-lg-6 mb-4">
-            <div class="list-card">
-                <div class="data-card-header">
-                    <h3 class="data-card-title">
-                        <i class="fas fa-envelope"></i>
-                        Derniers messages
-                    </h3>
-                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn-view-all">Voir tout</a>
-                </div>
-                {% for message in recent_messages %}
-                <div class="list-item">
-                    <div class="list-item-main">
-                        <div class="list-item-title">
-                            <a href="{% url 'admin:core_contactmessage_change' message.pk %}">{{ message.name }}</a>
-                        </div>
-                        <div class="list-item-subtitle">{{ message.message|truncatewords:10 }}</div>
-                    </div>
-                    <div class="list-item-meta">
-                        <div class="list-item-date">{{ message.created_at|date:"d/m" }}</div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p>Aucun message</p>
-                </div>
-                {% endfor %}
+        <div class="list-card">
+            <div class="data-card-header">
+                <h3 class="data-card-title">
+                    <i class="fas fa-envelope"></i>
+                    Messages récents
+                </h3>
+                <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn-view-all">Voir tout</a>
             </div>
+            {% for message in recent_messages %}
+            <div class="list-item">
+                <div class="list-item-main">
+                    <div class="list-item-title">
+                        <a href="{% url 'admin:core_contactmessage_change' message.pk %}">{{ message.name }}</a>
+                    </div>
+                    <div class="list-item-subtitle">{{ message.message|truncatewords:8 }}</div>
+                </div>
+                <div class="list-item-meta">
+                    <div class="list-item-date">{{ message.created_at|date:"d/m" }}</div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>Aucun message</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <!-- Newsletter & Game Row -->
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="list-card">
-                <div class="data-card-header">
-                    <h3 class="data-card-title">
-                        <i class="fas fa-mail-bulk"></i>
-                        Derniers abonnés newsletter
-                    </h3>
-                </div>
-                {% for sub in recent_subscribers %}
-                <div class="list-item">
-                    <div class="list-item-main">
-                        <div class="list-item-title">
-                            <i class="fas fa-user-check mr-2" style="color: #4caf50;"></i>
-                            {{ sub.email }}
-                        </div>
-                    </div>
-                    <div class="list-item-meta">
-                        <div class="list-item-date">{{ sub.created_at|date:"d/m/Y" }}</div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p>Aucun abonné</p>
-                </div>
-                {% endfor %}
+    <!-- Newsletter & Game -->
+    <div class="two-columns" style="margin-top: 25px;">
+        <div class="list-card">
+            <div class="data-card-header">
+                <h3 class="data-card-title">
+                    <i class="fas fa-mail-bulk"></i>
+                    Abonnés newsletter
+                </h3>
             </div>
+            {% for sub in recent_subscribers %}
+            <div class="list-item">
+                <div class="list-item-main">
+                    <div class="list-item-title">
+                        <i class="fas fa-user-check" style="color: #4caf50; margin-right: 10px;"></i>
+                        {{ sub.email }}
+                    </div>
+                </div>
+                <div class="list-item-meta">
+                    <div class="list-item-date">{{ sub.created_at|date:"d/m/Y" }}</div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>Aucun abonné</p>
+            </div>
+            {% endfor %}
         </div>
 
-        <div class="col-lg-6 mb-4">
-            <div class="list-card">
-                <div class="data-card-header">
-                    <h3 class="data-card-title">
-                        <i class="fas fa-gamepad"></i>
-                        Participations au jeu
-                    </h3>
-                </div>
-                {% for participation in recent_game_participations %}
-                <div class="list-item">
-                    <div class="list-item-main">
-                        <div class="list-item-title">{{ participation.name }}</div>
-                        <div class="list-item-subtitle">{{ participation.email }}</div>
-                    </div>
-                    <div class="list-item-meta">
-                        {% if participation.prize and participation.prize.is_winning_prize %}
-                        <span class="status-badge processed">
-                            <i class="fas fa-trophy mr-1"></i> {{ participation.prize.name }}
-                        </span>
-                        {% else %}
-                        <span class="status-badge" style="background: #f5f5f5; color: #888;">Pas de lot</span>
-                        {% endif %}
-                        <div class="list-item-date mt-1">{{ participation.created_at|date:"d/m H:i" }}</div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="empty-state">
+        <div class="list-card">
+            <div class="data-card-header">
+                <h3 class="data-card-title">
                     <i class="fas fa-gamepad"></i>
-                    <p>Aucune participation</p>
-                </div>
-                {% endfor %}
+                    Participations jeu
+                </h3>
             </div>
+            {% for participation in recent_game_participations %}
+            <div class="list-item">
+                <div class="list-item-main">
+                    <div class="list-item-title">{{ participation.name }}</div>
+                    <div class="list-item-subtitle">{{ participation.email }}</div>
+                </div>
+                <div class="list-item-meta">
+                    {% if participation.prize and participation.prize.is_winning_prize %}
+                    <span class="status-badge processed">
+                        <i class="fas fa-trophy"></i> {{ participation.prize.name }}
+                    </span>
+                    {% else %}
+                    <span class="status-badge" style="background: #f5f5f5; color: #888;">Pas de lot</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-gamepad"></i>
+                <p>Aucune participation</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
 
-<!-- Charts Script -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Mini quotes chart
-    const quotesCtx = document.getElementById('quotesChart');
-    if (quotesCtx) {
-        new Chart(quotesCtx, {
-            type: 'line',
-            data: {
-                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-                datasets: [{
-                    data: [2, 4, 3, 5, 2, 3, 4],
-                    borderColor: '#4caf50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 2,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { display: false }
-                }
-            }
-        });
-    }
-
-    // Mini messages chart
-    const messagesCtx = document.getElementById('messagesChart');
-    if (messagesCtx) {
-        new Chart(messagesCtx, {
+    // Bar Chart
+    const barCtx = document.getElementById('barChart');
+    if (barCtx) {
+        new Chart(barCtx, {
             type: 'bar',
             data: {
-                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-                datasets: [{
-                    data: [3, 2, 4, 1, 3, 2, 1],
-                    backgroundColor: '#1a237e',
-                    borderRadius: 4,
-                    barThickness: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { display: false }
-                }
-            }
-        });
-    }
-
-    // Activity chart
-    const activityCtx = document.getElementById('activityChart');
-    if (activityCtx) {
-        new Chart(activityCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec'],
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
                 datasets: [{
                     label: 'Devis',
-                    data: [5, 8, 12, 7, 15, 10, 18, 14, 20, 16, 22, 25],
-                    borderColor: '#4caf50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 2
+                    data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
+                    backgroundColor: '#f5a623',
+                    borderRadius: 6,
+                    barThickness: 20
                 }, {
                     label: 'Messages',
-                    data: [3, 5, 8, 4, 10, 7, 12, 9, 14, 11, 16, 18],
-                    borderColor: '#1a237e',
-                    backgroundColor: 'transparent',
-                    tension: 0.4,
-                    borderWidth: 2
+                    data: [8, 12, 10, 15, 14, 20, 18, 22, 20, 25, 24, 28],
+                    backgroundColor: '#1e2a4a',
+                    borderRadius: 6,
+                    barThickness: 20
                 }]
             },
             options: {
@@ -875,44 +860,114 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     legend: {
                         position: 'top',
+                        align: 'end',
                         labels: {
                             usePointStyle: true,
-                            padding: 20
+                            padding: 20,
+                            font: { size: 12 }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        grid: { display: false }
+                        grid: { display: false },
+                        ticks: { font: { size: 11 } }
                     },
                     y: {
                         beginAtZero: true,
-                        grid: { color: '#f0f0f0' }
+                        grid: { color: '#f5f5f5' },
+                        ticks: { font: { size: 11 } }
                     }
                 }
             }
         });
     }
 
-    // Distribution chart
-    const distributionCtx = document.getElementById('distributionChart');
-    if (distributionCtx) {
-        new Chart(distributionCtx, {
+    // Donut Chart
+    const donutCtx = document.getElementById('donutChart');
+    if (donutCtx) {
+        new Chart(donutCtx, {
             type: 'doughnut',
             data: {
                 labels: ['Devis', 'Messages', 'Newsletter'],
                 datasets: [{
                     data: [{{ stats.quote_requests_count|default:1 }}, {{ stats.contact_messages_count|default:1 }}, {{ stats.newsletter_subscribers_count|default:1 }}],
-                    backgroundColor: ['#4caf50', '#1a237e', '#ff9800'],
-                    borderWidth: 0
+                    backgroundColor: ['#f5a623', '#1e2a4a', '#4caf50'],
+                    borderWidth: 0,
+                    cutout: '75%'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '70%',
                 plugins: {
                     legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // Line Chart
+    const lineCtx = document.getElementById('lineChart');
+    if (lineCtx) {
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+                datasets: [{
+                    label: 'Devis',
+                    data: [5, 10, 8, 15, 12, 20, 18, 25, 22, 30, 28, 35],
+                    borderColor: '#f5a623',
+                    backgroundColor: 'rgba(245, 166, 35, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#f5a623',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }, {
+                    label: 'Messages',
+                    data: [3, 7, 5, 10, 8, 14, 12, 18, 15, 22, 20, 25],
+                    borderColor: '#1e2a4a',
+                    backgroundColor: 'rgba(30, 42, 74, 0.05)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#1e2a4a',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f5f5f5' },
+                        ticks: { font: { size: 11 } }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 }
             }
         });
