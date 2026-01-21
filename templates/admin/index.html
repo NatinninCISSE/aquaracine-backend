@@ -1,247 +1,609 @@
 {% extends "admin/base_site.html" %}
 {% load static i18n %}
 
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ============================================
+   DASHBOARD AQUA-RACINE - STYLES KPI
+   Couleurs: Vert (#1b5e20, #2e7d32, #4caf50)
+             Bleu (#0d47a1, #1976d2)
+             Blanc, Noir
+   ============================================ */
+
+/* KPI Cards - Style moderne */
+.kpi-card {
+    border-radius: 12px;
+    padding: 25px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 140px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.kpi-card .kpi-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+.kpi-card .kpi-value {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.kpi-card .kpi-label {
+    font-size: 1rem;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+.kpi-card .kpi-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+}
+
+.kpi-card .kpi-footer a {
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.kpi-card .kpi-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Couleurs KPI */
+.kpi-green-dark {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+}
+
+.kpi-green {
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+}
+
+.kpi-blue-dark {
+    background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+}
+
+.kpi-blue {
+    background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+}
+
+.kpi-teal {
+    background: linear-gradient(135deg, #00695c 0%, #00897b 100%);
+}
+
+.kpi-cyan {
+    background: linear-gradient(135deg, #006064 0%, #00838f 100%);
+}
+
+/* Info boxes secondaires */
+.stat-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.stat-box:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+.stat-box .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-right: 15px;
+}
+
+.stat-box .stat-icon.bg-green { background: linear-gradient(135deg, #2e7d32, #4caf50); }
+.stat-box .stat-icon.bg-blue { background: linear-gradient(135deg, #1976d2, #2196f3); }
+.stat-box .stat-icon.bg-teal { background: linear-gradient(135deg, #00695c, #00897b); }
+.stat-box .stat-icon.bg-cyan { background: linear-gradient(135deg, #006064, #00838f); }
+
+.stat-box .stat-content .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1b5e20;
+    line-height: 1;
+}
+
+.stat-box .stat-content .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.stat-box .stat-content .stat-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 5px;
+    display: inline-block;
+}
+
+.stat-badge.success { background: #e8f5e9; color: #2e7d32; }
+.stat-badge.warning { background: #fff3e0; color: #e65100; }
+
+/* Cards personnalisées */
+.custom-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: none;
+}
+
+.custom-card .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+    border-bottom: 2px solid #4caf50;
+    padding: 18px 20px;
+}
+
+.custom-card .card-header .card-title {
+    color: #1b5e20;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.custom-card .card-header .card-title i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.custom-card .card-tools .btn {
+    border-radius: 6px;
+    font-size: 0.85rem;
+    padding: 6px 15px;
+}
+
+/* Tables personnalisées */
+.custom-table {
+    margin: 0;
+}
+
+.custom-table thead th {
+    background: #1b5e20 !important;
+    color: #fff !important;
+    font-weight: 600;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    border: none !important;
+}
+
+.custom-table tbody td {
+    padding: 12px 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+}
+
+.custom-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.status-badge.processed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-badge.cancelled {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Quick actions */
+.quick-action-card {
+    text-align: center;
+    padding: 25px 15px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    text-decoration: none;
+}
+
+.quick-action-card i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.quick-action-card span {
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.quick-action-card.green i { color: #2e7d32; }
+.quick-action-card.blue i { color: #1976d2; }
+.quick-action-card.teal i { color: #00695c; }
+.quick-action-card.cyan i { color: #00838f; }
+
+/* Liste stylisée */
+.styled-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.styled-list .list-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
+
+.styled-list .list-item:hover {
+    background: #f8f9fa;
+}
+
+.styled-list .list-item:last-child {
+    border-bottom: none;
+}
+
+/* Page header */
+.dashboard-header {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+    border-radius: 12px;
+    padding: 30px;
+    color: #fff;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(27, 94, 32, 0.3);
+}
+
+.dashboard-header h2 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.dashboard-header p {
+    margin: 8px 0 0;
+    opacity: 0.9;
+    font-size: 1.05rem;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1rem;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
-    <!-- Page Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2 class="mb-1" style="color: #2e7d32; font-weight: 700;">
-                <i class="fas fa-tachometer-alt mr-2"></i> Tableau de bord
-            </h2>
-            <p class="text-muted mb-0">Bienvenue dans votre espace d'administration Aqua-Racine</p>
-        </div>
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h2><i class="fas fa-leaf mr-2"></i> Tableau de bord Aqua-Racine</h2>
+        <p>Bienvenue dans votre espace d'administration</p>
     </div>
 
     <!-- KPI Cards Row -->
-    <div class="row">
-        <!-- Quote Requests -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{ stats.quote_requests_count|default:0 }}</h3>
-                    <p>Demandes de devis</p>
+    <div class="row mb-4">
+        <!-- Demandes de devis -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="kpi-card kpi-green-dark">
+                <i class="fas fa-file-invoice-dollar kpi-icon"></i>
+                <div class="kpi-value">{{ stats.quote_requests_count|default:0 }}</div>
+                <div class="kpi-label">Demandes de devis</div>
+                <div class="kpi-footer">
+                    <a href="{% url 'admin:core_quoterequest_changelist' %}">
+                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
+                    </a>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                </div>
-                <a href="{% url 'admin:core_quoterequest_changelist' %}" class="small-box-footer">
-                    Voir tout <i class="fas fa-arrow-circle-right"></i>
-                </a>
             </div>
         </div>
 
-        <!-- Contact Messages -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3>{{ stats.contact_messages_count|default:0 }}</h3>
-                    <p>Messages de contact</p>
+        <!-- Messages de contact -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="kpi-card kpi-blue-dark">
+                <i class="fas fa-envelope kpi-icon"></i>
+                <div class="kpi-value">{{ stats.contact_messages_count|default:0 }}</div>
+                <div class="kpi-label">Messages de contact</div>
+                <div class="kpi-footer">
+                    <a href="{% url 'admin:core_contactmessage_changelist' %}">
+                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
+                    </a>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <a href="{% url 'admin:core_contactmessage_changelist' %}" class="small-box-footer">
-                    Voir tout <i class="fas fa-arrow-circle-right"></i>
-                </a>
             </div>
         </div>
 
-        <!-- Newsletter Subscribers -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>{{ stats.newsletter_subscribers_count|default:0 }}</h3>
-                    <p>Abonnés newsletter</p>
+        <!-- Abonnés newsletter -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="kpi-card kpi-green">
+                <i class="fas fa-mail-bulk kpi-icon"></i>
+                <div class="kpi-value">{{ stats.newsletter_subscribers_count|default:0 }}</div>
+                <div class="kpi-label">Abonnés newsletter</div>
+                <div class="kpi-footer">
+                    <a href="{% url 'admin:core_newsletter_changelist' %}">
+                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
+                    </a>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-mail-bulk"></i>
-                </div>
-                <a href="{% url 'admin:core_newsletter_changelist' %}" class="small-box-footer">
-                    Voir tout <i class="fas fa-arrow-circle-right"></i>
-                </a>
             </div>
         </div>
 
-        <!-- Products -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="small-box" style="background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
-                <div class="inner" style="color: #fff;">
-                    <h3 style="color: #fff;">{{ stats.products_count|default:0 }}</h3>
-                    <p>Produits actifs</p>
+        <!-- Produits -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="kpi-card kpi-blue">
+                <i class="fas fa-fish kpi-icon"></i>
+                <div class="kpi-value">{{ stats.products_count|default:0 }}</div>
+                <div class="kpi-label">Produits actifs</div>
+                <div class="kpi-footer">
+                    <a href="{% url 'admin:core_product_changelist' %}">
+                        <i class="fas fa-arrow-right mr-1"></i> Voir tout
+                    </a>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-fish"></i>
-                </div>
-                <a href="{% url 'admin:core_product_changelist' %}" class="small-box-footer">
-                    Voir tout <i class="fas fa-arrow-circle-right"></i>
-                </a>
             </div>
         </div>
     </div>
 
-    <!-- Second Row: More Stats -->
-    <div class="row">
-        <!-- New Quotes This Week -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="info-box">
-                <span class="info-box-icon bg-success"><i class="fas fa-calendar-week"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Devis cette semaine</span>
-                    <span class="info-box-number">{{ stats.quotes_this_week|default:0 }}</span>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" style="width: {{ stats.quotes_week_percent|default:0 }}%"></div>
-                    </div>
+    <!-- Secondary Stats Row -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-box">
+                <div class="stat-icon bg-green">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.quotes_this_week|default:0 }}</div>
+                    <div class="stat-label">Devis cette semaine</div>
                 </div>
             </div>
         </div>
 
-        <!-- Pending Quotes -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="info-box">
-                <span class="info-box-icon" style="background: linear-gradient(135deg, #ff9800, #f57c00);"><i class="fas fa-clock" style="color: #fff;"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Devis en attente</span>
-                    <span class="info-box-number">{{ stats.pending_quotes|default:0 }}</span>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-box">
+                <div class="stat-icon bg-blue">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.pending_quotes|default:0 }}</div>
+                    <div class="stat-label">Devis en attente</div>
                     {% if stats.pending_quotes > 0 %}
-                    <small class="text-danger"><i class="fas fa-exclamation-circle"></i> À traiter</small>
+                    <span class="stat-badge warning"><i class="fas fa-exclamation-circle"></i> À traiter</span>
                     {% else %}
-                    <small class="text-success"><i class="fas fa-check-circle"></i> Tout traité</small>
+                    <span class="stat-badge success"><i class="fas fa-check-circle"></i> Tout traité</span>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Team Members -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="info-box">
-                <span class="info-box-icon" style="background: linear-gradient(135deg, #00bcd4, #0097a7);"><i class="fas fa-users" style="color: #fff;"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Membres équipe</span>
-                    <span class="info-box-number">{{ stats.team_members_count|default:0 }}</span>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-box">
+                <div class="stat-icon bg-teal">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.team_members_count|default:0 }}</div>
+                    <div class="stat-label">Membres de l'équipe</div>
                 </div>
             </div>
         </div>
 
-        <!-- Gallery Images -->
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="info-box">
-                <span class="info-box-icon" style="background: linear-gradient(135deg, #e91e63, #c2185b);"><i class="fas fa-images" style="color: #fff;"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Images galerie</span>
-                    <span class="info-box-number">{{ stats.gallery_images_count|default:0 }}</span>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-box">
+                <div class="stat-icon bg-cyan">
+                    <i class="fas fa-images"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.gallery_images_count|default:0 }}</div>
+                    <div class="stat-label">Images galerie</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Content Row -->
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5 style="color: #1b5e20; font-weight: 600; margin-bottom: 20px;">
+                <i class="fas fa-bolt mr-2"></i> Actions rapides
+            </h5>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="{% url 'admin:core_product_add' %}" class="quick-action-card green">
+                <i class="fas fa-plus-circle"></i>
+                <span>Ajouter produit</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="{% url 'admin:core_heroslide_add' %}" class="quick-action-card blue">
+                <i class="fas fa-image"></i>
+                <span>Ajouter slide</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="{% url 'admin:core_service_add' %}" class="quick-action-card teal">
+                <i class="fas fa-concierge-bell"></i>
+                <span>Ajouter service</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="{% url 'admin:core_galleryimage_add' %}" class="quick-action-card cyan">
+                <i class="fas fa-camera"></i>
+                <span>Ajouter image</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="{% url 'admin:core_sitesettings_changelist' %}" class="quick-action-card green">
+                <i class="fas fa-cog"></i>
+                <span>Paramètres</span>
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-4 col-6 mb-3">
+            <a href="/" target="_blank" class="quick-action-card blue">
+                <i class="fas fa-external-link-alt"></i>
+                <span>Voir le site</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content: Tables -->
     <div class="row">
         <!-- Recent Quote Requests -->
         <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header">
+            <div class="custom-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">
-                        <i class="fas fa-file-invoice-dollar mr-2" style="color: #4caf50;"></i>
+                        <i class="fas fa-file-invoice-dollar" style="color: #2e7d32;"></i>
                         Dernières demandes de devis
                     </h3>
                     <div class="card-tools">
-                        <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn btn-sm btn-primary">
+                        <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn btn-sm" style="background: #2e7d32; color: #fff;">
                             Voir tout
                         </a>
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                    <th>Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for quote in recent_quotes %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'admin:core_quoterequest_change' quote.pk %}">
-                                            <strong>{{ quote.full_name }}</strong>
-                                        </a>
-                                        <br><small class="text-muted">{{ quote.email }}</small>
-                                    </td>
-                                    <td>
-                                        {% for type in quote.installation_types.all %}
-                                        <span class="badge badge-success">{{ type.name }}</span>
-                                        {% empty %}
-                                        <span class="text-muted">-</span>
-                                        {% endfor %}
-                                    </td>
-                                    <td><small>{{ quote.created_at|date:"d/m/Y H:i" }}</small></td>
-                                    <td>
-                                        {% if quote.status == 'pending' %}
-                                        <span class="badge" style="background: rgba(243, 156, 18, 0.15); color: #f39c12;">En attente</span>
-                                        {% elif quote.status == 'processed' %}
-                                        <span class="badge" style="background: rgba(76, 175, 80, 0.15); color: #4caf50;">Traité</span>
-                                        {% elif quote.status == 'cancelled' %}
-                                        <span class="badge" style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Annulé</span>
-                                        {% else %}
-                                        <span class="badge badge-secondary">{{ quote.status }}</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        <i class="fas fa-inbox fa-2x mb-2"></i><br>
-                                        Aucune demande de devis
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in recent_quotes %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'admin:core_quoterequest_change' quote.pk %}" style="color: #1b5e20; font-weight: 600;">
+                                        {{ quote.full_name }}
+                                    </a>
+                                    <br><small style="color: #888;">{{ quote.email }}</small>
+                                </td>
+                                <td>
+                                    {% for type in quote.installation_types.all %}
+                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem;">{{ type.name }}</span>
+                                    {% empty %}
+                                    <span style="color: #999;">-</span>
+                                    {% endfor %}
+                                </td>
+                                <td><small>{{ quote.created_at|date:"d/m/Y" }}</small></td>
+                                <td>
+                                    {% if quote.status == 'pending' %}
+                                    <span class="status-badge pending">En attente</span>
+                                    {% elif quote.status == 'processed' %}
+                                    <span class="status-badge processed">Traité</span>
+                                    {% elif quote.status == 'cancelled' %}
+                                    <span class="status-badge cancelled">Annulé</span>
+                                    {% else %}
+                                    <span class="status-badge" style="background: #eee; color: #666;">{{ quote.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>Aucune demande de devis</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Recent Contact Messages -->
         <div class="col-lg-6 mb-4">
-            <div class="card">
-                <div class="card-header">
+            <div class="custom-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">
-                        <i class="fas fa-envelope mr-2" style="color: #00bcd4;"></i>
+                        <i class="fas fa-envelope" style="color: #1976d2;"></i>
                         Derniers messages de contact
                     </h3>
                     <div class="card-tools">
-                        <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn btn-sm btn-info">
+                        <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn btn-sm" style="background: #1976d2; color: #fff;">
                             Voir tout
                         </a>
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
+                    <ul class="styled-list">
                         {% for message in recent_messages %}
-                        <li class="list-group-item">
+                        <li class="list-item">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <a href="{% url 'admin:core_contactmessage_change' message.pk %}">
-                                        <strong>{{ message.name }}</strong>
+                                    <a href="{% url 'admin:core_contactmessage_change' message.pk %}" style="color: #1b5e20; font-weight: 600;">
+                                        {{ message.name }}
                                     </a>
-                                    <br>
-                                    <small class="text-muted">{{ message.email }}</small>
-                                    <p class="mb-0 mt-1 text-truncate" style="max-width: 400px;">
-                                        {{ message.message|truncatewords:15 }}
+                                    <br><small style="color: #888;">{{ message.email }}</small>
+                                    <p style="margin: 8px 0 0; color: #555; font-size: 0.9rem;">
+                                        {{ message.message|truncatewords:12 }}
                                     </p>
                                 </div>
-                                <small class="text-muted">{{ message.created_at|date:"d/m" }}</small>
+                                <small style="color: #999;">{{ message.created_at|date:"d/m" }}</small>
                             </div>
                         </li>
                         {% empty %}
-                        <li class="list-group-item text-center text-muted py-4">
-                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
-                            Aucun message
+                        <li class="list-item">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Aucun message</p>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -250,85 +612,33 @@
         </div>
     </div>
 
-    <!-- Quick Actions Row -->
-    <div class="row">
-        <div class="col-12 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-bolt mr-2" style="color: #f5a715;"></i>
-                        Actions rapides
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="{% url 'admin:core_product_add' %}" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-plus-circle" style="color: #4caf50;"></i>
-                                <span>Ajouter produit</span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="{% url 'admin:core_heroslide_add' %}" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-image" style="color: #2196f3;"></i>
-                                <span>Ajouter slide</span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="{% url 'admin:core_service_add' %}" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-concierge-bell" style="color: #9c27b0;"></i>
-                                <span>Ajouter service</span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="{% url 'admin:core_galleryimage_add' %}" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-camera" style="color: #e91e63;"></i>
-                                <span>Ajouter image</span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="{% url 'admin:core_sitesettings_changelist' %}" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-cog" style="color: #607d8b;"></i>
-                                <span>Paramètres</span>
-                            </a>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a href="/" target="_blank" class="quick-action-btn d-block text-center">
-                                <i class="fas fa-external-link-alt" style="color: #00bcd4;"></i>
-                                <span>Voir le site</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Newsletter Subscribers & Game Participations -->
+    <!-- Newsletter & Game Row -->
     <div class="row">
         <!-- Recent Newsletter Subscribers -->
         <div class="col-lg-6 mb-4">
-            <div class="card">
+            <div class="custom-card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-mail-bulk mr-2" style="color: #f5a715;"></i>
+                        <i class="fas fa-mail-bulk" style="color: #2e7d32;"></i>
                         Derniers abonnés newsletter
                     </h3>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
+                    <ul class="styled-list">
                         {% for sub in recent_subscribers %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-item d-flex justify-content-between align-items-center">
                             <div>
-                                <i class="fas fa-user-check text-success mr-2"></i>
-                                {{ sub.email }}
+                                <i class="fas fa-user-check mr-2" style="color: #4caf50;"></i>
+                                <span style="color: #333;">{{ sub.email }}</span>
                             </div>
-                            <small class="text-muted">{{ sub.created_at|date:"d/m/Y" }}</small>
+                            <small style="color: #999;">{{ sub.created_at|date:"d/m/Y" }}</small>
                         </li>
                         {% empty %}
-                        <li class="list-group-item text-center text-muted py-4">
-                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
-                            Aucun abonné
+                        <li class="list-item">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Aucun abonné</p>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -338,36 +648,42 @@
 
         <!-- Game Participations -->
         <div class="col-lg-6 mb-4">
-            <div class="card">
+            <div class="custom-card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-gamepad mr-2" style="color: #9c27b0;"></i>
-                        Dernières participations au jeu
+                        <i class="fas fa-gamepad" style="color: #1976d2;"></i>
+                        Participations au jeu
                     </h3>
                 </div>
                 <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
+                    <ul class="styled-list">
                         {% for participation in recent_game_participations %}
-                        <li class="list-group-item">
+                        <li class="list-item">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>{{ participation.name }}</strong>
-                                    <br><small class="text-muted">{{ participation.email }}</small>
+                                    <strong style="color: #333;">{{ participation.name }}</strong>
+                                    <br><small style="color: #888;">{{ participation.email }}</small>
                                 </div>
                                 <div class="text-right">
                                     {% if participation.prize and participation.prize.is_winning_prize %}
-                                    <span class="badge badge-success">Gagné: {{ participation.prize.name }}</span>
+                                    <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
+                                        <i class="fas fa-trophy mr-1"></i> {{ participation.prize.name }}
+                                    </span>
                                     {% else %}
-                                    <span class="badge badge-secondary">Pas de lot</span>
+                                    <span style="background: #f5f5f5; color: #999; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem;">
+                                        Pas de lot
+                                    </span>
                                     {% endif %}
-                                    <br><small class="text-muted">{{ participation.created_at|date:"d/m H:i" }}</small>
+                                    <br><small style="color: #999;">{{ participation.created_at|date:"d/m H:i" }}</small>
                                 </div>
                             </div>
                         </li>
                         {% empty %}
-                        <li class="list-group-item text-center text-muted py-4">
-                            <i class="fas fa-gamepad fa-2x mb-2"></i><br>
-                            Aucune participation
+                        <li class="list-item">
+                            <div class="empty-state">
+                                <i class="fas fa-gamepad"></i>
+                                <p>Aucune participation</p>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -379,5 +695,4 @@
 {% endblock %}
 
 {% block sidebar %}
-<!-- Sidebar is hidden with Jazzmin, but keeping for fallback -->
 {% endblock %}
