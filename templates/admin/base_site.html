@@ -102,52 +102,59 @@
         background: rgba(76, 175, 80, 0.3);
     }
 
-    /* Jazzmin sidebar styles - ensure text is visible */
-    .main-sidebar,
-    .main-sidebar .nav-sidebar .nav-link,
-    .main-sidebar .nav-sidebar .nav-link p,
-    .main-sidebar .brand-link,
-    .main-sidebar .brand-link .brand-text,
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link,
-    [class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link {
-        color: #ffffff !important;
-    }
-
-    /* Sidebar section headers */
-    .main-sidebar .nav-header,
-    .sidebar-dark-primary .nav-header,
-    [class*="sidebar-dark"] .nav-header {
-        color: #81c784 !important;
-        background: rgba(0, 0, 0, 0.15) !important;
-        padding: 10px 15px !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        font-size: 0.75rem !important;
-    }
-
-    /* Sidebar background */
+    /* Jazzmin sidebar styles - LIGHT THEME with dark text */
     .main-sidebar {
-        background: linear-gradient(180deg, #1a3a1a 0%, #2e5a2e 100%) !important;
+        background: #ffffff !important;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
     }
 
-    /* Sidebar links hover */
-    .main-sidebar .nav-sidebar .nav-link:hover,
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
-        background: rgba(76, 175, 80, 0.3) !important;
-        color: #ffffff !important;
-    }
-
-    /* Active link in sidebar */
-    .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
-    .main-sidebar .nav-sidebar .nav-link.active {
+    .main-sidebar .brand-link {
         background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
         color: #ffffff !important;
     }
 
-    /* Sidebar icons */
+    .main-sidebar .brand-link .brand-text {
+        color: #ffffff !important;
+    }
+
+    /* Sidebar text - dark on light background */
+    .main-sidebar .nav-sidebar .nav-link,
+    .main-sidebar .nav-sidebar .nav-link p,
+    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link {
+        color: #333333 !important;
+    }
+
+    /* Sidebar section headers */
+    .main-sidebar .nav-header,
+    [class*="sidebar-light"] .nav-header {
+        color: #2e7d32 !important;
+        background: #f0f7f0 !important;
+        padding: 12px 15px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 0.75rem !important;
+        border-left: 3px solid #4caf50 !important;
+    }
+
+    /* Sidebar links hover */
+    .main-sidebar .nav-sidebar .nav-link:hover {
+        background: #e8f5e9 !important;
+        color: #2e7d32 !important;
+    }
+
+    /* Active link in sidebar */
+    .main-sidebar .nav-sidebar .nav-link.active,
+    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link.active {
+        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+        color: #ffffff !important;
+        border-radius: 5px;
+        margin: 0 10px;
+    }
+
+    /* Sidebar icons - green */
     .nav-sidebar .nav-icon,
     .main-sidebar .nav-icon {
-        color: #81c784 !important;
+        color: #4caf50 !important;
     }
 
     .nav-sidebar .nav-link.active .nav-icon {
@@ -157,19 +164,19 @@
     /* Plus/Add buttons */
     .main-sidebar .badge,
     .main-sidebar .right,
-    .main-sidebar .fas.fa-plus {
-        color: #81c784 !important;
+    .main-sidebar .fa-plus {
+        color: #4caf50 !important;
     }
 
     /* Sidebar filter */
     .main-sidebar .form-control-sidebar {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border-color: rgba(255, 255, 255, 0.2) !important;
-        color: #ffffff !important;
+        background: #f5f5f5 !important;
+        border: 1px solid #e0e0e0 !important;
+        color: #333333 !important;
     }
 
     .main-sidebar .form-control-sidebar::placeholder {
-        color: rgba(255, 255, 255, 0.6) !important;
+        color: #999999 !important;
     }
 
     /* Cards and boxes */
