@@ -31,6 +31,8 @@ class UserProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profil administrateur'
     fk_name = 'user'
+    extra = 0  # Don't show extra empty forms for new users
+    min_num = 0
 
     fieldsets = (
         ('Rôle et informations', {
@@ -38,6 +40,12 @@ class UserProfileInline(admin.StackedInline):
             'description': 'Super Admin : Accès complet à toutes les fonctionnalités. Admin : Accès limité (ne peut pas gérer les utilisateurs).'
         }),
     )
+
+    def get_extra(self, request, obj=None, **kwargs):
+        """Show 1 extra form only for new users without profile."""
+        if obj is None:
+            return 1  # New user - show form to create profile
+        return 0  # Existing user - don't show extra forms
 
 
 def is_user_super_admin(user):
@@ -187,6 +195,12 @@ class CustomUserAdmin(BaseUserAdmin):
         """Ensure staff flag is set for admin users."""
         obj.is_staff = True
         super().save_model(request, obj, form, change)
+
+    def get_inlines(self, request, obj):
+        """Only show profile inline for existing users, not when adding."""
+        if obj is None:
+            return []  # No inline when adding new user (signal will create profile)
+        return self.inlines
 
 
 # Unregister the default User admin and register our custom one

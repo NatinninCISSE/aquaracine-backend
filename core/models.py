@@ -80,10 +80,12 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    """Create a UserProfile when a User is created."""
+    """Create a UserProfile when a User is created (only if not already exists)."""
     if instance.is_staff:
-        role = 'super_admin' if instance.is_superuser else 'admin'
-        UserProfile.objects.get_or_create(user=instance, defaults={'role': role})
+        # Check if profile already exists to avoid duplicate creation
+        if not UserProfile.objects.filter(user=instance).exists():
+            role = 'super_admin' if instance.is_superuser else 'admin'
+            UserProfile.objects.create(user=instance, role=role)
 
 
 class TimeStampedModel(models.Model):
