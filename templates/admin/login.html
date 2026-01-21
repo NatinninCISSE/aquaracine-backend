@@ -5,9 +5,11 @@
 {{ block.super }}
 <style>
 /* Hide ALL admin UI elements for login page */
-body, body.login {
-    background: linear-gradient(135deg, #1e2a4a 0%, #0d1b2a 100%) !important;
+html, body, body.login {
+    background: #ffffff !important;
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 #header,
@@ -20,32 +22,42 @@ nav.sidebar,
 .module.filtered,
 #changelist-filter,
 nav,
-.breadcrumbs {
+.breadcrumbs,
+#branding,
+#user-tools {
     display: none !important;
     width: 0 !important;
+    height: 0 !important;
     visibility: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 
-#container, .main {
+#container, .main, main {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     min-height: 100vh !important;
     padding: 20px !important;
-    margin-left: 0 !important;
+    margin: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
+    background: #ffffff !important;
 }
 
 #content, .content {
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
     max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .login-wrapper {
     width: 100%;
     max-width: 420px;
+    margin: 0 auto;
 }
 
 .login-card {
