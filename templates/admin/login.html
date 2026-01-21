@@ -4,25 +4,43 @@
 {% block extrastyle %}
 {{ block.super }}
 <style>
-body.login {
-    background: linear-gradient(135deg, #1e2a4a 0%, #0d1b2a 100%);
+/* Hide ALL admin UI elements for login page */
+body, body.login {
+    background: linear-gradient(135deg, #1e2a4a 0%, #0d1b2a 100%) !important;
     min-height: 100vh;
 }
 
-#header {
-    display: none;
+#header,
+nav.sidebar,
+#nav-sidebar,
+.sidebar,
+#toggle-nav-sidebar,
+.main > .sidebar,
+#nav-filter,
+.module.filtered,
+#changelist-filter,
+nav,
+.breadcrumbs {
+    display: none !important;
+    width: 0 !important;
+    visibility: hidden !important;
 }
 
-#container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
+#container, .main {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 100vh !important;
+    padding: 20px !important;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
-#content {
-    padding: 0;
+#content, .content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
 }
 
 .login-wrapper {
