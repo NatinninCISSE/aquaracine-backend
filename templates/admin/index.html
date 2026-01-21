@@ -1,75 +1,383 @@
 {% extends "admin/base_site.html" %}
-{% load i18n static %}
+{% load static i18n %}
 
 {% block content %}
-{% if app_list %}
-    {% for app in app_list %}
-        <div class="app-{{ app.app_label }} module">
-            <table>
-                <caption>
-                    <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">{{ app.name }}</a>
-                </caption>
-                {% for model in app.models %}
-                    <tr class="model-{{ model.object_name|lower }}">
-                        {% if model.admin_url %}
-                            <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
-                        {% else %}
-                            <th scope="row">{{ model.name }}</th>
-                        {% endif %}
-
-                        {% if model.add_url %}
-                            <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
-                        {% else %}
-                            <td>&nbsp;</td>
-                        {% endif %}
-
-                        {% if model.admin_url and show_changelinks %}
-                            {% if model.view_only %}
-                                <td><a href="{{ model.admin_url }}" class="viewlink">{% trans 'View' %}</a></td>
-                            {% else %}
-                                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
-                            {% endif %}
-                        {% elif show_changelinks %}
-                            <td>&nbsp;</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-1" style="color: #2e7d32; font-weight: 700;">
+                <i class="fas fa-tachometer-alt mr-2"></i> Tableau de bord
+            </h2>
+            <p class="text-muted mb-0">Bienvenue dans votre espace d'administration Aqua-Racine</p>
         </div>
-    {% endfor %}
-{% else %}
-    <p>{% trans "You don't have permission to view or edit anything." %}</p>
-{% endif %}
+    </div>
+
+    <!-- KPI Cards Row -->
+    <div class="row">
+        <!-- Quote Requests -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ stats.quote_requests_count|default:0 }}</h3>
+                    <p>Demandes de devis</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <a href="{% url 'admin:core_quoterequest_changelist' %}" class="small-box-footer">
+                    Voir tout <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact Messages -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ stats.contact_messages_count|default:0 }}</h3>
+                    <p>Messages de contact</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <a href="{% url 'admin:core_contactmessage_changelist' %}" class="small-box-footer">
+                    Voir tout <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Newsletter Subscribers -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ stats.newsletter_subscribers_count|default:0 }}</h3>
+                    <p>Abonnés newsletter</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-mail-bulk"></i>
+                </div>
+                <a href="{% url 'admin:core_newsletter_changelist' %}" class="small-box-footer">
+                    Voir tout <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="small-box" style="background: linear-gradient(135deg, #9c27b0, #7b1fa2);">
+                <div class="inner" style="color: #fff;">
+                    <h3 style="color: #fff;">{{ stats.products_count|default:0 }}</h3>
+                    <p>Produits actifs</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <a href="{% url 'admin:core_product_changelist' %}" class="small-box-footer">
+                    Voir tout <i class="fas fa-arrow-circle-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row: More Stats -->
+    <div class="row">
+        <!-- New Quotes This Week -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="info-box">
+                <span class="info-box-icon bg-success"><i class="fas fa-calendar-week"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Devis cette semaine</span>
+                    <span class="info-box-number">{{ stats.quotes_this_week|default:0 }}</span>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: {{ stats.quotes_week_percent|default:0 }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Quotes -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="info-box">
+                <span class="info-box-icon" style="background: linear-gradient(135deg, #ff9800, #f57c00);"><i class="fas fa-clock" style="color: #fff;"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Devis en attente</span>
+                    <span class="info-box-number">{{ stats.pending_quotes|default:0 }}</span>
+                    {% if stats.pending_quotes > 0 %}
+                    <small class="text-danger"><i class="fas fa-exclamation-circle"></i> À traiter</small>
+                    {% else %}
+                    <small class="text-success"><i class="fas fa-check-circle"></i> Tout traité</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Members -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="info-box">
+                <span class="info-box-icon" style="background: linear-gradient(135deg, #00bcd4, #0097a7);"><i class="fas fa-users" style="color: #fff;"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Membres équipe</span>
+                    <span class="info-box-number">{{ stats.team_members_count|default:0 }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Images -->
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="info-box">
+                <span class="info-box-icon" style="background: linear-gradient(135deg, #e91e63, #c2185b);"><i class="fas fa-images" style="color: #fff;"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Images galerie</span>
+                    <span class="info-box-number">{{ stats.gallery_images_count|default:0 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Recent Quote Requests -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-file-invoice-dollar mr-2" style="color: #4caf50;"></i>
+                        Dernières demandes de devis
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'admin:core_quoterequest_changelist' %}" class="btn btn-sm btn-primary">
+                            Voir tout
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quote in recent_quotes %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'admin:core_quoterequest_change' quote.pk %}">
+                                            <strong>{{ quote.full_name }}</strong>
+                                        </a>
+                                        <br><small class="text-muted">{{ quote.email }}</small>
+                                    </td>
+                                    <td>
+                                        {% for type in quote.installation_types.all %}
+                                        <span class="badge badge-success">{{ type.name }}</span>
+                                        {% empty %}
+                                        <span class="text-muted">-</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td><small>{{ quote.created_at|date:"d/m/Y H:i" }}</small></td>
+                                    <td>
+                                        {% if quote.status == 'pending' %}
+                                        <span class="badge" style="background: rgba(243, 156, 18, 0.15); color: #f39c12;">En attente</span>
+                                        {% elif quote.status == 'processed' %}
+                                        <span class="badge" style="background: rgba(76, 175, 80, 0.15); color: #4caf50;">Traité</span>
+                                        {% elif quote.status == 'cancelled' %}
+                                        <span class="badge" style="background: rgba(231, 76, 60, 0.15); color: #e74c3c;">Annulé</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ quote.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                                        Aucune demande de devis
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Contact Messages -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-envelope mr-2" style="color: #00bcd4;"></i>
+                        Derniers messages de contact
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'admin:core_contactmessage_changelist' %}" class="btn btn-sm btn-info">
+                            Voir tout
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for message in recent_messages %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <a href="{% url 'admin:core_contactmessage_change' message.pk %}">
+                                        <strong>{{ message.name }}</strong>
+                                    </a>
+                                    <br>
+                                    <small class="text-muted">{{ message.email }}</small>
+                                    <p class="mb-0 mt-1 text-truncate" style="max-width: 400px;">
+                                        {{ message.message|truncatewords:15 }}
+                                    </p>
+                                </div>
+                                <small class="text-muted">{{ message.created_at|date:"d/m" }}</small>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                            Aucun message
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Row -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-bolt mr-2" style="color: #f5a715;"></i>
+                        Actions rapides
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'admin:core_product_add' %}" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-plus-circle" style="color: #4caf50;"></i>
+                                <span>Ajouter produit</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'admin:core_heroslide_add' %}" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-image" style="color: #2196f3;"></i>
+                                <span>Ajouter slide</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'admin:core_service_add' %}" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-concierge-bell" style="color: #9c27b0;"></i>
+                                <span>Ajouter service</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'admin:core_galleryimage_add' %}" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-camera" style="color: #e91e63;"></i>
+                                <span>Ajouter image</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="{% url 'admin:core_sitesettings_changelist' %}" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-cog" style="color: #607d8b;"></i>
+                                <span>Paramètres</span>
+                            </a>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a href="/" target="_blank" class="quick-action-btn d-block text-center">
+                                <i class="fas fa-external-link-alt" style="color: #00bcd4;"></i>
+                                <span>Voir le site</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Subscribers & Game Participations -->
+    <div class="row">
+        <!-- Recent Newsletter Subscribers -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-mail-bulk mr-2" style="color: #f5a715;"></i>
+                        Derniers abonnés newsletter
+                    </h3>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for sub in recent_subscribers %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-user-check text-success mr-2"></i>
+                                {{ sub.email }}
+                            </div>
+                            <small class="text-muted">{{ sub.subscribed_at|date:"d/m/Y" }}</small>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                            Aucun abonné
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Participations -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-gamepad mr-2" style="color: #9c27b0;"></i>
+                        Dernières participations au jeu
+                    </h3>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for participation in recent_game_participations %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ participation.name }}</strong>
+                                    <br><small class="text-muted">{{ participation.email }}</small>
+                                </div>
+                                <div class="text-right">
+                                    {% if participation.prize and participation.prize.is_winning_prize %}
+                                    <span class="badge badge-success">Gagné: {{ participation.prize.name }}</span>
+                                    {% else %}
+                                    <span class="badge badge-secondary">Pas de lot</span>
+                                    {% endif %}
+                                    <br><small class="text-muted">{{ participation.played_at|date:"d/m H:i" }}</small>
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center text-muted py-4">
+                            <i class="fas fa-gamepad fa-2x mb-2"></i><br>
+                            Aucune participation
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block sidebar %}
-<div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% trans 'Recent actions' %}</h2>
-        <h3>{% trans 'My actions' %}</h3>
-        {% load log %}
-        {% get_admin_log 10 as admin_log for_user user %}
-        {% if not admin_log %}
-            <p>{% trans 'None available' %}</p>
-        {% else %}
-            <ul class="actionlist">
-                {% for entry in admin_log %}
-                    <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                        {% if entry.is_deletion or not entry.get_admin_url %}
-                            {{ entry.object_repr }}
-                        {% else %}
-                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
-                        {% endif %}
-                        <br>
-                        {% if entry.content_type %}
-                            <span class="mini quiet">{% filter capfirst %}{{ entry.content_type }}{% endfilter %}</span>
-                        {% else %}
-                            <span class="mini quiet">{% trans 'Unknown content' %}</span>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
-</div>
+<!-- Sidebar is hidden with Jazzmin, but keeping for fallback -->
 {% endblock %}

@@ -1010,6 +1010,22 @@ a.slicknav_item.slicknav_row {
 .single-product-info p a:hover {
     color: #f5a715;
 }
+
+/* Limit product card size */
+.single-product.max-width-320 {
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.single-product-img img {
+    max-height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+.product-gallery .row {
+    justify-content: center;
+}
+
 /*--------------------------------------
 ----- PRODUCT GALLERY AREA CSS END ------
 ---------------------------------------*/

@@ -2,8 +2,11 @@
 Admin configuration for Aqua-Racine backoffice.
 """
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from django.utils.html import format_html
 from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
 from .models import (
     SiteSettings, PhoneNumber, HeroSlide, Service, ProductCategory, Product,
     TeamMember, BlogCategory, BlogPost, TimelineStep, GalleryImage,
@@ -1007,6 +1010,128 @@ class TrainingTypeAdmin(admin.ModelAdmin):
 # ADMIN SITE CUSTOMIZATION
 # ============================================
 
+class AquaRacineAdminSite(AdminSite):
+    """Custom admin site with dashboard statistics."""
+    site_header = "Aqua-Racine Administration"
+    site_title = "Aqua-Racine Admin"
+    index_title = "Tableau de bord"
+
+    def index(self, request, extra_context=None):
+        """Override index to add dashboard statistics."""
+        extra_context = extra_context or {}
+
+        # Calculate date ranges
+        now = timezone.now()
+        week_ago = now - timedelta(days=7)
+        month_ago = now - timedelta(days=30)
+
+        # Main KPIs
+        quote_requests_count = QuoteRequest.objects.count()
+        contact_messages_count = ContactMessage.objects.count()
+        newsletter_subscribers_count = Newsletter.objects.filter(is_active=True).count()
+        products_count = Product.objects.filter(is_active=True).count()
+
+        # Weekly stats
+        quotes_this_week = QuoteRequest.objects.filter(created_at__gte=week_ago).count()
+        quotes_last_week = QuoteRequest.objects.filter(
+            created_at__gte=week_ago - timedelta(days=7),
+            created_at__lt=week_ago
+        ).count()
+
+        # Calculate percentage for progress bar (max 100%)
+        quotes_week_percent = min(quotes_this_week * 10, 100) if quotes_this_week else 0
+
+        # Pending quotes
+        pending_quotes = QuoteRequest.objects.filter(status='pending').count()
+
+        # Other counts
+        team_members_count = TeamMember.objects.filter(is_active=True).count()
+        gallery_images_count = GalleryImage.objects.filter(is_active=True).count()
+
+        # Recent items for dashboard lists
+        recent_quotes = QuoteRequest.objects.select_related().prefetch_related('installation_types').order_by('-created_at')[:5]
+        recent_messages = ContactMessage.objects.order_by('-created_at')[:5]
+        recent_subscribers = Newsletter.objects.filter(is_active=True).order_by('-subscribed_at')[:5]
+        recent_game_participations = GameParticipation.objects.select_related('prize').order_by('-played_at')[:5]
+
+        # Build stats dictionary
+        extra_context['stats'] = {
+            'quote_requests_count': quote_requests_count,
+            'contact_messages_count': contact_messages_count,
+            'newsletter_subscribers_count': newsletter_subscribers_count,
+            'products_count': products_count,
+            'quotes_this_week': quotes_this_week,
+            'quotes_last_week': quotes_last_week,
+            'quotes_week_percent': quotes_week_percent,
+            'pending_quotes': pending_quotes,
+            'team_members_count': team_members_count,
+            'gallery_images_count': gallery_images_count,
+        }
+
+        # Recent items
+        extra_context['recent_quotes'] = recent_quotes
+        extra_context['recent_messages'] = recent_messages
+        extra_context['recent_subscribers'] = recent_subscribers
+        extra_context['recent_game_participations'] = recent_game_participations
+
+        return super().index(request, extra_context=extra_context)
+
+
+# Create custom admin site instance
+aquaracine_admin_site = AquaRacineAdminSite(name='aquaracine_admin')
+
+# Keep default admin site configuration for fallback
 admin.site.site_header = "Aqua-Racine Administration"
 admin.site.site_title = "Aqua-Racine Admin"
 admin.site.index_title = "Tableau de bord"
+
+
+def get_dashboard_stats():
+    """Helper function to get dashboard statistics for default admin."""
+    now = timezone.now()
+    week_ago = now - timedelta(days=7)
+
+    return {
+        'quote_requests_count': QuoteRequest.objects.count(),
+        'contact_messages_count': ContactMessage.objects.count(),
+        'newsletter_subscribers_count': Newsletter.objects.filter(is_active=True).count(),
+        'products_count': Product.objects.filter(is_active=True).count(),
+        'quotes_this_week': QuoteRequest.objects.filter(created_at__gte=week_ago).count(),
+        'pending_quotes': QuoteRequest.objects.filter(status='pending').count(),
+        'team_members_count': TeamMember.objects.filter(is_active=True).count(),
+        'gallery_images_count': GalleryImage.objects.filter(is_active=True).count(),
+    }
+
+
+# Override default admin index
+original_index = admin.site.index
+
+def custom_admin_index(request, extra_context=None):
+    """Override default admin index to include stats."""
+    extra_context = extra_context or {}
+
+    now = timezone.now()
+    week_ago = now - timedelta(days=7)
+
+    # Stats
+    extra_context['stats'] = {
+        'quote_requests_count': QuoteRequest.objects.count(),
+        'contact_messages_count': ContactMessage.objects.count(),
+        'newsletter_subscribers_count': Newsletter.objects.filter(is_active=True).count(),
+        'products_count': Product.objects.filter(is_active=True).count(),
+        'quotes_this_week': QuoteRequest.objects.filter(created_at__gte=week_ago).count(),
+        'quotes_week_percent': min(QuoteRequest.objects.filter(created_at__gte=week_ago).count() * 10, 100),
+        'pending_quotes': QuoteRequest.objects.filter(status='pending').count(),
+        'team_members_count': TeamMember.objects.filter(is_active=True).count(),
+        'gallery_images_count': GalleryImage.objects.filter(is_active=True).count(),
+    }
+
+    # Recent items
+    extra_context['recent_quotes'] = QuoteRequest.objects.select_related().prefetch_related('installation_types').order_by('-created_at')[:5]
+    extra_context['recent_messages'] = ContactMessage.objects.order_by('-created_at')[:5]
+    extra_context['recent_subscribers'] = Newsletter.objects.filter(is_active=True).order_by('-subscribed_at')[:5]
+    extra_context['recent_game_participations'] = GameParticipation.objects.select_related('prize').order_by('-played_at')[:5]
+
+    return original_index(request, extra_context=extra_context)
+
+admin.site.index = custom_admin_index
