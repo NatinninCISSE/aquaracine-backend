@@ -14,460 +14,177 @@
 
 {% block extrastyle %}
 {{ block.super }}
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Bootstrap 4 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-<!-- AdminLTE CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!-- Custom Admin CSS -->
-<link rel="stylesheet" href="{% static 'css/admin-custom.css' %}">
 <style>
-    :root {
-        --aqua-primary: #4caf50;
-        --aqua-primary-dark: #2e7d32;
-        --aqua-primary-light: #81c784;
-        --aqua-secondary: #00bcd4;
-        --aqua-accent: #f5a715;
-        --aqua-gradient: linear-gradient(135deg, #4caf50, #2e7d32);
-    }
-
-    body {
-        font-family: 'Inter', 'Segoe UI', Roboto, sans-serif !important;
-        background: #f4f6f9;
-    }
-
-    /* Override Django admin styles */
-    #header {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-        color: white !important;
-        padding: 15px 20px;
-    }
-
-    #header a, #header a:link, #header a:visited {
-        color: white !important;
-    }
-
-    #branding h1 {
-        color: white !important;
-        font-weight: 700;
-    }
-
-    #branding h1 a {
-        color: white !important;
-    }
-
-    #user-tools {
-        color: rgba(255,255,255,0.9);
-    }
-
-    #user-tools a {
-        color: white !important;
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-
-    #user-tools a:hover {
-        border-bottom-color: white;
-    }
-
-    /* Content area */
-    #content {
-        padding: 30px;
-    }
-
-    #content-main {
-        max-width: 100%;
-    }
-
-    /* Sidebar override for Django default admin */
-    #nav-sidebar {
-        background: linear-gradient(180deg, #1a3a1a 0%, #2e5a2e 100%);
-    }
-
-    #nav-sidebar .module th {
-        background: rgba(0,0,0,0.2);
-        color: #81c784;
-    }
-
-    #nav-sidebar a {
-        color: rgba(255,255,255,0.85);
-    }
-
-    #nav-sidebar a:hover {
-        color: white;
-        background: rgba(76, 175, 80, 0.3);
-    }
-
-    /* Jazzmin sidebar - Fond vert, texte noir, lien actif bleu */
-    .main-sidebar {
-        background: #4caf50 !important;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Barre de marque (logo) avec fond vert dégradé */
-    .main-sidebar .brand-link {
-        background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
-        color: #ffffff !important;
-    }
-
-    .main-sidebar .brand-link .brand-text {
-        color: #ffffff !important;
-    }
-
-    /* Texte noir - parfaitement lisible */
-    .main-sidebar .nav-sidebar .nav-link,
-    .main-sidebar .nav-sidebar .nav-link p,
-    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link,
-    [class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link {
-        color: #000000 !important;
-        font-weight: 500;
-    }
-
-    /* En-têtes de section en vert foncé avec fond vert clair */
-    .main-sidebar .nav-header,
-    [class*="sidebar-light"] .nav-header,
-    [class*="sidebar-dark"] .nav-header {
-        color: #1b5e20 !important;
-        background: rgba(255, 255, 255, 0.3) !important;
-        padding: 12px 15px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        font-size: 0.75rem !important;
-        border-left: 3px solid #2e7d32 !important;
-    }
-
-    /* Sidebar links hover */
-    .main-sidebar .nav-sidebar .nav-link:hover {
-        background: rgba(255, 255, 255, 0.3) !important;
-        color: #000000 !important;
-    }
-
-    /* Lien actif avec dégradé BLEU et texte blanc */
-    .main-sidebar .nav-sidebar .nav-link.active,
-    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link.active,
-    [class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link.active {
-        background: linear-gradient(135deg, #1976d2, #0d47a1) !important;
-        color: #ffffff !important;
-        border-radius: 5px;
-        margin: 0 10px;
-        box-shadow: 0 2px 10px rgba(25, 118, 210, 0.4);
-    }
-
-    /* Icônes vertes */
-    .nav-sidebar .nav-icon,
-    .main-sidebar .nav-icon {
-        color: #1b5e20 !important;
-    }
-
-    .nav-sidebar .nav-link.active .nav-icon {
-        color: #ffffff !important;
-    }
-
-    /* Plus/Add buttons */
-    .main-sidebar .badge,
-    .main-sidebar .right,
-    .main-sidebar .fa-plus {
-        color: #1b5e20 !important;
-    }
-
-    /* Sidebar filter */
-    .main-sidebar .form-control-sidebar {
-        background: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid rgba(0, 0, 0, 0.1) !important;
-        color: #000000 !important;
-    }
-
-    .main-sidebar .form-control-sidebar::placeholder {
-        color: #666666 !important;
-    }
-
-    /* Cards and boxes */
-    .small-box {
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .small-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-    }
-
-    .small-box .inner {
-        padding: 20px;
-    }
-
-    .small-box .inner h3 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 0 0 10px 0;
-        color: white;
-    }
-
-    .small-box .inner p {
-        font-size: 1rem;
-        margin: 0;
-        color: rgba(255,255,255,0.9);
-    }
-
-    .small-box .icon {
-        position: absolute;
-        right: 15px;
-        top: 15px;
-        font-size: 70px;
-        color: rgba(255,255,255,0.2);
-    }
-
-    .small-box .small-box-footer {
-        display: block;
-        background: rgba(0,0,0,0.15);
-        color: white;
-        text-align: center;
-        padding: 10px;
-        text-decoration: none;
-        border-radius: 0 0 15px 15px;
-        transition: background 0.3s;
-    }
-
-    .small-box .small-box-footer:hover {
-        background: rgba(0,0,0,0.25);
-        color: white;
-    }
-
-    .small-box.bg-success {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-    }
-
-    .small-box.bg-info {
-        background: linear-gradient(135deg, #00bcd4, #0097a7) !important;
-    }
-
-    .small-box.bg-warning {
-        background: linear-gradient(135deg, #f5a715, #e09800) !important;
-    }
-
-    /* Info boxes */
-    .info-box {
-        display: flex;
-        align-items: stretch;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        min-height: 100px;
-        margin-bottom: 20px;
-    }
-
-    .info-box-icon {
-        width: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 30px;
-        border-radius: 12px 0 0 12px;
-        color: white;
-    }
-
-    .info-box-icon.bg-success {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-    }
-
-    .info-box-content {
-        padding: 15px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .info-box-text {
-        color: #666;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .info-box-number {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #333;
-    }
-
-    /* Cards */
-    .card {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
-    }
-
-    .card-header {
-        background: transparent;
-        border-bottom: 1px solid #eee;
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .card-title {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2e7d32;
-    }
-
-    .card-body {
-        padding: 20px;
-    }
-
-    /* Quick action buttons */
-    .quick-action-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 25px 15px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 3px 15px rgba(0,0,0,0.05);
-        text-decoration: none !important;
-        color: #333;
-        transition: all 0.3s ease;
-    }
-
-    .quick-action-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.2);
-        color: #2e7d32;
-    }
-
-    .quick-action-btn i {
-        font-size: 32px;
-        margin-bottom: 12px;
-    }
-
-    .quick-action-btn span {
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
-    /* Buttons */
-    .btn-primary {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-        border: none !important;
-        box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #388e3c, #1b5e20) !important;
-        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-    }
-
-    .btn-info {
-        background: linear-gradient(135deg, #00bcd4, #0097a7) !important;
-        border: none !important;
-    }
-
-    /* Tables */
-    .table thead th {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border-bottom: 2px solid #4caf50;
-        color: #2e7d32;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(76, 175, 80, 0.05);
-    }
-
-    /* Badges */
-    .badge-success {
-        background: linear-gradient(135deg, #4caf50, #2e7d32);
-    }
-
-    /* Progress bars */
-    .progress {
-        height: 6px;
-        border-radius: 3px;
-        background: #e9ecef;
-        margin-top: 8px;
-    }
-
-    .progress-bar.bg-success {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
-    }
-
-    /* List groups */
-    .list-group-item {
-        border: none;
-        border-bottom: 1px solid #f0f0f0;
-        padding: 15px 20px;
-    }
-
-    .list-group-item:last-child {
-        border-bottom: none;
-    }
-
-    /* Text colors */
-    .text-success {
-        color: #4caf50 !important;
-    }
-
-    /* Dashboard header */
-    .dashboard-header {
-        margin-bottom: 30px;
-    }
-
-    .dashboard-header h2 {
-        color: #2e7d32;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    /* Row spacing */
-    .row {
-        margin-left: -10px;
-        margin-right: -10px;
-    }
-
-    .row > [class*="col-"] {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .small-box, .info-box, .card {
-        animation: fadeInUp 0.5s ease;
-    }
+/* ===========================================
+   THEME AQUA-RACINE - Vert, Bleu, Noir, Blanc
+   =========================================== */
+
+/* SIDEBAR - Fond VERT FONCE, texte BLANC */
+.main-sidebar {
+    background: #1b5e20 !important;
+}
+
+.main-sidebar .brand-link {
+    background: #0d47a1 !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #1565c0 !important;
+}
+
+.main-sidebar .brand-link .brand-text {
+    color: #ffffff !important;
+}
+
+/* Liens sidebar - BLANC sur fond vert */
+.main-sidebar .nav-sidebar .nav-link,
+.main-sidebar .nav-sidebar .nav-link p {
+    color: #ffffff !important;
+}
+
+/* Headers de section - fond bleu */
+.main-sidebar .nav-header {
+    color: #ffffff !important;
+    background: #0d47a1 !important;
+    padding: 10px 15px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.8rem !important;
+}
+
+/* Hover sur liens */
+.main-sidebar .nav-sidebar .nav-link:hover {
+    background: #2e7d32 !important;
+    color: #ffffff !important;
+}
+
+/* Lien ACTIF - fond BLEU */
+.main-sidebar .nav-sidebar .nav-link.active {
+    background: #1976d2 !important;
+    color: #ffffff !important;
+    border-radius: 4px;
+    margin: 2px 8px;
+}
+
+/* Icônes - BLANC */
+.main-sidebar .nav-icon {
+    color: #ffffff !important;
+}
+
+/* Boutons AJOUTER - fond BLEU, texte BLANC */
+.main-sidebar .badge,
+.main-sidebar .right,
+.main-sidebar .fa-plus,
+.main-sidebar a.bg-success,
+.main-sidebar .btn {
+    background: #1976d2 !important;
+    color: #ffffff !important;
+    border-radius: 3px;
+    padding: 2px 6px;
+}
+
+/* Champ de recherche */
+.main-sidebar .form-control-sidebar {
+    background: #2e7d32 !important;
+    border: 1px solid #4caf50 !important;
+    color: #ffffff !important;
+}
+
+.main-sidebar .form-control-sidebar::placeholder {
+    color: #c8e6c9 !important;
+}
+
+/* NAVBAR - fond BLEU FONCE */
+.main-header.navbar {
+    background: #0d47a1 !important;
+}
+
+.main-header .navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+/* CONTENU - fond clair */
+.content-wrapper {
+    background: #f5f5f5 !important;
+}
+
+/* Breadcrumb */
+.content-header {
+    background: #ffffff;
+    border-bottom: 2px solid #4caf50;
+    margin-bottom: 20px;
+}
+
+/* BOUTONS généraux */
+.btn-primary {
+    background: #1976d2 !important;
+    border-color: #1565c0 !important;
+    color: #ffffff !important;
+}
+
+.btn-success {
+    background: #2e7d32 !important;
+    border-color: #1b5e20 !important;
+    color: #ffffff !important;
+}
+
+.btn-info {
+    background: #0288d1 !important;
+    border-color: #0277bd !important;
+    color: #ffffff !important;
+}
+
+/* Tables */
+.table thead th {
+    background: #1b5e20 !important;
+    color: #ffffff !important;
+    border-color: #2e7d32 !important;
+}
+
+/* Cards */
+.card-header {
+    background: #e8f5e9 !important;
+    border-bottom: 2px solid #4caf50 !important;
+}
+
+.card-title {
+    color: #1b5e20 !important;
+    font-weight: 600;
+}
+
+/* Footer */
+.main-footer {
+    background: #1b5e20 !important;
+    color: #ffffff !important;
+    border-top: none !important;
+}
+
+.main-footer a {
+    color: #81c784 !important;
+}
+
+/* Sous-menus */
+.nav-treeview {
+    background: #2e7d32 !important;
+}
+
+.nav-treeview .nav-link {
+    color: #ffffff !important;
+    padding-left: 30px !important;
+}
+
+.nav-treeview .nav-link:hover {
+    background: #388e3c !important;
+}
+
+/* Scrollbar */
+.main-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.main-sidebar::-webkit-scrollbar-thumb {
+    background: #4caf50;
+    border-radius: 3px;
+}
 </style>
-{% endblock %}
-
-{% block extrahead %}
-{{ block.super }}
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
 
 {% block welcome-msg %}
@@ -478,8 +195,8 @@
 
 {% block userlinks %}
     {% if user.is_authenticated %}
-        <a href="/" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le site</a> /
-        <a href="{% url 'admin:password_change' %}"><i class="fas fa-key"></i> Mot de passe</a> /
-        <a href="{% url 'admin:logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        <a href="/" target="_blank" style="color: #ffffff !important;">Voir le site</a> /
+        <a href="{% url 'admin:password_change' %}" style="color: #ffffff !important;">Mot de passe</a> /
+        <a href="{% url 'admin:logout' %}" style="color: #ffffff !important;">Déconnexion</a>
     {% endif %}
 {% endblock %}
