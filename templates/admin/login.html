@@ -283,12 +283,12 @@ nav,
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="id_username">Nom d'utilisateur</label>
+                    <label for="id_username">Adresse email</label>
                     <div class="input-with-icon">
-                        <input type="text" name="username" id="id_username"
-                               placeholder="Votre nom d'utilisateur" autofocus required
+                        <input type="email" name="username" id="id_username"
+                               placeholder="votre@email.com" autofocus required
                                {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
-                        <span class="icon">👤</span>
+                        <span class="icon">📧</span>
                     </div>
                 </div>
 

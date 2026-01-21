@@ -209,6 +209,12 @@ if is_package_installed('ckeditor'):
         },
     }
 
+# Authentication Backends - Allow login by email
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailBackend',  # Custom email authentication
+    'django.contrib.auth.backends.ModelBackend',  # Default username authentication as fallback
+]
+
 # Email Configuration
 EMAIL_BACKEND = os.environ.get(
     'EMAIL_BACKEND',
