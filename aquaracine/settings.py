@@ -350,6 +350,5 @@ if is_package_installed('jazzmin'):
         },
     }
 
-    # CSS personnalisé injecté directement
-    JAZZMIN_SETTINGS["custom_css"] = None  # Désactiver le fichier CSS externe
-    JAZZMIN_SETTINGS["custom_js"] = None
+    # CSS personnalisé - s'assurer qu'il est bien chargé
+    JAZZMIN_SETTINGS["custom_css"] = "css/admin-custom.css"
