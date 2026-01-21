@@ -141,6 +141,7 @@ class ServiceAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/service_changelist.html'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
@@ -204,6 +205,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     autocomplete_fields = ['category']
     ordering = ['order', '-created_at']
+    change_list_template = 'admin/core/product_changelist.html'
 
     fieldsets = (
         ('Informations principales', {
@@ -282,6 +284,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['name', 'role', 'bio']
     ordering = ['order']
+    change_list_template = 'admin/core/teammember_changelist.html'
 
     fieldsets = (
         ('Informations', {
@@ -359,6 +362,7 @@ class BlogPostAdmin(admin.ModelAdmin):
     autocomplete_fields = ['category']
     date_hierarchy = 'published_date'
     ordering = ['-published_date']
+    change_list_template = 'admin/core/blogpost_changelist.html'
 
     fieldsets = (
         ('Contenu', {
@@ -456,6 +460,7 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'description']
     ordering = ['order']
+    change_list_template = 'admin/core/galleryimage_changelist.html'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
@@ -608,6 +613,7 @@ class QuoteRequestAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
     filter_horizontal = ['installation_types']
+    change_list_template = 'admin/core/quoterequest_changelist.html'
 
     fieldsets = (
         ('Contact', {
@@ -752,6 +758,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
+    change_list_template = 'admin/core/contactmessage_changelist.html'
 
     fieldsets = (
         ('Message', {
@@ -839,6 +846,7 @@ class NewsletterAdmin(admin.ModelAdmin):
     search_fields = ['email']
     ordering = ['-created_at']
     date_hierarchy = 'created_at'
+    change_list_template = 'admin/core/newsletter_changelist.html'
 
     actions = ['export_emails', 'deactivate', 'activate']
 
@@ -963,6 +971,7 @@ class AwardAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'organization', 'description']
     ordering = ['-year', 'order']
+    change_list_template = 'admin/core/award_changelist.html'
 
     fieldsets = (
         ('Informations', {
@@ -1154,6 +1163,7 @@ class GameParticipationAdmin(admin.ModelAdmin):
     ordering = ['-created_at']
     autocomplete_fields = ['prize']
     date_hierarchy = 'created_at'
+    change_list_template = 'admin/core/gameparticipation_changelist.html'
 
     fieldsets = (
         ('Participant', {
