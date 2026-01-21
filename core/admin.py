@@ -1052,7 +1052,7 @@ class AquaRacineAdminSite(AdminSite):
         recent_quotes = QuoteRequest.objects.select_related().prefetch_related('installation_types').order_by('-created_at')[:5]
         recent_messages = ContactMessage.objects.order_by('-created_at')[:5]
         recent_subscribers = Newsletter.objects.filter(is_active=True).order_by('-created_at')[:5]
-        recent_game_participations = GameParticipation.objects.select_related('prize').order_by('-played_at')[:5]
+        recent_game_participations = GameParticipation.objects.select_related('prize').order_by('-created_at')[:5]
 
         # Build stats dictionary
         extra_context['stats'] = {
