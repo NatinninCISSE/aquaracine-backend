@@ -102,14 +102,15 @@
         background: rgba(76, 175, 80, 0.3);
     }
 
-    /* Jazzmin sidebar styles - LIGHT THEME with dark text */
+    /* Jazzmin sidebar - Fond vert, texte noir, lien actif bleu */
     .main-sidebar {
-        background: #ffffff !important;
-        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        background: #4caf50 !important;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
     }
 
+    /* Barre de marque (logo) avec fond vert dégradé */
     .main-sidebar .brand-link {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+        background: linear-gradient(135deg, #2e7d32, #1b5e20) !important;
         color: #ffffff !important;
     }
 
@@ -117,44 +118,49 @@
         color: #ffffff !important;
     }
 
-    /* Sidebar text - dark on light background */
+    /* Texte noir - parfaitement lisible */
     .main-sidebar .nav-sidebar .nav-link,
     .main-sidebar .nav-sidebar .nav-link p,
-    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link {
-        color: #333333 !important;
+    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link,
+    [class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link {
+        color: #000000 !important;
+        font-weight: 500;
     }
 
-    /* Sidebar section headers */
+    /* En-têtes de section en vert foncé avec fond vert clair */
     .main-sidebar .nav-header,
-    [class*="sidebar-light"] .nav-header {
-        color: #2e7d32 !important;
-        background: #f0f7f0 !important;
+    [class*="sidebar-light"] .nav-header,
+    [class*="sidebar-dark"] .nav-header {
+        color: #1b5e20 !important;
+        background: rgba(255, 255, 255, 0.3) !important;
         padding: 12px 15px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
         font-size: 0.75rem !important;
-        border-left: 3px solid #4caf50 !important;
+        border-left: 3px solid #2e7d32 !important;
     }
 
     /* Sidebar links hover */
     .main-sidebar .nav-sidebar .nav-link:hover {
-        background: #e8f5e9 !important;
-        color: #2e7d32 !important;
+        background: rgba(255, 255, 255, 0.3) !important;
+        color: #000000 !important;
     }
 
-    /* Active link in sidebar */
+    /* Lien actif avec dégradé BLEU et texte blanc */
     .main-sidebar .nav-sidebar .nav-link.active,
-    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link.active {
-        background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+    [class*="sidebar-light"] .nav-sidebar > .nav-item > .nav-link.active,
+    [class*="sidebar-dark"] .nav-sidebar > .nav-item > .nav-link.active {
+        background: linear-gradient(135deg, #1976d2, #0d47a1) !important;
         color: #ffffff !important;
         border-radius: 5px;
         margin: 0 10px;
+        box-shadow: 0 2px 10px rgba(25, 118, 210, 0.4);
     }
 
-    /* Sidebar icons - green */
+    /* Icônes vertes */
     .nav-sidebar .nav-icon,
     .main-sidebar .nav-icon {
-        color: #4caf50 !important;
+        color: #1b5e20 !important;
     }
 
     .nav-sidebar .nav-link.active .nav-icon {
@@ -165,18 +171,18 @@
     .main-sidebar .badge,
     .main-sidebar .right,
     .main-sidebar .fa-plus {
-        color: #4caf50 !important;
+        color: #1b5e20 !important;
     }
 
     /* Sidebar filter */
     .main-sidebar .form-control-sidebar {
-        background: #f5f5f5 !important;
-        border: 1px solid #e0e0e0 !important;
-        color: #333333 !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        color: #000000 !important;
     }
 
     .main-sidebar .form-control-sidebar::placeholder {
-        color: #999999 !important;
+        color: #666666 !important;
     }
 
     /* Cards and boxes */
