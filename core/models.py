@@ -2,9 +2,6 @@
 Models for Aqua-Racine website management.
 """
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
@@ -14,78 +11,6 @@ try:
     from ckeditor.fields import RichTextField
 except ImportError:
     RichTextField = models.TextField
-
-
-# ============================================
-# USER PROFILE WITH ROLES
-# ============================================
-
-class UserProfile(models.Model):
-    """Extended user profile with roles for admin panel."""
-
-    ROLE_CHOICES = [
-        ('super_admin', 'Super Administrateur'),
-        ('admin', 'Administrateur'),
-    ]
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    role = models.CharField(
-        'Rôle',
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default='admin'
-    )
-    phone = models.CharField('Téléphone', max_length=20, blank=True)
-    avatar = models.ImageField('Photo de profil', upload_to='avatars/', blank=True, null=True)
-    created_at = models.DateTimeField('Date de création', auto_now_add=True)
-    updated_at = models.DateTimeField('Dernière modification', auto_now=True)
-
-    class Meta:
-        verbose_name = 'Profil Utilisateur'
-        verbose_name_plural = 'Profils Utilisateurs'
-
-    def __str__(self):
-        return f"{self.user.get_full_name() or self.user.username} ({self.get_role_display()})"
-
-    @property
-    def is_super_admin(self):
-        return self.role == 'super_admin' or self.user.is_superuser
-
-    @property
-    def is_simple_admin(self):
-        return self.role == 'admin' and not self.user.is_superuser
-
-    def save(self, *args, **kwargs):
-        # Sync role with Django permissions (avoid recursion)
-        update_user = False
-        if self.role == 'super_admin':
-            if not self.user.is_superuser or not self.user.is_staff:
-                self.user.is_superuser = True
-                self.user.is_staff = True
-                update_user = True
-        elif self.role == 'admin':
-            if not self.user.is_staff:
-                self.user.is_staff = True
-                update_user = True
-
-        # Only save user if we made changes (prevent recursion)
-        if update_user and self.pk:  # Only if profile already exists
-            User.objects.filter(pk=self.user.pk).update(
-                is_superuser=self.user.is_superuser,
-                is_staff=self.user.is_staff
-            )
-
-        super().save(*args, **kwargs)
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    """Create a UserProfile when a User is created (only if not already exists)."""
-    if instance.is_staff:
-        # Check if profile already exists to avoid duplicate creation
-        if not UserProfile.objects.filter(user=instance).exists():
-            role = 'super_admin' if instance.is_superuser else 'admin'
-            UserProfile.objects.create(user=instance, role=role)
 
 
 class TimeStampedModel(models.Model):

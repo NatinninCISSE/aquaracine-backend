@@ -33,15 +33,13 @@ from django import forms
 from django.utils import timezone
 from datetime import timedelta
 
-from django.contrib.auth.models import User
 from .models import (
     SiteSettings, PhoneNumber, HeroSlide, Service, ProductCategory, Product,
     TeamMember, BlogCategory, BlogPost, TimelineStep, GalleryImage,
     Advantage, Testimonial, FAQ, InstallationType, QuoteRequest,
     ContactMessage, Newsletter, SystemModel, Award,
     FishSpecies, CropType, BasinType, HydroSystemType, TrainingType,
-    QuizQuestion, GamePrize, GameParticipation,
-    UserProfile
+    QuizQuestion, GamePrize, GameParticipation
 )
 import json
 import random
@@ -1244,133 +1242,3 @@ class MarkPromoCodeUsed(APIView):
                 'success': False,
                 'message': 'Code non trouvé ou déjà utilisé'
             })
-
-
-# ============================================
-# PASSWORD RESET VIEWS
-# ============================================
-
-class PasswordResetRequestForm(forms.Form):
-    """Form for requesting password reset."""
-    email = forms.EmailField(
-        label="Adresse email",
-        max_length=254,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'votre@email.com',
-            'autofocus': True
-        })
-    )
-
-
-class PasswordResetRequestView(FormView):
-    """View to request a password reset link."""
-    template_name = 'admin/password_reset_form.html'
-    form_class = PasswordResetRequestForm
-    success_url = reverse_lazy('password_reset_done')
-
-    def form_valid(self, form):
-        email = form.cleaned_data['email']
-        try:
-            # Get staff user by email
-            user = User.objects.get(email=email, is_active=True, is_staff=True)
-
-            # Generate token
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-            # Build reset URL
-            reset_url = self.request.build_absolute_uri(
-                reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-            )
-
-            # Send email
-            subject = 'Réinitialisation de votre mot de passe - Aqua-Racine'
-            message = render_to_string('admin/password_reset_email.html', {
-                'user': user,
-                'reset_url': reset_url,
-                'site_name': 'Aqua-Racine',
-            })
-
-            send_mail(
-                subject,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
-                fail_silently=False,
-                html_message=message
-            )
-
-        except User.DoesNotExist:
-            # Don't reveal that the user doesn't exist
-            pass
-
-        return super().form_valid(form)
-
-
-class SetPasswordForm(forms.Form):
-    """Form for setting a new password."""
-    new_password1 = forms.CharField(
-        label="Nouveau mot de passe",
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': '••••••••'
-        }),
-        min_length=8
-    )
-    new_password2 = forms.CharField(
-        label="Confirmer le mot de passe",
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': '••••••••'
-        })
-    )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password1 = cleaned_data.get('new_password1')
-        password2 = cleaned_data.get('new_password2')
-
-        if password1 and password2 and password1 != password2:
-            raise forms.ValidationError("Les mots de passe ne correspondent pas.")
-
-        return cleaned_data
-
-
-class PasswordResetConfirmView(FormView):
-    """View to confirm password reset with new password."""
-    template_name = 'admin/password_reset_confirm.html'
-    form_class = SetPasswordForm
-    success_url = reverse_lazy('password_reset_complete')
-
-    def dispatch(self, request, *args, **kwargs):
-        self.user = self.get_user(kwargs.get('uidb64'))
-        self.valid_link = False
-
-        if self.user is not None:
-            token = kwargs.get('token')
-            if default_token_generator.check_token(self.user, token):
-                self.valid_link = True
-
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_user(self, uidb64):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid, is_staff=True)
-            return user
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            return None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['valid_link'] = self.valid_link
-        return context
-
-    def form_valid(self, form):
-        if self.valid_link and self.user:
-            password = form.cleaned_data['new_password1']
-            self.user.set_password(password)
-            self.user.save()
-            return super().form_valid(form)
-        return self.form_invalid(form)
