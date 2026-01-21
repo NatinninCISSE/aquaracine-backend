@@ -307,7 +307,7 @@ if is_package_installed('jazzmin'):
 
         # UI Options
         "related_modal_active": True,
-        "custom_css": "css/admin-custom.css",
+        "custom_css": None,  # Désactivé - styles dans base_site.html
         "custom_js": None,
         "use_google_fonts_cdn": True,
         "show_ui_builder": False,
@@ -323,32 +323,29 @@ if is_package_installed('jazzmin'):
         "footer_small_text": False,
         "body_small_text": False,
         "brand_small_text": False,
-        "brand_colour": "navbar-dark",
-        "accent": "accent-primary",
-        "navbar": "navbar-dark bg-dark",
+        "brand_colour": "navbar-success",
+        "accent": "accent-success",
+        "navbar": "navbar-success navbar-dark",
         "no_navbar_border": False,
         "navbar_fixed": True,
         "layout_boxed": False,
         "footer_fixed": False,
         "sidebar_fixed": True,
-        "sidebar": "sidebar-dark-primary",
+        "sidebar": "sidebar-light-success",
         "sidebar_nav_small_text": False,
         "sidebar_disable_expand": False,
         "sidebar_nav_child_indent": True,
         "sidebar_nav_compact_style": False,
         "sidebar_nav_legacy_style": False,
         "sidebar_nav_flat_style": False,
-        "theme": "darkly",
+        "theme": "default",
         "dark_mode_theme": None,
         "button_classes": {
-            "primary": "btn-primary",
-            "secondary": "btn-outline-light",
+            "primary": "btn-success",
+            "secondary": "btn-secondary",
             "info": "btn-info",
             "warning": "btn-warning",
             "danger": "btn-danger",
             "success": "btn-success",
         },
     }
-
-    # CSS personnalisé - s'assurer qu'il est bien chargé
-    JAZZMIN_SETTINGS["custom_css"] = "css/admin-custom.css"

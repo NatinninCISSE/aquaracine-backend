@@ -12,134 +12,240 @@
 </h1>
 {% endblock %}
 
-{% block extrastyle %}
+{% block extrahead %}
 {{ block.super }}
-<style>
+<style type="text/css">
 /* ===========================================
-   THEME AQUA-RACINE - Vert, Bleu, Noir, Blanc
+   THEME AQUA-RACINE - FORCÉ AVEC !important
+   Couleurs: Vert foncé, Bleu, Blanc, Noir
    =========================================== */
 
-/* SIDEBAR - Fond VERT FONCE, texte BLANC */
-.main-sidebar {
+/* SIDEBAR - Fond VERT FONCE (#1b5e20) */
+.main-sidebar,
+.main-sidebar.sidebar-dark-primary,
+.main-sidebar.sidebar-dark-success,
+.main-sidebar.sidebar-light-success,
+.main-sidebar.sidebar-light-primary,
+[class*="sidebar-"] {
     background: #1b5e20 !important;
+    background-color: #1b5e20 !important;
 }
 
-.main-sidebar .brand-link {
+/* Logo/Brand - Fond BLEU (#0d47a1) */
+.brand-link,
+.main-sidebar .brand-link,
+.sidebar-dark-primary .brand-link,
+.sidebar-light-success .brand-link {
     background: #0d47a1 !important;
+    background-color: #0d47a1 !important;
     color: #ffffff !important;
-    border-bottom: 1px solid #1565c0 !important;
+    border-bottom: 2px solid #1565c0 !important;
 }
 
-.main-sidebar .brand-link .brand-text {
-    color: #ffffff !important;
-}
-
-/* Liens sidebar - BLANC sur fond vert */
-.main-sidebar .nav-sidebar .nav-link,
-.main-sidebar .nav-sidebar .nav-link p {
+.brand-link .brand-text,
+.brand-link .brand-image-text,
+.main-sidebar .brand-text {
     color: #ffffff !important;
 }
 
-/* Headers de section - fond bleu */
-.main-sidebar .nav-header {
+/* TOUS les liens du menu - TEXTE BLANC */
+.nav-sidebar .nav-link,
+.nav-sidebar .nav-link p,
+.nav-sidebar > .nav-item > .nav-link,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link,
+.sidebar-light-success .nav-sidebar > .nav-item > .nav-link,
+.main-sidebar .nav-link,
+.main-sidebar .nav-link p,
+.main-sidebar a {
+    color: #ffffff !important;
+}
+
+/* Headers de section - Fond BLEU */
+.nav-header,
+.main-sidebar .nav-header,
+.sidebar .nav-header {
     color: #ffffff !important;
     background: #0d47a1 !important;
-    padding: 10px 15px !important;
+    background-color: #0d47a1 !important;
+    padding: 12px 15px !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
-    font-size: 0.8rem !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.5px !important;
 }
 
-/* Hover sur liens */
-.main-sidebar .nav-sidebar .nav-link:hover {
+/* Hover sur liens - Vert plus clair */
+.nav-sidebar .nav-link:hover,
+.nav-sidebar > .nav-item > .nav-link:hover,
+.main-sidebar .nav-link:hover {
     background: #2e7d32 !important;
+    background-color: #2e7d32 !important;
     color: #ffffff !important;
 }
 
-/* Lien ACTIF - fond BLEU */
-.main-sidebar .nav-sidebar .nav-link.active {
+/* Lien ACTIF - Fond BLEU vif */
+.nav-sidebar .nav-link.active,
+.nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-light-success .nav-sidebar > .nav-item > .nav-link.active,
+.main-sidebar .nav-link.active,
+.nav-sidebar .nav-item.menu-open > .nav-link {
     background: #1976d2 !important;
+    background-color: #1976d2 !important;
     color: #ffffff !important;
-    border-radius: 4px;
-    margin: 2px 8px;
+    border-radius: 5px !important;
+    margin: 3px 10px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
 }
 
-/* Icônes - BLANC */
-.main-sidebar .nav-icon {
+/* ICÔNES - Toutes en BLANC */
+.nav-icon,
+.main-sidebar .nav-icon,
+.main-sidebar .fas,
+.main-sidebar .far,
+.main-sidebar .fa,
+.main-sidebar i,
+.nav-sidebar .nav-icon {
     color: #ffffff !important;
 }
 
-/* Boutons AJOUTER - fond BLEU, texte BLANC */
+/* ============================================
+   BOUTONS AJOUTER - BLEU avec TEXTE BLANC
+   TRES IMPORTANT - doit être visible!
+   ============================================ */
+.badge,
 .main-sidebar .badge,
-.main-sidebar .right,
-.main-sidebar .fa-plus,
-.main-sidebar a.bg-success,
-.main-sidebar .btn {
+.nav-sidebar .badge,
+.right.badge,
+.badge-info,
+.badge-success,
+.badge-primary,
+.bg-info,
+.bg-success,
+.bg-primary,
+a.badge,
+span.badge {
     background: #1976d2 !important;
+    background-color: #1976d2 !important;
     color: #ffffff !important;
-    border-radius: 3px;
-    padding: 2px 6px;
+    padding: 5px 12px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    border: none !important;
 }
 
-/* Champ de recherche */
-.main-sidebar .form-control-sidebar {
+/* Bouton + (plus) */
+.fa-plus,
+.main-sidebar .fa-plus {
+    color: #ffffff !important;
+}
+
+/* Champ de recherche sidebar */
+.form-control-sidebar,
+.main-sidebar .form-control-sidebar,
+.sidebar-search input {
     background: #2e7d32 !important;
+    background-color: #2e7d32 !important;
     border: 1px solid #4caf50 !important;
     color: #ffffff !important;
 }
 
-.main-sidebar .form-control-sidebar::placeholder {
+.form-control-sidebar::placeholder {
     color: #c8e6c9 !important;
 }
 
-/* NAVBAR - fond BLEU FONCE */
-.main-header.navbar {
+/* ============================================
+   NAVBAR SUPERIEURE - Fond BLEU FONCE
+   ============================================ */
+.main-header,
+.main-header.navbar,
+nav.main-header {
     background: #0d47a1 !important;
+    background-color: #0d47a1 !important;
+    border: none !important;
 }
 
-.main-header .navbar-nav .nav-link {
+.main-header .nav-link,
+.main-header .navbar-nav .nav-link,
+.navbar-nav .nav-link {
     color: #ffffff !important;
 }
 
-/* CONTENU - fond clair */
+.main-header .nav-link:hover {
+    background: rgba(255,255,255,0.1) !important;
+    color: #ffffff !important;
+}
+
+/* ============================================
+   SOUS-MENUS (treeview)
+   ============================================ */
+.nav-treeview,
+.main-sidebar .nav-treeview {
+    background: #2e7d32 !important;
+    background-color: #2e7d32 !important;
+}
+
+.nav-treeview .nav-link,
+.nav-treeview > .nav-item > .nav-link {
+    color: #ffffff !important;
+    padding-left: 35px !important;
+}
+
+.nav-treeview .nav-link:hover {
+    background: #388e3c !important;
+}
+
+/* ============================================
+   CONTENU PRINCIPAL
+   ============================================ */
 .content-wrapper {
     background: #f5f5f5 !important;
 }
 
-/* Breadcrumb */
 .content-header {
-    background: #ffffff;
-    border-bottom: 2px solid #4caf50;
-    margin-bottom: 20px;
+    background: #ffffff !important;
+    border-bottom: 3px solid #4caf50 !important;
+    margin-bottom: 20px !important;
 }
 
-/* BOUTONS généraux */
-.btn-primary {
+/* ============================================
+   BOUTONS GÉNÉRAUX
+   ============================================ */
+.btn-primary,
+.btn-outline-primary:hover {
     background: #1976d2 !important;
     border-color: #1565c0 !important;
     color: #ffffff !important;
 }
 
-.btn-success {
+.btn-success,
+.btn-outline-success:hover {
     background: #2e7d32 !important;
     border-color: #1b5e20 !important;
     color: #ffffff !important;
 }
 
-.btn-info {
+.btn-info,
+.btn-outline-info:hover {
     background: #0288d1 !important;
     border-color: #0277bd !important;
     color: #ffffff !important;
 }
 
-/* Tables */
-.table thead th {
+/* ============================================
+   TABLES
+   ============================================ */
+.table thead th,
+table thead th {
     background: #1b5e20 !important;
     color: #ffffff !important;
     border-color: #2e7d32 !important;
 }
 
-/* Cards */
+/* ============================================
+   CARDS
+   ============================================ */
 .card-header {
     background: #e8f5e9 !important;
     border-bottom: 2px solid #4caf50 !important;
@@ -147,10 +253,12 @@
 
 .card-title {
     color: #1b5e20 !important;
-    font-weight: 600;
+    font-weight: 600 !important;
 }
 
-/* Footer */
+/* ============================================
+   FOOTER
+   ============================================ */
 .main-footer {
     background: #1b5e20 !important;
     color: #ffffff !important;
@@ -161,30 +269,35 @@
     color: #81c784 !important;
 }
 
-/* Sous-menus */
-.nav-treeview {
-    background: #2e7d32 !important;
-}
-
-.nav-treeview .nav-link {
-    color: #ffffff !important;
-    padding-left: 30px !important;
-}
-
-.nav-treeview .nav-link:hover {
-    background: #388e3c !important;
-}
-
-/* Scrollbar */
+/* ============================================
+   SCROLLBAR PERSONNALISÉE
+   ============================================ */
 .main-sidebar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .main-sidebar::-webkit-scrollbar-thumb {
     background: #4caf50;
-    border-radius: 3px;
+    border-radius: 4px;
+}
+
+.main-sidebar::-webkit-scrollbar-track {
+    background: #1b5e20;
+}
+
+/* ============================================
+   PETITS POINTS/BADGES
+   ============================================ */
+.nav-sidebar .nav-link p .right,
+.nav-link .right {
+    background: #1976d2 !important;
+    color: #ffffff !important;
 }
 </style>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
 {% endblock %}
 
 {% block welcome-msg %}
