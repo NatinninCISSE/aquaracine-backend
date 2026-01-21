@@ -4,9 +4,9 @@ Admin configuration for Aqua-Racine backoffice.
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.utils.html import format_html
-from django.db.models import Count
+from django.db.models import Count, Sum, Avg, Q
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, date
 from .models import (
     SiteSettings, PhoneNumber, HeroSlide, Service, ProductCategory, Product,
     TeamMember, BlogCategory, BlogPost, TimelineStep, GalleryImage,
@@ -142,6 +142,26 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ['title', 'description']
     ordering = ['order']
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = Service.objects.count()
+        active = Service.objects.filter(is_active=True).count()
+        inactive = Service.objects.filter(is_active=False).count()
+        with_image = Service.objects.filter(is_active=True).exclude(image='').count()
+
+        # Aperçu services
+        services_preview = list(Service.objects.filter(is_active=True).order_by('order')[:6])
+
+        extra_context['kpi'] = {
+            'total_services': total,
+            'active_count': active,
+            'inactive_count': inactive,
+            'with_image_count': with_image,
+            'services_preview': services_preview,
+        }
+        return super().changelist_view(request, extra_context)
+
     def icon_preview(self, obj):
         return format_html('<i class="{}" style="font-size:24px;"></i>', obj.icon)
     icon_preview.short_description = "Icône"
@@ -200,6 +220,42 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = Product.objects.count()
+        active = Product.objects.filter(is_active=True).count()
+        featured = Product.objects.filter(is_featured=True).count()
+        low_stock = Product.objects.filter(is_active=True, stock__gt=0, stock__lte=5).count()
+        out_of_stock = Product.objects.filter(is_active=True, stock=0).count()
+        on_sale = Product.objects.filter(old_price__isnull=False).exclude(old_price=0).count()
+        categories = ProductCategory.objects.count()
+
+        # Prix moyen
+        avg_price = Product.objects.filter(is_active=True).aggregate(avg=Avg('price'))['avg']
+        avg_price_str = f"{avg_price:,.0f}".replace(",", " ") if avg_price else None
+
+        # Produits par catégorie
+        by_category = list(
+            ProductCategory.objects.annotate(count=Count('products'))
+            .filter(count__gt=0)
+            .values('name', 'count')
+            .order_by('-count')[:5]
+        )
+
+        extra_context['kpi'] = {
+            'total_products': total,
+            'active_count': active,
+            'featured_count': featured,
+            'low_stock_count': low_stock,
+            'out_of_stock_count': out_of_stock,
+            'on_sale_count': on_sale,
+            'categories_count': categories,
+            'avg_price': avg_price_str,
+            'by_category': by_category,
+        }
+        return super().changelist_view(request, extra_context)
+
     def image_preview(self, obj):
         if obj.image:
             return format_html('<img src="{}" width="50" height="50" style="object-fit:cover;border-radius:4px;"/>', obj.image.url)
@@ -242,6 +298,30 @@ class TeamMemberAdmin(admin.ModelAdmin):
             'fields': ('order', 'is_active')
         }),
     )
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+
+        total = TeamMember.objects.count()
+        active = TeamMember.objects.filter(is_active=True).count()
+        inactive = TeamMember.objects.filter(is_active=False).count()
+        with_photo = TeamMember.objects.filter(is_active=True).exclude(photo='').count()
+        with_social = TeamMember.objects.filter(is_active=True).filter(
+            Q(linkedin_url__isnull=False) | Q(facebook_url__isnull=False) | Q(twitter_url__isnull=False)
+        ).exclude(linkedin_url='').exclude(facebook_url='').exclude(twitter_url='').count()
+
+        # Aperçu équipe
+        team_preview = list(TeamMember.objects.filter(is_active=True).order_by('order')[:8])
+
+        extra_context['kpi'] = {
+            'total_members': total,
+            'active_count': active,
+            'inactive_count': inactive,
+            'with_photo_count': with_photo,
+            'with_social_count': with_social,
+            'team_preview': team_preview,
+        }
+        return super().changelist_view(request, extra_context)
 
     def photo_preview(self, obj):
         if obj.photo:
@@ -294,6 +374,43 @@ class BlogPostAdmin(admin.ModelAdmin):
 
     readonly_fields = ['views']
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        month_ago = now - timedelta(days=30)
+
+        total = BlogPost.objects.count()
+        published = BlogPost.objects.filter(is_published=True).count()
+        draft = BlogPost.objects.filter(is_published=False).count()
+        featured = BlogPost.objects.filter(is_featured=True).count()
+        categories = BlogCategory.objects.count()
+        total_views = BlogPost.objects.aggregate(total=Sum('views'))['total'] or 0
+        this_month = BlogPost.objects.filter(published_date__gte=month_ago).count()
+
+        # Par catégorie
+        by_category = list(
+            BlogCategory.objects.annotate(count=Count('posts'))
+            .filter(count__gt=0)
+            .values('name', 'count')
+            .order_by('-count')[:5]
+        )
+
+        # Top articles
+        top_articles = list(BlogPost.objects.filter(is_published=True).order_by('-views')[:5])
+
+        extra_context['kpi'] = {
+            'total_posts': total,
+            'published_count': published,
+            'draft_count': draft,
+            'featured_count': featured,
+            'categories_count': categories,
+            'total_views': total_views,
+            'this_month_count': this_month,
+            'by_category': by_category,
+            'top_articles': top_articles,
+        }
+        return super().changelist_view(request, extra_context)
+
     def image_preview(self, obj):
         if obj.image:
             return format_html('<img src="{}" width="80" height="50" style="object-fit:cover;border-radius:4px;"/>', obj.image.url)
@@ -339,6 +456,40 @@ class GalleryImageAdmin(admin.ModelAdmin):
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'description']
     ordering = ['order']
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        month_ago = now - timedelta(days=30)
+
+        total = GalleryImage.objects.count()
+        active = GalleryImage.objects.filter(is_active=True).count()
+        inactive = GalleryImage.objects.filter(is_active=False).count()
+        recent = GalleryImage.objects.filter(created_at__gte=month_ago).count() if hasattr(GalleryImage, 'created_at') else 0
+
+        # Par catégorie
+        by_category = list(
+            GalleryImage.objects.values('category')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+
+        # Nombre de catégories uniques
+        categories_count = GalleryImage.objects.values('category').distinct().count()
+
+        # Aperçu galerie
+        gallery_preview = list(GalleryImage.objects.filter(is_active=True).order_by('-id')[:12])
+
+        extra_context['kpi'] = {
+            'total_images': total,
+            'active_count': active,
+            'inactive_count': inactive,
+            'recent_count': recent,
+            'categories_count': categories_count,
+            'by_category': by_category,
+            'gallery_preview': gallery_preview,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -484,6 +635,65 @@ class QuoteRequestAdmin(admin.ModelAdmin):
         }),
     )
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = now - timedelta(days=7)
+        last_week = week_ago - timedelta(days=7)
+        month_ago = now - timedelta(days=30)
+
+        total = QuoteRequest.objects.count()
+        pending = QuoteRequest.objects.filter(status='pending').count()
+        today_count = QuoteRequest.objects.filter(created_at__gte=today).count()
+        week_count = QuoteRequest.objects.filter(created_at__gte=week_ago).count()
+        last_week_count = QuoteRequest.objects.filter(created_at__gte=last_week, created_at__lt=week_ago).count()
+        month_count = QuoteRequest.objects.filter(created_at__gte=month_ago).count()
+        accepted = QuoteRequest.objects.filter(status='accepted').count()
+        completed = QuoteRequest.objects.filter(status='completed').count()
+
+        week_growth = 0
+        if last_week_count > 0:
+            week_growth = round(((week_count - last_week_count) / last_week_count) * 100)
+
+        conversion_rate = round(((accepted + completed) / total * 100)) if total > 0 else 0
+
+        # Montant estimé des devis acceptés
+        estimated = QuoteRequest.objects.filter(status__in=['accepted', 'completed']).aggregate(
+            total=Sum('estimated_amount')
+        )['total'] or 0
+        estimated_str = f"{estimated:,.0f}".replace(",", " ") if estimated else None
+
+        # Répartition par statut
+        status_labels = {
+            'pending': 'En attente',
+            'contacted': 'Contacté',
+            'in_progress': 'En cours',
+            'quoted': 'Devis envoyé',
+            'accepted': 'Accepté',
+            'rejected': 'Refusé',
+            'completed': 'Terminé',
+        }
+        status_breakdown = []
+        for status, label in status_labels.items():
+            count = QuoteRequest.objects.filter(status=status).count()
+            if count > 0:
+                status_breakdown.append({'status': status, 'label': label, 'count': count})
+
+        extra_context['kpi'] = {
+            'total_quotes': total,
+            'pending_count': pending,
+            'today_count': today_count,
+            'week_count': week_count,
+            'week_growth': week_growth,
+            'month_count': month_count,
+            'accepted_count': accepted + completed,
+            'conversion_rate': conversion_rate,
+            'estimated_revenue': estimated_str,
+            'status_breakdown': status_breakdown,
+        }
+        return super().changelist_view(request, extra_context)
+
     def full_name(self, obj):
         return obj.full_name
     full_name.short_description = "Nom"
@@ -556,6 +766,32 @@ class ContactMessageAdmin(admin.ModelAdmin):
         }),
     )
 
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = now - timedelta(days=7)
+
+        total = ContactMessage.objects.count()
+        new_count = ContactMessage.objects.filter(status='new').count()
+        today_count = ContactMessage.objects.filter(created_at__gte=today).count()
+        week_count = ContactMessage.objects.filter(created_at__gte=week_ago).count()
+        replied_count = ContactMessage.objects.filter(status='replied').count()
+        archived_count = ContactMessage.objects.filter(status='archived').count()
+
+        response_rate = round((replied_count / total * 100)) if total > 0 else 0
+
+        extra_context['kpi'] = {
+            'total_messages': total,
+            'new_count': new_count,
+            'today_count': today_count,
+            'week_count': week_count,
+            'replied_count': replied_count,
+            'archived_count': archived_count,
+            'response_rate': response_rate,
+        }
+        return super().changelist_view(request, extra_context)
+
     def subject_short(self, obj):
         return obj.subject[:50] + '...' if obj.subject and len(obj.subject) > 50 else (obj.subject or 'Sans sujet')
     subject_short.short_description = "Sujet"
@@ -605,6 +841,39 @@ class NewsletterAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
 
     actions = ['export_emails', 'deactivate', 'activate']
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = now - timedelta(days=7)
+        month_ago = now - timedelta(days=30)
+        last_week = week_ago - timedelta(days=7)
+
+        total = Newsletter.objects.filter(is_active=True).count()
+        total_all = Newsletter.objects.count()
+        today_count = Newsletter.objects.filter(created_at__gte=today).count()
+        week_count = Newsletter.objects.filter(created_at__gte=week_ago).count()
+        last_week_count = Newsletter.objects.filter(created_at__gte=last_week, created_at__lt=week_ago).count()
+        month_count = Newsletter.objects.filter(created_at__gte=month_ago).count()
+        inactive_count = Newsletter.objects.filter(is_active=False).count()
+
+        week_growth = 0
+        if last_week_count > 0:
+            week_growth = round(((week_count - last_week_count) / last_week_count) * 100)
+
+        active_rate = round((total / total_all * 100)) if total_all > 0 else 0
+
+        extra_context['kpi'] = {
+            'total_subscribers': total,
+            'today_count': today_count,
+            'week_count': week_count,
+            'month_count': month_count,
+            'inactive_count': inactive_count,
+            'week_growth': week_growth,
+            'active_rate': active_rate,
+        }
+        return super().changelist_view(request, extra_context)
 
     def export_emails(self, request, queryset):
         # This would export emails - just a placeholder action
@@ -706,6 +975,35 @@ class AwardAdmin(admin.ModelAdmin):
             'fields': ('order', 'is_active')
         }),
     )
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        current_year = date.today().year
+
+        total = Award.objects.count()
+        active = Award.objects.filter(is_active=True).count()
+        this_year = Award.objects.filter(year=current_year).count()
+        with_image = Award.objects.exclude(image='').count()
+
+        # Organisations uniques
+        organizations = Award.objects.values('organization').distinct().count()
+
+        # Par année
+        by_year = list(
+            Award.objects.values('year')
+            .annotate(count=Count('id'))
+            .order_by('-year')[:5]
+        )
+
+        extra_context['kpi'] = {
+            'total_awards': total,
+            'active_count': active,
+            'this_year_count': this_year,
+            'with_image_count': with_image,
+            'organizations_count': organizations,
+            'by_year': by_year,
+        }
+        return super().changelist_view(request, extra_context)
 
     def image_preview(self, obj):
         if obj.image:
@@ -873,6 +1171,56 @@ class GameParticipationAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        now = timezone.now()
+        today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = now - timedelta(days=7)
+
+        total = GameParticipation.objects.count()
+        today_count = GameParticipation.objects.filter(created_at__gte=today).count()
+        week_count = GameParticipation.objects.filter(created_at__gte=week_ago).count()
+        winners = GameParticipation.objects.filter(prize__is_winning_prize=True).count()
+        losers = GameParticipation.objects.filter(prize__is_winning_prize=False).count()
+        codes_used = GameParticipation.objects.filter(has_used_prize=True).count()
+        codes_pending = GameParticipation.objects.filter(
+            has_used_prize=False,
+            promo_code__isnull=False
+        ).exclude(promo_code='').count()
+
+        win_rate = round((winners / total * 100)) if total > 0 else 0
+
+        # Score moyen quiz
+        avg_score = GameParticipation.objects.aggregate(avg=Avg('quiz_score'))['avg']
+        quiz_total = 5  # Valeur par défaut
+
+        # Répartition des prix
+        prizes_breakdown = list(
+            GameParticipation.objects.filter(prize__is_winning_prize=True)
+            .values('prize__name', 'prize__color')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+        prizes_formatted = [
+            {'name': p['prize__name'], 'color': p['prize__color'], 'count': p['count']}
+            for p in prizes_breakdown
+        ]
+
+        extra_context['kpi'] = {
+            'total_participations': total,
+            'today_count': today_count,
+            'week_count': week_count,
+            'winners_count': winners,
+            'losers_count': losers,
+            'win_rate': win_rate,
+            'codes_used': codes_used,
+            'codes_pending': codes_pending,
+            'avg_quiz_score': round(avg_score, 1) if avg_score else None,
+            'quiz_total': quiz_total,
+            'prizes_breakdown': prizes_formatted,
+        }
+        return super().changelist_view(request, extra_context)
 
     def quiz_score_display(self, obj):
         return f"{obj.quiz_score}/{obj.quiz_total}"
