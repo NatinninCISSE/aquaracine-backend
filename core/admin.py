@@ -1112,18 +1112,114 @@ def custom_admin_index(request, extra_context=None):
 
     now = timezone.now()
     week_ago = now - timedelta(days=7)
+    month_ago = now - timedelta(days=30)
 
-    # Stats
+    # Comptages de base
+    total_quotes = QuoteRequest.objects.count()
+    pending_quotes = QuoteRequest.objects.filter(status='pending').count()
+    processed_quotes = QuoteRequest.objects.filter(status='processed').count()
+    quotes_this_week = QuoteRequest.objects.filter(created_at__gte=week_ago).count()
+    quotes_this_month = QuoteRequest.objects.filter(created_at__gte=month_ago).count()
+
+    # Taux de conversion (devis traités / total)
+    conversion_rate = round((processed_quotes / total_quotes * 100), 1) if total_quotes > 0 else 0
+
+    # Messages non lus (on considère les messages récents comme "non lus")
+    unread_messages = ContactMessage.objects.filter(created_at__gte=week_ago).count()
+    total_messages = ContactMessage.objects.count()
+
+    # Newsletter stats
+    total_subscribers = Newsletter.objects.filter(is_active=True).count()
+    new_subscribers_week = Newsletter.objects.filter(is_active=True, created_at__gte=week_ago).count()
+    new_subscribers_month = Newsletter.objects.filter(is_active=True, created_at__gte=month_ago).count()
+
+    # Devis par type d'installation
+    quotes_by_type = []
+    try:
+        from django.db.models import Count
+        quotes_by_type = list(
+            QuoteRequest.objects.values('installation_types__name')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+    except Exception:
+        pass
+
+    # Devis par ville/région
+    quotes_by_city = []
+    try:
+        quotes_by_city = list(
+            QuoteRequest.objects.exclude(city__isnull=True).exclude(city='')
+            .values('city')
+            .annotate(count=Count('id'))
+            .order_by('-count')[:5]
+        )
+    except Exception:
+        pass
+
+    # Données mensuelles pour graphiques (12 derniers mois)
+    monthly_quotes = []
+    monthly_messages = []
+    monthly_labels = []
+    for i in range(11, -1, -1):
+        month_start = (now - timedelta(days=i*30)).replace(day=1)
+        if i > 0:
+            month_end = (now - timedelta(days=(i-1)*30)).replace(day=1)
+        else:
+            month_end = now
+
+        monthly_labels.append(month_start.strftime('%b'))
+        monthly_quotes.append(QuoteRequest.objects.filter(
+            created_at__gte=month_start, created_at__lt=month_end
+        ).count())
+        monthly_messages.append(ContactMessage.objects.filter(
+            created_at__gte=month_start, created_at__lt=month_end
+        ).count())
+
+    # Participations au jeu
+    game_participations_count = GameParticipation.objects.count()
+    game_winners_count = GameParticipation.objects.filter(prize__is_winning_prize=True).count()
+
+    # Stats complètes
     extra_context['stats'] = {
-        'quote_requests_count': QuoteRequest.objects.count(),
-        'contact_messages_count': ContactMessage.objects.count(),
-        'newsletter_subscribers_count': Newsletter.objects.filter(is_active=True).count(),
+        # KPIs principaux
+        'quote_requests_count': total_quotes,
+        'pending_quotes': pending_quotes,
+        'processed_quotes': processed_quotes,
+        'conversion_rate': conversion_rate,
+
+        # Messages
+        'contact_messages_count': total_messages,
+        'unread_messages': unread_messages,
+
+        # Newsletter
+        'newsletter_subscribers_count': total_subscribers,
+        'new_subscribers_week': new_subscribers_week,
+        'new_subscribers_month': new_subscribers_month,
+
+        # Tendances
+        'quotes_this_week': quotes_this_week,
+        'quotes_this_month': quotes_this_month,
+        'quotes_week_percent': min(quotes_this_week * 10, 100),
+
+        # Contenu
         'products_count': Product.objects.filter(is_active=True).count(),
-        'quotes_this_week': QuoteRequest.objects.filter(created_at__gte=week_ago).count(),
-        'quotes_week_percent': min(QuoteRequest.objects.filter(created_at__gte=week_ago).count() * 10, 100),
-        'pending_quotes': QuoteRequest.objects.filter(status='pending').count(),
+        'categories_count': ProductCategory.objects.count() if 'ProductCategory' in dir() else 0,
         'team_members_count': TeamMember.objects.filter(is_active=True).count(),
         'gallery_images_count': GalleryImage.objects.filter(is_active=True).count(),
+        'services_count': Service.objects.filter(is_active=True).count(),
+        'blog_posts_count': BlogPost.objects.filter(is_published=True).count() if hasattr(BlogPost, 'is_published') else BlogPost.objects.count(),
+
+        # Jeu
+        'game_participations_count': game_participations_count,
+        'game_winners_count': game_winners_count,
+
+        # Données pour graphiques
+        'quotes_by_type': quotes_by_type,
+        'quotes_by_city': quotes_by_city,
+        'monthly_quotes': monthly_quotes,
+        'monthly_messages': monthly_messages,
+        'monthly_labels': monthly_labels,
     }
 
     # Recent items
